@@ -13,31 +13,34 @@
   },
   "posicion_actual": "f1.python-profesional",
   "fortalezas": [
-    "Sintaxis basica de Python (funciones, loops) verificada en sesion 1: escribe un for con guardas y continue sin ayuda.",
-    "Type hints en firmas y excepciones propias: resolvio el ejercicio 01 correctamente (pistas conceptuales, nunca la solucion)."
+    "Sintaxis basica de Python (funciones, loops, guardas, continue) verificada sin ayuda.",
+    "Type hints en firmas y excepciones propias: ejercicio 01 resuelto por su cuenta (4/4).",
+    "dataclasses: ejercicio 02 resuelto por su cuenta (5/5). Campos ordenados, __post_init__ con validacion y ConfigError informativo.",
+    "Lee y depura output de pytest por su cuenta: encontro y corrigio raise faltante y error de frontera <= vs < sin que se le diera la solucion.",
+    "Repaso S2 superado: explico split('=', 1) y el valor de excepciones con nombre correctamente de memoria."
   ],
   "debilidades": [
-    "Distincion listas vs. dict al empezar: pregunto 'como hago append a un dict' (se aclaro en sesion).",
-    "Edge case split('=') vs split('=', 1): dejo vivo el caso de valores con '=' (no roto por tests, pendiente de interiorizar).",
+    "Error de frontera <= vs < (cometido en 02, corregido). Vigilar en futuros validators.",
+    "Olvido de 'raise' al lanzar excepcion (cometido en 02, corregido). Vigilar.",
     "Entornos y gestion de dependencias con uv (no instalado, no visto).",
     "Linting con ruff y revision de tipos (no instalado, no visto).",
-    "dataclasses y estructura de paquetes Python (no vistos).",
+    "Estructura de paquetes Python (no vista).",
     "Todo el stack de AI Engineer de F2 en adelante: sin exposicion."
   ],
   "topicos": {
     "f1.python-profesional": {
       "status": "visto",
       "ultima_sesion": "2026-07-27",
-      "intentos": 1,
+      "intentos": 2,
       "notas": [
-        "Sesion 1: cubierto type hints + excepciones propias + control de flujo (continue). Ejercicio 01-tags-tipados resuelto por su cuenta con pistas 1-2 (nunca solucion completa): 4/4 pytest.",
-        "Necesito guia sobre: split para separar, asignacion a dict (no append), y orden de guardas en el loop.",
-        "PENDIENTE del topico para llegar a aprendido/dominado: uv (entornos), ruff (lint), revision de tipos, dataclasses, refactor a paquete. El criterio_dominio del topico exige todo eso.",
-        "Edge lurking: split('=') se rompe con valores que contienen '='; usar split('=', 1). Convertir en item de repaso."
+        "S1: type hints + excepciones propias + control de flujo (continue). Ejercicio 01-tags-tipados 4/4 por su cuenta.",
+        "S2: dataclasses (@dataclass, campos con/ sin default, __post_init__, __repr__/__eq__ generados). Ejercicio 02-config-dataclass 5/5 por su cuenta con pistas 1-2. Bugs propios encontrados via pytest: ConfigError sin raise, y frontera < vs <=.",
+        "S2 repaso: split('=', 1) y excepciones con nombre — interiorizados (recuperacion activa OK).",
+        "PENDIENTE para llegar a aprendido/dominado del topico: uv (entornos), ruff (lint), revision de tipos, refactor a paquete. El criterio_dominio del topico exige eso. Proxima sesion cierra el topico."
       ]
     }
   },
-  "sesiones_completadas": 1,
+  "sesiones_completadas": 2,
   "ultima_sesion": "2026-07-27",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
