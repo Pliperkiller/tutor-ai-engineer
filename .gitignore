@@ -1,0 +1,22 @@
+# Secretos y datos locales
+.env
+data/
+
+# Claude Code (config local de esta máquina)
+.claude/settings.local.json
+
+# SO / editor
+.DS_Store
+
+# Stack del tema (AI Engineer)
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+*.egg-info/
+# artefactos pesados de modelos y vectores
+models/
+*.gguf
+*.safetensors

@@ -1,0 +1,371 @@
+# Roadmap de AI Engineer — versión estructurada para el tutor.
+# La versión humana está en docs/roadmap.md.
+
+meta:
+  version: 1
+  horas_totales_estimadas: 510
+  reglas:
+    - "Orden por defecto: secuencial (tópicos dentro de la fase, fases en orden)."
+    - "prerequisitos solo se listan cuando cruzan fases o rompen el orden por defecto."
+    - "tipo: codigo (ejercicio de producción obligatorio) | mixto (producción + diseño) | conceptual (ejercicio de diseño escrito)."
+    - "El estado del estudiante NO vive aquí: vive en state/progress.json."
+
+fases:
+  - id: f1
+    nombre: Fundamentos de programación para IA
+    horas: 80
+    certificacion_ancla: null
+    criterio_dominio_fase: >
+      Construir una API REST con FastAPI que consuma una API pública externa,
+      valide entradas/salidas con Pydantic, tenga suite de tests con pytest
+      (incluyendo mocks de la API externa) y esté en un repo con historia de
+      commits legible.
+    capstone: "La API base en FastAPI que servirá el asistente (endpoints, validación, tests)."
+    topicos:
+      - id: f1.python-profesional
+        nombre: Python profesional
+        tipo: codigo
+        conceptos: [type hints, dataclasses, manejo de excepciones, estructura de paquetes, entornos con uv]
+        tecnologias: [Python 3.12+, uv, ruff]
+        criterio_dominio: "Refactoriza un script dado a un paquete tipado con manejo de errores explícito que pasa ruff y una revisión de tipos sin errores."
+      - id: f1.git-flujo
+        nombre: Git y flujo de trabajo
+        tipo: codigo
+        conceptos: [commits atómicos, branches, pull requests, historia legible, resolución de conflictos]
+        tecnologias: [Git, GitHub]
+        criterio_dominio: "Publica un repo con 2+ branches fusionadas vía PR y una historia de 10+ commits atómicos con mensajes descriptivos, resolviendo al menos un conflicto."
+      - id: f1.pydantic-validacion
+        nombre: Modelado y validación con Pydantic
+        tipo: codigo
+        conceptos: [modelos anidados, validators personalizados, serialización/deserialización]
+        tecnologias: [Pydantic]
+        criterio_dominio: "Modela un dominio con 3+ modelos Pydantic anidados y validators personalizados, con tests que cubren casos válidos e inválidos."
+      - id: f1.async-basico
+        nombre: Async y concurrencia básica
+        tipo: codigo
+        conceptos: [event loop, async/await, llamadas HTTP concurrentes, timeouts]
+        tecnologias: [asyncio, httpx]
+        criterio_dominio: "Escribe un cliente que hace 10 llamadas HTTP concurrentes con httpx y demuestra con mediciones la ganancia frente a la versión secuencial."
+      - id: f1.apis-rest-fastapi
+        nombre: APIs REST con FastAPI
+        tipo: codigo
+        conceptos: [verbos HTTP, status codes, autenticación por API key, diseño de endpoints, documentación automática]
+        tecnologias: [FastAPI]
+        criterio_dominio: "Construye una API FastAPI con 4+ endpoints, autenticación por API key y documentación automática funcional en /docs."
+      - id: f1.testing-pytest
+        nombre: Testing con pytest
+        tipo: codigo
+        conceptos: [unit tests, fixtures, mocking de servicios externos, cobertura]
+        tecnologias: [pytest]
+        criterio_dominio: "Suite de pytest con fixtures y mocks de una API externa que cubre los caminos felices y de error del cliente HTTP del capstone."
+
+  - id: f2
+    nombre: LLMs, prompting y tool use
+    horas: 60
+    certificacion_ancla: null
+    criterio_dominio_fase: >
+      Construir un asistente CLI que use tool calling con al menos 3
+      herramientas reales, devuelva salidas estructuradas validadas, maneje
+      errores de API con reintentos y registre el costo en tokens de cada
+      sesión.
+    capstone: "Capa LLM: el asistente responde con tool calling y salidas estructuradas."
+    topicos:
+      - id: f2.como-funciona-llm
+        nombre: Cómo funciona un LLM
+        tipo: conceptual
+        conceptos: [tokens y tokenización, ventana de contexto, temperatura y sampling, embeddings como representación]
+        tecnologias: []
+        criterio_dominio: "Redacta un diseño de 1 página que explique tokens/contexto/temperatura y prediga el efecto de 3 configuraciones de sampling, verificando luego las predicciones contra la API real."
+      - id: f2.llamadas-api
+        nombre: Llamadas a APIs de LLM
+        tipo: codigo
+        conceptos: [estructura de mensajes, streaming, reintentos con backoff, conteo de tokens y costos]
+        tecnologias: [Anthropic API, OpenAI API]
+        criterio_dominio: "Cliente que llama a ambos proveedores con streaming, reintentos con backoff exponencial y registro del costo en tokens de cada request."
+      - id: f2.prompting-estructurado
+        nombre: Prompt engineering estructurado
+        tipo: mixto
+        conceptos: [system prompts como contratos, few-shot, estructura con XML/secciones, versionado de prompts]
+        tecnologias: []
+        criterio_dominio: "Diseña 2 versiones de un system prompt para la misma tarea y demuestra con 10 casos de prueba cuál rinde mejor y por qué."
+      - id: f2.tool-use
+        nombre: Tool use / function calling
+        tipo: codigo
+        conceptos: [definición de herramientas, ciclo llamada-resultado, manejo de errores de herramienta]
+        tecnologias: [Anthropic API]
+        criterio_dominio: "Implementa el loop completo de tool calling con 3 herramientas reales y manejo de errores de herramienta sin romper la conversación."
+      - id: f2.salidas-estructuradas
+        nombre: Salidas estructuradas
+        tipo: codigo
+        conceptos: [JSON mode, structured outputs, validación con Pydantic, reintento ante salidas inválidas]
+        tecnologias: [Pydantic]
+        criterio_dominio: "Extrae datos estructurados de 20 textos libres hacia un modelo Pydantic con tasa de parseo del 100%, incluyendo estrategia de reintento ante salidas inválidas."
+      - id: f2.multi-proveedor
+        nombre: Multi-proveedor y fallback
+        tipo: mixto
+        conceptos: [diferencias entre modelos, criterios de selección, capa de abstracción, fallback]
+        tecnologias: [Anthropic API, OpenAI API]
+        criterio_dominio: "Implementa una capa de abstracción con fallback entre 2 proveedores y documenta una comparación de costo/latencia/calidad sobre 10 prompts."
+
+  - id: f3
+    nombre: RAG y bases vectoriales
+    horas: 70
+    certificacion_ancla: null
+    criterio_dominio_fase: >
+      Construir un RAG sobre un corpus real de 50+ documentos, con búsqueda
+      híbrida y reranking, y reportar métricas RAGAS (faithfulness y answer
+      relevancy) sobre un set de 20+ preguntas, documentando qué decisión de
+      chunking mejoró más los números y por qué.
+    capstone: "RAG: el asistente responde con base en el corpus del dominio, con métricas de retrieval."
+    topicos:
+      - id: f3.embeddings
+        nombre: Embeddings en profundidad
+        tipo: codigo
+        conceptos: [modelos de embedding, similitud coseno, dimensionalidad, límites de la similitud semántica]
+        tecnologias: [modelos de embedding vía API]
+        criterio_dominio: "Script que embebe 100 frases, calcula similitud coseno y reporta los 5 vecinos más cercanos de consultas dadas, explicando 2 casos donde la similitud engaña."
+      - id: f3.chunking
+        nombre: Estrategias de chunking
+        tipo: codigo
+        conceptos: [chunking por tamaño, semántico y por estructura, solapamiento, trade-offs]
+        tecnologias: []
+        criterio_dominio: "Implementa 3 estrategias de chunking sobre el mismo corpus y compara con métricas de retrieval cuál gana y por qué."
+      - id: f3.pgvector
+        nombre: Vector DB con pgvector
+        tipo: codigo
+        conceptos: [PostgreSQL + pgvector, índices HNSW, consultas kNN, latencia]
+        tecnologias: [pgvector, Docker]
+        criterio_dominio: "Levanta pgvector en Docker, indexa 1.000+ chunks con índice HNSW y sirve consultas kNN con latencia medida."
+      - id: f3.busqueda-hibrida
+        nombre: Búsqueda híbrida y reranking
+        tipo: codigo
+        conceptos: [BM25/keyword + vectorial, fusión RRF, reranking]
+        tecnologias: [pgvector]
+        criterio_dominio: "Añade búsqueda híbrida con fusión RRF y un reranker, y demuestra la mejora sobre 20 queries frente a la búsqueda vectorial pura."
+      - id: f3.pipeline-rag
+        nombre: Pipeline RAG end-to-end
+        tipo: codigo
+        conceptos: [ingesta, indexación, retrieval, generación con contexto, citación de fuentes]
+        tecnologias: [FastAPI, pgvector]
+        criterio_dominio: "Pipeline RAG end-to-end sobre 50+ documentos reales que responde con citas verificables a los chunks fuente."
+      - id: f3.evaluacion-rag
+        nombre: Evaluación de RAG
+        tipo: codigo
+        conceptos: [faithfulness, answer relevancy, context precision, diseño de sets de preguntas]
+        tecnologias: [RAGAS]
+        criterio_dominio: "Reporta métricas RAGAS sobre un set de 20+ preguntas y documenta la decisión de diseño que más movió las métricas."
+
+  - id: f4
+    nombre: Evals y observabilidad
+    horas: 50
+    certificacion_ancla: null
+    criterio_dominio_fase: >
+      Montar una suite de evals automatizada sobre el RAG de la Fase 3 que
+      corra en CI (GitHub Actions) y demostrar que detecta una regresión
+      inyectada a propósito haciendo fallar el pipeline.
+    capstone: "Suite de evals + tracing: cada cambio al asistente pasa por evaluación automática."
+    topicos:
+      - id: f4.datasets-evaluacion
+        nombre: Datasets de evaluación
+        tipo: mixto
+        conceptos: [casos dorados, casos límite, casos adversarios, cobertura del dataset]
+        tecnologias: []
+        criterio_dominio: "Construye un dataset de evaluación de 30+ casos (dorados, límite y adversarios) con el resultado esperado documentado por caso."
+      - id: f4.llm-as-judge
+        nombre: LLM-as-judge
+        tipo: codigo
+        conceptos: [rúbricas programáticas, sesgos del juez, calibración contra etiquetas humanas]
+        tecnologias: [Anthropic API]
+        criterio_dominio: "Implementa un juez LLM con rúbrica y mide su acuerdo contra 20 etiquetas humanas propias, reportando dónde y por qué se equivoca."
+      - id: f4.tracing-langfuse
+        nombre: Tracing y observabilidad
+        tipo: codigo
+        conceptos: [trazas y spans, costo y latencia por request, tasa de error]
+        tecnologias: [Langfuse, Docker]
+        criterio_dominio: "Instrumenta el pipeline con Langfuse self-hosted y localiza, usando las trazas, el paso más caro y el más lento del sistema."
+      - id: f4.regression-testing
+        nombre: Regression testing de prompts
+        tipo: codigo
+        conceptos: [prompts versionados como código, evals por cambio, comparación entre versiones]
+        tecnologias: [pytest]
+        criterio_dominio: "Versiona los prompts del capstone y crea un script de evals que compara dos versiones y bloquea si la nueva empeora las métricas."
+      - id: f4.evals-en-ci
+        nombre: Evals en CI
+        tipo: codigo
+        conceptos: [gates de calidad, presupuesto de evals en CI, reporte de resultados]
+        tecnologias: [GitHub Actions]
+        criterio_dominio: "Pipeline de CI que corre la suite de evals y demuestra que una regresión inyectada a propósito hace fallar el build."
+
+  - id: f5
+    nombre: Agentes y MCP
+    horas: 80
+    certificacion_ancla: null
+    criterio_dominio_fase: >
+      Construir un agente en LangGraph que resuelva una tarea multi-paso real,
+      consumiendo al menos un servidor MCP construido por el estudiante, con
+      checkpointing, un punto de aprobación humana, trazas en Langfuse y evals
+      de la Fase 4 aplicados a su salida.
+    capstone: "Se convierte en agente: ejecuta tareas multi-paso del dominio vía un servidor MCP propio."
+    topicos:
+      - id: f5.anatomia-agente
+        nombre: Anatomía de un agente
+        tipo: mixto
+        conceptos: [loop razonamiento-acción, condiciones de parada, presupuestos de pasos y tokens]
+        tecnologias: [Anthropic API]
+        criterio_dominio: "Implementa desde cero (sin framework) un loop de agente con presupuesto de pasos y condición de parada, y documenta 2 modos de fallo observados."
+      - id: f5.langgraph-grafos
+        nombre: Grafos de estado con LangGraph
+        tipo: codigo
+        conceptos: [nodos, aristas condicionales, estado tipado, enrutamiento]
+        tecnologias: [LangGraph]
+        criterio_dominio: "Migra el agente artesanal a un grafo LangGraph con 4+ nodos y una arista condicional, con tests del enrutamiento."
+      - id: f5.checkpointing-hitl
+        nombre: Checkpointing y human-in-the-loop
+        tipo: codigo
+        conceptos: [persistencia de estado, interrupciones, aprobación humana, reanudación]
+        tecnologias: [LangGraph]
+        criterio_dominio: "Agente con checkpointing que se interrumpe antes de una acción irreversible, espera aprobación humana y retoma desde el checkpoint."
+      - id: f5.memoria
+        nombre: Memoria de agentes
+        tipo: codigo
+        conceptos: [memoria de corto plazo en contexto, memoria de largo plazo persistida, recuperación de memorias]
+        tecnologias: [LangGraph, pgvector]
+        criterio_dominio: "Añade memoria persistida entre ejecuciones y demuestra con un caso reproducible que el agente usa lo aprendido en una corrida anterior."
+      - id: f5.mcp-servidor
+        nombre: Servidores MCP
+        tipo: codigo
+        conceptos: [protocolo MCP, herramientas y recursos, servidor y cliente, ciclo de mensajes]
+        tecnologias: [MCP Python SDK]
+        criterio_dominio: "Construye un servidor MCP propio con 2+ herramientas y conéctalo a un cliente, con logs que muestren el ciclo completo de mensajes."
+      - id: f5.multiagente-guardrails
+        nombre: Multi-agente y guardrails
+        tipo: mixto
+        conceptos: [cuándo multi-agente sí y cuándo es sobre-ingeniería, sandboxing, matriz de permisos]
+        tecnologias: [LangGraph]
+        criterio_dominio: "Redacta el diseño justificado (single vs. multi-agente) del capstone con matriz de permisos por herramienta e implementa un guardrail de acción irreversible."
+
+  - id: f6
+    nombre: Deployment y LLMOps
+    horas: 70
+    certificacion_ancla: "AWS Certified AI Practitioner (o Azure AI-102 si el stack objetivo es Microsoft)"
+    criterio_dominio_fase: >
+      Desplegar el agente de la Fase 5 en AWS con CI/CD completo (tests +
+      evals como gate), observabilidad en producción, un mecanismo de defensa
+      contra prompt injection demostrable y un reporte del costo mensual
+      estimado del sistema bajo una carga definida.
+    capstone: "Desplegado en AWS con CI/CD, observabilidad y defensa contra prompt injection."
+    topicos:
+      - id: f6.docker
+        nombre: Contenedores con Docker
+        tipo: codigo
+        conceptos: [imágenes, multi-stage builds, tamaño y seguridad de la imagen]
+        tecnologias: [Docker]
+        criterio_dominio: "Containeriza el servicio con un multi-stage build que reduce el tamaño de imagen 50%+ frente a la versión ingenua y corre los tests dentro del contenedor."
+      - id: f6.despliegue-aws
+        nombre: Despliegue en AWS
+        tipo: codigo
+        conceptos: [contenedores gestionados o serverless, redes básicas, gestión de secretos]
+        tecnologias: [AWS ECS/Fargate o Lambda]
+        criterio_dominio: "Despliega el servicio en AWS accesible por HTTPS con los secretos gestionados fuera del código."
+      - id: f6.cicd
+        nombre: CI/CD del sistema
+        tipo: codigo
+        conceptos: [pipeline test + evals + deploy, entornos, rollback]
+        tecnologias: [GitHub Actions]
+        criterio_dominio: "Pipeline que despliega automáticamente al pasar tests y evals, con un rollback demostrado en vivo."
+      - id: f6.seguridad-llm
+        nombre: Seguridad de sistemas LLM
+        tipo: mixto
+        conceptos: [prompt injection directa e indirecta, manejo de secretos, rate limiting]
+        tecnologias: []
+        criterio_dominio: "Demuestra un ataque de prompt injection exitoso contra el sistema sin defensa y luego la defensa que lo bloquea, documentando ambos."
+      - id: f6.operacion-costos
+        nombre: Operación y costos
+        tipo: codigo
+        conceptos: [monitoreo de latencia/costo/errores, caching, fallback entre modelos, presupuestos de tokens]
+        tecnologias: [Langfuse]
+        criterio_dominio: "Implementa caching y fallback entre modelos, y entrega un reporte de costo mensual estimado bajo una carga definida con datos reales de trazas."
+      - id: f6.cert-ai-practitioner
+        nombre: Preparación de la certificación ancla
+        tipo: conceptual
+        conceptos: [dominios del examen, formato de preguntas, brechas propias]
+        tecnologias: []
+        criterio_dominio: "Obtiene 80%+ en 2 exámenes de práctica completos de la certificación elegida, con revisión escrita de cada pregunta fallada."
+
+  - id: f7
+    nombre: Modelos abiertos y fine-tuning selectivo
+    horas: 60
+    certificacion_ancla: null
+    criterio_dominio_fase: >
+      Hacer fine-tuning LoRA de un modelo abierto pequeño para una tarea
+      específica y publicar una comparación con evals contra el mejor prompt
+      sobre un modelo frontera: métricas, costo y latencia de ambas rutas,
+      con recomendación justificada.
+    capstone: "Un componente sensible a costo/latencia se compara (o migra) contra un modelo abierto fine-tuneado."
+    topicos:
+      - id: f7.ecosistema-abierto
+        nombre: Ecosistema de modelos abiertos
+        tipo: conceptual
+        conceptos: [familias y tamaños, licencias, requisitos de hardware, casos de uso]
+        tecnologias: [Hugging Face]
+        criterio_dominio: "Elabora una tabla de decisión de 5+ modelos abiertos (tamaño, licencia, hardware, caso de uso) y justifica por escrito la elección para el capstone."
+      - id: f7.inferencia-local
+        nombre: Inferencia local y self-hosted
+        tipo: codigo
+        conceptos: [cuantización, trade-offs de latencia/costo/privacidad]
+        tecnologias: [Ollama]
+        criterio_dominio: "Sirve un modelo cuantizado con Ollama detrás de la misma interfaz del capstone y mide latencia y calidad frente al modelo frontera con la suite de evals."
+      - id: f7.arbol-decision
+        nombre: Prompting vs. RAG vs. fine-tuning
+        tipo: conceptual
+        conceptos: [el árbol de decisión y su orden, datos requeridos por cada ruta, costos]
+        tecnologias: []
+        criterio_dominio: "Resuelve por escrito 5 escenarios dados eligiendo prompting/RAG/fine-tuning con justificación de costos y datos requeridos en cada uno."
+      - id: f7.lora-finetuning
+        nombre: Fine-tuning con LoRA
+        tipo: codigo
+        conceptos: [LoRA/QLoRA, preparación del dataset, entrenamiento, guardado de adaptadores]
+        tecnologias: [Unsloth o PEFT]
+        criterio_dominio: "Fine-tunea con LoRA un modelo pequeño sobre un dataset propio de 200+ ejemplos y guarda el adaptador de forma reproducible (script + config)."
+      - id: f7.comparacion-honesta
+        nombre: Comparación honesta de rutas
+        tipo: codigo
+        conceptos: [evaluación comparativa con la misma suite, reporte de métricas/costo/latencia]
+        tecnologias: [RAGAS, Langfuse]
+        criterio_dominio: "Publica la comparación fine-tune vs. mejor prompt frontera con métricas, costo y latencia de ambas rutas y una recomendación justificada."
+
+  - id: f8
+    nombre: Portafolio y perfil profesional
+    horas: 40
+    certificacion_ancla: null
+    criterio_dominio_fase: >
+      Capstone desplegado públicamente con link funcional + writeup técnico
+      publicado con métricas reales + repo curado, y un simulacro de
+      entrevista de system design de un sistema LLM resuelto por escrito
+      (problema → arquitectura → trade-offs → evals).
+    capstone: "Demo pública + writeup con la arquitectura y las métricas del sistema completo."
+    topicos:
+      - id: f8.repos-curados
+        nombre: Repos curados
+        tipo: codigo
+        conceptos: [README con arquitectura y decisiones, demo reproducible, historia limpia]
+        tecnologias: [GitHub]
+        criterio_dominio: "README del capstone con diagrama de arquitectura, decisiones documentadas y una demo reproducible por un tercero en menos de 10 minutos."
+      - id: f8.writeup
+        nombre: Writeup técnico
+        tipo: mixto
+        conceptos: [narrativa técnica, métricas reales, honestidad sobre limitaciones]
+        tecnologias: []
+        criterio_dominio: "Publica un writeup técnico del capstone con métricas reales y una sección explícita de limitaciones."
+      - id: f8.demo-publica
+        nombre: Demo pública con costos acotados
+        tipo: codigo
+        conceptos: [acceso público, límites de uso, hardening mínimo, presupuesto]
+        tecnologias: [AWS]
+        criterio_dominio: "Capstone accesible públicamente con límites de uso que acotan el costo mensual a un presupuesto definido y documentado."
+      - id: f8.system-design-llm
+        nombre: System design de sistemas LLM
+        tipo: conceptual
+        conceptos: [formato de entrevista, arquitectura y trade-offs, plan de evals como parte del diseño]
+        tecnologias: []
+        criterio_dominio: "Resuelve por escrito 2 problemas de system design de sistemas LLM en 45 minutos cada uno, con arquitectura, trade-offs y plan de evals."

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "diagnostico": {
+    "estado": "pendiente",
+    "completado_en": null,
+    "notas": []
+  },
+  "posicion_actual": null,
+  "fortalezas": [],
+  "debilidades": [],
+  "topicos": {},
+  "sesiones_completadas": 0,
+  "ultima_sesion": null,
+  "_reglas": [
+    "Todo topico ausente de 'topicos' esta en status no_visto",
+    "Estados validos: visto, aprendido, dominado",
+    "Solo el tutor escribe este archivo, al cierre de cada sesion (ver CLAUDE.md)"
+  ]
+}
