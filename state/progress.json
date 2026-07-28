@@ -11,36 +11,40 @@
       "Frontera: inicio de F1. Primer topico a trabajar: f1.python-profesional."
     ]
   },
-  "posicion_actual": "f1.python-profesional",
+  "posicion_actual": "f1.git-flujo",
   "fortalezas": [
     "Sintaxis basica de Python (funciones, loops, guardas, continue) verificada sin ayuda.",
-    "Type hints en firmas y excepciones propias: ejercicio 01 resuelto por su cuenta (4/4).",
-    "dataclasses: ejercicio 02 resuelto por su cuenta (5/5). Campos ordenados, __post_init__ con validacion y ConfigError informativo.",
-    "Lee y depura output de pytest por su cuenta: encontro y corrigio raise faltante y error de frontera <= vs < sin que se le diera la solucion.",
-    "Repaso S2 superado: explico split('=', 1) y el valor de excepciones con nombre correctamente de memoria."
+    "Type hints en firmas + excepciones propias (ejercicio 01, 4/4).",
+    "dataclasses con __post_init__ y validacion fail-fast (ejercicio 02, 5/5). Entiende __repr__/__eq__ generados.",
+    "Estructura de paquete: __init__.py con imports relativos y __all__; distingue F401 basura vs re-export (ejercicio 03).",
+    "Herramental moderno: uv y ruff instalados y usados. Lee y actua sobre el output de ruff y pytest por su cuenta.",
+    "Depuracion autonoma: encontro y corrigio sus propios bugs (raise faltante, frontera <=, self-import circular) con solo pistas conceptuales."
   ],
   "debilidades": [
-    "Error de frontera <= vs < (cometido en 02, corregido). Vigilar en futuros validators.",
-    "Olvido de 'raise' al lanzar excepcion (cometido en 02, corregido). Vigilar.",
-    "Entornos y gestion de dependencias con uv (no instalado, no visto).",
-    "Linting con ruff y revision de tipos (no instalado, no visto).",
-    "Estructura de paquetes Python (no vista).",
+    "Error de frontera <= vs < y olvido de 'raise' (cometidos y corregidos en 02). Vigilar en validators futuros.",
+    "Import circular por self-import en __init__.py (cometido y corregido en 03). Reforzar imports relativos.",
+    "Revision de tipos con type-checker dedicado (mypy/pyright) aun NO ejecutada: el codigo esta tipado y pasa ruff, pero falta correr un type-check formal. Enganchar en f1.apis-rest-fastapi.",
+    "Gestion completa de proyectos con uv (uv init/add/run, lockfile) vista de forma conceptual pero no practicada a fondo. Reforzar al montar el capstone.",
+    "Git a nivel de flujo (branches, PRs, conflictos): usa commits basicos pero el topico f1.git-flujo no se ha trabajado. <- posicion_actual.",
     "Todo el stack de AI Engineer de F2 en adelante: sin exposicion."
   ],
   "topicos": {
     "f1.python-profesional": {
-      "status": "visto",
+      "status": "aprendido",
       "ultima_sesion": "2026-07-27",
-      "intentos": 2,
+      "next_review": "2026-07-29",
+      "intentos": 3,
       "notas": [
-        "S1: type hints + excepciones propias + control de flujo (continue). Ejercicio 01-tags-tipados 4/4 por su cuenta.",
-        "S2: dataclasses (@dataclass, campos con/ sin default, __post_init__, __repr__/__eq__ generados). Ejercicio 02-config-dataclass 5/5 por su cuenta con pistas 1-2. Bugs propios encontrados via pytest: ConfigError sin raise, y frontera < vs <=.",
-        "S2 repaso: split('=', 1) y excepciones con nombre — interiorizados (recuperacion activa OK).",
-        "PENDIENTE para llegar a aprendido/dominado del topico: uv (entornos), ruff (lint), revision de tipos, refactor a paquete. El criterio_dominio del topico exige eso. Proxima sesion cierra el topico."
+        "S1: type hints + excepciones propias + control de flujo. Ejercicio 01-tags-tipados 4/4.",
+        "S2: dataclasses (@dataclass, defaults/orden, __post_init__ fail-fast, __repr__/__eq__). Ejercicio 02-config-dataclass 5/5.",
+        "S3: paquete aiconfig (tags.py + config.py + __init__.py con imports relativos y __all__) + ruff limpio + pytest 4/4. Ejercicio 03-paquete-config. Aprendio a distinguir F401 basura vs re-export.",
+        "PASA A APRENDIDO: refactor a paquete tipado que pasa ruff, resuelto por su cuenta con pistas 1-2 en las 3 sesiones.",
+        "CAVEAT del criterio_dominio: 'revision de tipos sin errores' con type-checker dedicado (mypy/pyright) NO corrida aun; codigo tipado y ruff-clean. Cerrar ese cabo en f1.apis-rest-fastapi.",
+        "Repaso dominado pendiente: recuperacion activa >=2 dias (a partir de 2026-07-29) sobre dataclasses/__post_init__ y estructura de paquete/__all__."
       ]
     }
   },
-  "sesiones_completadas": 2,
+  "sesiones_completadas": 3,
   "ultima_sesion": "2026-07-27",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
