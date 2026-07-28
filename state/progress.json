@@ -1,16 +1,29 @@
 {
   "version": 1,
   "diagnostico": {
-    "estado": "pendiente",
-    "completado_en": null,
-    "notas": []
+    "estado": "completado",
+    "completado_en": "2026-07-27",
+    "notas": [
+      "Autoevaluacion inicial: F1=parcial, F2-F8=no.",
+      "Al iniciar verificacion, el estudiante rebajo F1 y pidio 'empezar desde cero'.",
+      "Calibracion de ritmo: 'programo algo, Python basico' — sabe funciones/loops basicos, pero sin type hints, sin entornos (uv), sin estructura de paquetes.",
+      "No se corrio ningun ejercicio de codigo: el estudiante se declaro principiante y no habia ninguna afirmacion que verificar hacia arriba. Estado conservador: todo no_visto.",
+      "Frontera: inicio de F1. Primer topico a trabajar: f1.python-profesional."
+    ]
   },
-  "posicion_actual": null,
-  "fortalezas": [],
-  "debilidades": [],
+  "posicion_actual": "f1.python-profesional",
+  "fortalezas": [
+    "Sintaxis basica de Python (funciones, loops) autodeclarada — a verificar en la primera sesion."
+  ],
+  "debilidades": [
+    "Type hints y tipado explicito (no usados aun).",
+    "Entornos y gestion de dependencias con uv.",
+    "Estructura de paquetes Python.",
+    "Todo el stack de AI Engineer de F2 en adelante: sin exposicion."
+  ],
   "topicos": {},
   "sesiones_completadas": 0,
-  "ultima_sesion": null,
+  "ultima_sesion": "2026-07-27",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
