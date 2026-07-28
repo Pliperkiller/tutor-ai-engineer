@@ -13,16 +13,31 @@
   },
   "posicion_actual": "f1.python-profesional",
   "fortalezas": [
-    "Sintaxis basica de Python (funciones, loops) autodeclarada — a verificar en la primera sesion."
+    "Sintaxis basica de Python (funciones, loops) verificada en sesion 1: escribe un for con guardas y continue sin ayuda.",
+    "Type hints en firmas y excepciones propias: resolvio el ejercicio 01 correctamente (pistas conceptuales, nunca la solucion)."
   ],
   "debilidades": [
-    "Type hints y tipado explicito (no usados aun).",
-    "Entornos y gestion de dependencias con uv.",
-    "Estructura de paquetes Python.",
+    "Distincion listas vs. dict al empezar: pregunto 'como hago append a un dict' (se aclaro en sesion).",
+    "Edge case split('=') vs split('=', 1): dejo vivo el caso de valores con '=' (no roto por tests, pendiente de interiorizar).",
+    "Entornos y gestion de dependencias con uv (no instalado, no visto).",
+    "Linting con ruff y revision de tipos (no instalado, no visto).",
+    "dataclasses y estructura de paquetes Python (no vistos).",
     "Todo el stack de AI Engineer de F2 en adelante: sin exposicion."
   ],
-  "topicos": {},
-  "sesiones_completadas": 0,
+  "topicos": {
+    "f1.python-profesional": {
+      "status": "visto",
+      "ultima_sesion": "2026-07-27",
+      "intentos": 1,
+      "notas": [
+        "Sesion 1: cubierto type hints + excepciones propias + control de flujo (continue). Ejercicio 01-tags-tipados resuelto por su cuenta con pistas 1-2 (nunca solucion completa): 4/4 pytest.",
+        "Necesito guia sobre: split para separar, asignacion a dict (no append), y orden de guardas en el loop.",
+        "PENDIENTE del topico para llegar a aprendido/dominado: uv (entornos), ruff (lint), revision de tipos, dataclasses, refactor a paquete. El criterio_dominio del topico exige todo eso.",
+        "Edge lurking: split('=') se rompe con valores que contienen '='; usar split('=', 1). Convertir en item de repaso."
+      ]
+    }
+  },
+  "sesiones_completadas": 1,
   "ultima_sesion": "2026-07-27",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
