@@ -32,6 +32,8 @@
     "Conciencia de HEAD: creo la branch pero committeo parado en main (S5); requirio reparacion guiada (merge ff a la branch + reset --hard origin/main en main). Verificar en el proximo trabajo con branches.",
     "Mensajes de commit/merge: mejoro (documento el merge del conflicto) pero solo menciono 1 de los 3 parametros de la decision. Seguir puliendo 'el mensaje documenta el porque completo'.",
     "Criterio de dominio de f1.git-flujo INCOMPLETO: lleva 1 branch via PR (necesita 2+) y 9 commits (necesita 10+). Falta ademas conflicto resuelto VIA PR. Cerrar en el review del topico.",
+    "PATRON RECURRENTE (2 veces): guard invertido — <= vs < en ejercicio 02 de python, if sin not en el field_validator de pydantic 01. Habito a instalar: leer la condicion de rechazo en voz alta. Vigilar en todo validator futuro.",
+    "Entorno Python: el terminal de VS Code resolvia python3 al del sistema (/usr/bin) en vez del de pyenv → 'No module named pytest'. Fix de raiz pendiente (pyenv init en el shell del terminal integrado). Se resolvera de fondo con uv por proyecto en el capstone.",
     "Todo el stack de AI Engineer de F2 en adelante: sin exposicion."
   ],
   "topicos": {
@@ -63,9 +65,22 @@
         "PASA A APRENDIDO: ejercicio resuelto por su cuenta con pistas nivel 1-2. next_review 2026-07-31 (+2).",
         "PENDIENTE para cerrar criterio_dominio (hacer en el review): 2do PR con conflicto resuelto VIA PR; con eso llega a 2+ branches via PR y 10+ commits."
       ]
+    },
+    "f1.pydantic-validacion": {
+      "status": "visto",
+      "ultima_sesion": "2026-07-29",
+      "next_review": null,
+      "intentos": 1,
+      "notas": [
+        "S6 (2026-07-29): parte 1 — BaseModel, coercion desde dicts/JSON, Field constraints (ge/le/gt/default), field_validator con el contrato recibe-valida-devuelve. Ejercicio 01-config-pydantic (tipo test): 6/6 tras pistas nivel 1-2.",
+        "Errores del dia (ambos corregidos por el mismo): typo modelo= por mode= en el decorador (leyo el TypeError y lo hallo), y guard invertido en el validator (if sin not) — 2da ocurrencia del patron, ver debilidades.",
+        "Entiende el contraste con __post_init__ de dataclasses: validacion declarativa + coercion + errores en lote vs fail-fast manual.",
+        "Pregunta abierta para la proxima sesion (recuperacion activa): como recolecta Pydantic 3 errores en un solo ValidationError si el validator lanza ValueError.",
+        "PENDIENTE parte 2 del topico: modelos anidados, validators multi-campo (model_validator), serializacion (model_dump/model_dump_json). El criterio_dominio (3+ modelos anidados + tests propios) se trabaja ahi."
+      ]
     }
   },
-  "sesiones_completadas": 5,
+  "sesiones_completadas": 6,
   "ultima_sesion": "2026-07-29",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
