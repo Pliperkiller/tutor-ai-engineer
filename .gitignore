@@ -8,6 +8,9 @@ data/
 # SO / editor
 .DS_Store
 
+# Repos de práctica de git (anidados, no se trackean desde este repo)
+ejercicios/fase-1/f1.git-flujo/*/repo-practica/
+
 # Stack del tema (AI Engineer)
 __pycache__/
 *.py[cod]
