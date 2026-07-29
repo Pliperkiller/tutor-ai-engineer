@@ -11,7 +11,7 @@
       "Frontera: inicio de F1. Primer topico a trabajar: f1.python-profesional."
     ]
   },
-  "posicion_actual": "f1.git-flujo",
+  "posicion_actual": "f1.pydantic-validacion",
   "fortalezas": [
     "Sintaxis basica de Python (funciones, loops, guardas, continue) verificada sin ayuda.",
     "Type hints en firmas + excepciones propias (ejercicio 01, 4/4).",
@@ -19,16 +19,19 @@
     "Estructura de paquete: __init__.py con imports relativos y __all__; distingue F401 basura vs re-export (ejercicio 03).",
     "Herramental moderno: uv y ruff instalados y usados. Lee y actua sobre el output de ruff y pytest por su cuenta.",
     "Depuracion autonoma: encontro y corrigio sus propios bugs (raise faltante, frontera <=, self-import circular) con solo pistas conceptuales.",
-    "Git: branches, merge y resolucion de conflicto real (mezcla de ambos lados, sin marcadores residuales) por su cuenta. Predicciones escritas antes de ejecutar."
+    "Git: branches, merge y resolucion de conflicto real (mezcla de ambos lados, sin marcadores residuales) por su cuenta. Predicciones escritas antes de ejecutar.",
+    "Fast-forward vs merge commit: gap de S4 CERRADO — en S5 lo explico correctamente 2 veces con sus palabras (incluido 'no se crea ningun commit, solo se mueve el puntero' tras una precision).",
+    "Flujo remoto: publico repo con gh, push de branches, PR creado y fusionado via gh pr merge. Entiende que el PR vive en GitHub (no en el working copy) y que GitHub --merge siempre crea merge commit aunque fuera posible FF (lo detecto el mismo en P3).",
+    "Modelo mental de remotos: tras perder la historia local por rm -rf (setup.sh re-corrido), articulo por que ni reflog ni pull podian recuperarla (todo vive en .git/ y no habia copia remota)."
   ],
   "debilidades": [
     "Error de frontera <= vs < y olvido de 'raise' (cometidos y corregidos en 02). Vigilar en validators futuros.",
     "Import circular por self-import en __init__.py (cometido y corregido en 03). Reforzar imports relativos.",
     "Revision de tipos con type-checker dedicado (mypy/pyright) aun NO ejecutada: el codigo esta tipado y pasa ruff, pero falta correr un type-check formal. Enganchar en f1.apis-rest-fastapi.",
     "Gestion completa de proyectos con uv (uv init/add/run, lockfile) vista de forma conceptual pero no practicada a fondo. Reforzar al montar el capstone.",
-    "Fast-forward vs merge commit: predijo commit de merge donde hubo fast-forward; el concepto 'branch = puntero' requirio explicacion completa. Verificar en el repaso de f1.git-flujo.",
-    "Mensajes de commit: dejo el mensaje por defecto en el merge del conflicto en vez de documentar la decision. Reforzar 'el mensaje documenta el porque'.",
-    "Git flujo remoto (GitHub, PRs, review) aun sin practicar: solo flujo local. Parte 2 del topico.",
+    "Conciencia de HEAD: creo la branch pero committeo parado en main (S5); requirio reparacion guiada (merge ff a la branch + reset --hard origin/main en main). Verificar en el proximo trabajo con branches.",
+    "Mensajes de commit/merge: mejoro (documento el merge del conflicto) pero solo menciono 1 de los 3 parametros de la decision. Seguir puliendo 'el mensaje documenta el porque completo'.",
+    "Criterio de dominio de f1.git-flujo INCOMPLETO: lleva 1 branch via PR (necesita 2+) y 9 commits (necesita 10+). Falta ademas conflicto resuelto VIA PR. Cerrar en el review del topico.",
     "Todo el stack de AI Engineer de F2 en adelante: sin exposicion."
   ],
   "topicos": {
@@ -47,20 +50,22 @@
       ]
     },
     "f1.git-flujo": {
-      "status": "visto",
+      "status": "aprendido",
       "ultima_sesion": "2026-07-29",
-      "next_review": null,
-      "intentos": 1,
+      "next_review": "2026-07-31",
+      "intentos": 2,
       "notas": [
-        "S4 (2026-07-29): branches, merge, fast-forward vs merge commit, resolucion de conflicto. Ejercicio 01-branches-conflicto (debug+predecir) resuelto por su cuenta: conflicto resuelto con mezcla correcta (opus + temp 0.2 + 2048), branch propia con 2 commits atomicos, todo fusionado.",
-        "Gap conceptual del dia: fast-forward. Predijo commit de merge; tras nudge no lo vio en su graph y requirio la explicacion completa de 'branch = puntero'. Luego corrigio P2 con sus palabras.",
-        "Detalle: dejo el mensaje por defecto en el merge commit del conflicto (el enunciado pedia documentar la decision).",
-        "PENDIENTE parte 2 del topico: remoto GitHub, pull requests, review, conflicto via PR. El criterio_dominio (repo publicado, 2+ branches via PR, 10+ commits) aun no se cumple.",
-        "Config propia: aprendio git config --global core.editor vi y a leer git log --oneline --graph --all."
+        "S4 (2026-07-29): branches, merge, fast-forward vs merge commit, resolucion de conflicto. Ejercicio 01-branches-conflicto (debug+predecir) resuelto por su cuenta.",
+        "S5 (2026-07-29, mismo dia): parte 2 — remoto GitHub y PRs. Ejercicio 02-remoto-pr: publico repo asistente-config (Pliperkiller/asistente-config), branch docs-parametros con 2 commits atomicos, PR #1 creado y fusionado via gh. P1/P2/P3 escritas antes de ejecutar; en P3 detecto el mismo que GitHub --merge crea merge commit donde git local haria FF.",
+        "Incidente formativo S5: re-corrio setup.sh y perdio la historia local (rm -rf del .git). Se uso como leccion: git solo protege lo que esta en un .git vivo o en un remoto. Rehizo merge+conflicto de memoria como recuperacion activa (mensaje de merge esta vez documentado, aunque parcial).",
+        "Error S5: committeo en main con la branch docs-parametros ya creada → PR 'main into main'. Reparado con guia (merge ff + reset --hard origin/main). Gap de conciencia de HEAD a vigilar.",
+        "Entorno: gh via snap tiene bug 'remote-https is not a git command' cuando gh ejecuta git (push interno, --delete-branch). Workaround acordado: push siempre con git; gh solo para operaciones de API. Fix definitivo pendiente: gh via apt.",
+        "PASA A APRENDIDO: ejercicio resuelto por su cuenta con pistas nivel 1-2. next_review 2026-07-31 (+2).",
+        "PENDIENTE para cerrar criterio_dominio (hacer en el review): 2do PR con conflicto resuelto VIA PR; con eso llega a 2+ branches via PR y 10+ commits."
       ]
     }
   },
-  "sesiones_completadas": 4,
+  "sesiones_completadas": 5,
   "ultima_sesion": "2026-07-29",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
