@@ -1,0 +1,19 @@
+{
+  "nombre": "asistente-docs",
+  "modelo": {
+    "modelo": "claude-sonnet-5",
+    "temperatura": "0.3",
+    "max_tokens": 2048
+  },
+  "herramientas": [
+    {
+      "nombre": "buscar_docs",
+      "descripcion": "Busca en la documentacion del proyecto por palabra clave.",
+      "timeout_s": 10
+    },
+    {
+      "nombre": "leer_archivo",
+      "descripcion": "Lee el contenido completo de un archivo de texto."
+    }
+  ]
+}

@@ -11,7 +11,7 @@
       "Frontera: inicio de F1. Primer topico a trabajar: f1.python-profesional."
     ]
   },
-  "posicion_actual": "f1.pydantic-validacion",
+  "posicion_actual": "f1.async-basico",
   "fortalezas": [
     "Sintaxis basica de Python (funciones, loops, guardas, continue) verificada sin ayuda.",
     "Type hints en firmas + excepciones propias (ejercicio 01, 4/4).",
@@ -32,7 +32,8 @@
     "Conciencia de HEAD: creo la branch pero committeo parado en main (S5); requirio reparacion guiada (merge ff a la branch + reset --hard origin/main en main). Verificar en el proximo trabajo con branches.",
     "Mensajes de commit/merge: mejoro (documento el merge del conflicto) pero solo menciono 1 de los 3 parametros de la decision. Seguir puliendo 'el mensaje documenta el porque completo'.",
     "Criterio de dominio de f1.git-flujo INCOMPLETO: lleva 1 branch via PR (necesita 2+) y 9 commits (necesita 10+). Falta ademas conflicto resuelto VIA PR. Cerrar en el review del topico.",
-    "PATRON RECURRENTE (2 veces): guard invertido — <= vs < en ejercicio 02 de python, if sin not en el field_validator de pydantic 01. Habito a instalar: leer la condicion de rechazo en voz alta. Vigilar en todo validator futuro.",
+    "PATRON guard invertido (2 ocurrencias historicas): EN REMISION — en S7 escribio 3/3 condiciones de rechazo correctas a la primera usando el habito de leerlas en voz alta. Una sesion mas limpia y se retira de esta lista.",
+    "Tests que pasan por la razon equivocada: en S7 puso asserts DENTRO del with pytest.raises (nunca se ejecutan) y un caso invalido que disparaba otro validator del esperado. Corregidos con guia; reforzar el habito de auditar 'por que pasa este test' cuando llegue f1.testing-pytest.",
     "Entorno Python: el terminal de VS Code resolvia python3 al del sistema (/usr/bin) en vez del de pyenv → 'No module named pytest'. Fix de raiz pendiente (pyenv init en el shell del terminal integrado). Se resolvera de fondo con uv por proyecto en el capstone.",
     "Todo el stack de AI Engineer de F2 en adelante: sin exposicion."
   ],
@@ -67,21 +68,23 @@
       ]
     },
     "f1.pydantic-validacion": {
-      "status": "visto",
-      "ultima_sesion": "2026-07-29",
-      "next_review": null,
-      "intentos": 1,
+      "status": "aprendido",
+      "ultima_sesion": "2026-07-30",
+      "next_review": "2026-08-01",
+      "intentos": 2,
       "notas": [
         "S6 (2026-07-29): parte 1 — BaseModel, coercion desde dicts/JSON, Field constraints (ge/le/gt/default), field_validator con el contrato recibe-valida-devuelve. Ejercicio 01-config-pydantic (tipo test): 6/6 tras pistas nivel 1-2.",
-        "Errores del dia (ambos corregidos por el mismo): typo modelo= por mode= en el decorador (leyo el TypeError y lo hallo), y guard invertido en el validator (if sin not) — 2da ocurrencia del patron, ver debilidades.",
         "Entiende el contraste con __post_init__ de dataclasses: validacion declarativa + coercion + errores en lote vs fail-fast manual.",
-        "Pregunta abierta para la proxima sesion (recuperacion activa): como recolecta Pydantic 3 errores en un solo ValidationError si el validator lanza ValueError.",
-        "PENDIENTE parte 2 del topico: modelos anidados, validators multi-campo (model_validator), serializacion (model_dump/model_dump_json). El criterio_dominio (3+ modelos anidados + tests propios) se trabaja ahi."
+        "S7 (2026-07-30): parte 2 — anidacion (Forma A objeto vs Forma B dict crudo y su efecto en loc), model_validator(mode=after), default_factory, roundtrip model_dump_json/model_validate_json. Ejercicio 02-asistente-anidado: 3 modelos anidados + 8 tests propios 8/8, verificado con pytest. P1 (loc anidado) predicha bien.",
+        "Recuperacion activa S7 superada: explico atrapar-y-acumular por campo (pregunta abierta de S6) tras correccion de su hipotesis 'holdear la excepcion'.",
+        "PASA A APRENDIDO: criterio_dominio del topico cumplido (3+ modelos anidados, validators propios, tests validos+invalidos). Pistas nivel 1-2; el esqueleto de pytest se le dio porque testing aun no es topico visto.",
+        "Errores S7 (todos corregidos por el mismo): self.name vs self.nombre; asserts muertos dentro del with pytest.raises (tests verdes mentirosos); test 5 con Forma A no ejercitaba la anidacion. Guard invertido NO reaparecio (3/3 condiciones de rechazo derechas).",
+        "DEUDA para proximo repaso (sin material a la vista): que excepcion lanza self.name cuando el campo es nombre (AttributeError, no ValidationError). Extra: no distinguia aun model_dump() (dict) de model_dump_json() (string) — solo uso la segunda."
       ]
     }
   },
-  "sesiones_completadas": 6,
-  "ultima_sesion": "2026-07-29",
+  "sesiones_completadas": 7,
+  "ultima_sesion": "2026-07-30",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
