@@ -1,6 +1,6 @@
-"""El tutor ejecuta: pytest test_starter.py -q"""
-from starter import funcion_objetivo
+"""The tutor runs: pytest test_starter.py -q"""
+from starter import target_function
 
 
-def test_caso_base():
-    assert funcion_objetivo("<entrada>") == "<salida esperada>"
+def test_base_case():
+    assert target_function("<input>") == "<expected output>"

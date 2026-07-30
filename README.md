@@ -12,16 +12,15 @@ Repo-tutor personal: Claude Code actúa como tutor de AI Engineer siguiendo el r
 
 ```bash
 unzip tutor-ai-engineer.zip && cd tutor-ai-engineer
-git init -b main
-git add -A && git commit -m "init: tutor ai-engineer"
-git remote add origin <url-de-tu-repo-privado>
-git push -u origin main
+claude
+> /setup
 ```
+
+`/setup` inicializa git, te pide crear un repo privado vacío (GitHub/GitLab) y pegarle la URL, hace el primer push y te guía con el troubleshooting si algo falla. Hasta que `/setup` no termine bien, el tutor no ejecuta `/diagnostico` ni `/sesion`.
 
 ## Primera vez
 
 ```bash
-claude
 > /diagnostico
 ```
 
@@ -41,10 +40,14 @@ Al cierre, el tutor actualiza el estado, escribe apuntes y bitácora, y hace **c
 
 | Comando | Qué hace |
 |---|---|
+| `/setup` | Configuración inicial: conectar el repo de progreso (una sola vez) |
 | `/diagnostico` | Sesión 0: ubicarte en el roadmap |
-| `/sesion` | Sesión de estudio de ~30 min (`/sesion <topic_id>` fuerza un tópico) |
+| `/sesion` | Sesión de estudio de ~30 min (`/sesion <topic_id>` fuerza un tópico); si hay una sesión pausada, la retoma con recap |
+| `/break` | Pausar la sesión en curso guardando el contexto en el remoto |
 | `/repaso` | Sesión corta (~15 min) solo de repasos vencidos |
 | `/estado` | Resumen de progreso, solo lectura |
+| `/fase` | Estado de una fase + fecha tentativa de cierre según tu ritmo |
+| `/config` | Ajustar el tutor (commands, roadmap, reglas) y publicar el cambio |
 
 ## Estructura
 
@@ -55,7 +58,8 @@ tutor-ai-engineer/
 ├── docs/roadmap.md        # versión humana del roadmap, con fuentes
 ├── state/
 │   ├── progress.json      # fuente de verdad de tu avance (lo escribe el tutor)
-│   └── sessions/          # bitácora por sesión
+│   ├── sessions/          # bitácora por sesión
+│   └── sesion_en_curso.md # solo existe si hay una sesión pausada con /break
 ├── material/              # apuntes por tópico, generados en sesión
 ├── ejercicios/            # enunciados, esqueletos, tests y tus soluciones
 │   └── _plantilla/        # formato estándar de ejercicio

@@ -8,4 +8,6 @@ Lee `state/progress.json` y `roadmap/roadmap.yaml` y muestra:
 - Sesiones completadas y fecha de la última
 - Sugerencia concreta para la próxima sesión
 
+Para el detalle de una fase con estimación de fecha de cierre, remite a `/fase`.
+
 No modifiques ningún archivo ni hagas commit.

@@ -1,10 +1,10 @@
-"""<topic_id> · <NN> — esqueleto del ejercicio.
+"""<topic_id> · <NN> — exercise skeleton.
 
-Completa los TODO. No cambies las firmas de las funciones:
-el test las importa tal cual.
+Fill in the TODOs. Do not change the function signatures:
+the tests import them as-is.
 """
 
 
-def funcion_objetivo(entrada):
-    # TODO: implementar
+def target_function(input_data):
+    # TODO: implement
     raise NotImplementedError
