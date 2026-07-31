@@ -27,7 +27,9 @@
     "Git: branches, merge y resolucion de conflicto real (mezcla de ambos lados, sin marcadores residuales) por su cuenta. Predicciones escritas antes de ejecutar.",
     "Fast-forward vs merge commit: gap de S4 CERRADO — en S5 lo explico correctamente 2 veces con sus palabras (incluido 'no se crea ningun commit, solo se mueve el puntero' tras una precision).",
     "Flujo remoto: publico repo con gh, push de branches, PR creado y fusionado via gh pr merge. Entiende que el PR vive en GitHub (no en el working copy) y que GitHub --merge siempre crea merge commit aunque fuera posible FF (lo detecto el mismo en P3).",
-    "Modelo mental de remotos: tras perder la historia local por rm -rf (setup.sh re-corrido), articulo por que ni reflog ni pull podian recuperarla (todo vive en .git/ y no habia copia remota)."
+    "Modelo mental de remotos: tras perder la historia local por rm -rf (setup.sh re-corrido), articulo por que ni reflog ni pull podian recuperarla (todo vive en .git/ y no habia copia remota).",
+    "Async: modelo mental del event loop verificado con prediccion exacta (3s vs ~1s en P3, 3.14s vs 0.43s en el ejercicio). Cliente httpx concurrente con gather y AsyncClient compartido escrito por su cuenta (ejercicio 01 async, 10/10).",
+    "Deuda S7 cobrada: explico AttributeError vs ValidationError y model_dump (dict) vs model_dump_json (str) con criterio de uso correcto."
   ],
   "debilidades": [
     "Error de frontera <= vs < y olvido de 'raise' (cometidos y corregidos en 02). Vigilar en validators futuros.",
@@ -72,6 +74,20 @@
         "PENDIENTE para cerrar criterio_dominio (hacer en el review): 2do PR con conflicto resuelto VIA PR; con eso llega a 2+ branches via PR y 10+ commits."
       ]
     },
+    "f1.async-basico": {
+      "status": "aprendido",
+      "ultima_sesion": "2026-07-30",
+      "next_review": "2026-08-01",
+      "intentos": 1,
+      "notas": [
+        "S8 (2026-07-30): event loop, corrutinas, await como 'me pauso y libero al loop', gather vs await secuencial. Ejercicio 01-cliente-concurrente (completar+predecir): 3 TODOs resueltos por su cuenta, 10 requests secuencial 3.14s vs concurrente 0.43s (7.3x), predicciones correctas. Verificado ejecutando.",
+        "Confusion inicial (corregida en sesion): creia que await = 'sigo con otra cosa'; se asento que await pausa al que lo escribe y libera al loop, y que la concurrencia la crea REGISTRAR varias tareas antes de esperar, no await en si.",
+        "PASA A APRENDIDO: criterio_dominio del topico cumplido (10 llamadas concurrentes httpx + medicion vs secuencial). Solo recibio sintaxis de httpx (async with, client.get), no estructura.",
+        "Smell recurrente: renombro l -> iter e id (sombrean builtins). Vigilar nombres que mienten o sombrean.",
+        "PENDIENTE parte 2 (proxima sesion): timeouts y manejo de errores en gather (return_exceptions). El topico no se abandona hasta verlos.",
+        "Pregunta abierta para proximo repaso: por que la concurrente dio 0.43s y no 0.30s (overhead: abrir 10 conexiones TCP, scheduling del loop, servidor atendiendo en threads)."
+      ]
+    },
     "f1.pydantic-validacion": {
       "status": "aprendido",
       "ultima_sesion": "2026-07-30",
@@ -88,7 +104,7 @@
       ]
     }
   },
-  "sesiones_completadas": 7,
+  "sesiones_completadas": 8,
   "ultima_sesion": "2026-07-30",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
