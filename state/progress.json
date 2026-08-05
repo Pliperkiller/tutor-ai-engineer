@@ -31,19 +31,22 @@
     "Async: modelo mental del event loop verificado con prediccion exacta (3s vs ~1s en P3, 3.14s vs 0.43s en el ejercicio). Cliente httpx concurrente con gather y AsyncClient compartido escrito por su cuenta (ejercicio 01 async, 10/10).",
     "Deuda S7 cobrada: explico AttributeError vs ValidationError y model_dump (dict) vs model_dump_json (str) con criterio de uso correcto.",
     "Async parte 2 (S9): cliente robusto con timeout en AsyncClient, gather return_exceptions=True, clasificacion por isinstance y re-raise de lo desconocido. Verificado con 3 experimentos (server flaky 8/1/1 en ~1.1s, puerto muerto, excepcion inyectada). Prediccion P2 exacta.",
-    "Conciencia de HEAD recuperada (S9): explico de memoria que el commit cae donde esta HEAD y como verificarlo (git branch / git status) — el gap del incidente S5 cerro su parte conceptual."
+    "Conciencia de HEAD recuperada (S9): explico de memoria que el commit cae donde esta HEAD y como verificarlo (git branch / git status) — el gap del incidente S5 cerro su parte conceptual.",
+    "FastAPI parte 1 (S10): API de 4 endpoints (path param tipado, body Pydantic, HTTPException 404, 201 en decorador) resuelta por su cuenta con pistas 1-2 y verificada ejecutando (200/404/201/422). P2 (422 y quien lo decide) correcta.",
+    "uv real practicado (S10, deuda cobrada): uv init --bare, uv add fastapi[standard], distincion pyproject (lo pedido) vs uv.lock (lo resuelto), uv run. Entiende .python-version como fix del problema pyenv/python3.",
+    "Conecto conocimiento nuevo en caliente (S10): aplico model_dump() + desempaque ** al POST minutos despues de aprenderlo."
   ],
   "debilidades": [
     "Error de frontera <= vs < y olvido de 'raise' (cometidos y corregidos en 02). Vigilar en validators futuros.",
     "Import circular por self-import en __init__.py (cometido y corregido en 03). Reforzar imports relativos.",
-    "Revision de tipos con type-checker dedicado (mypy/pyright) aun NO ejecutada: el codigo esta tipado y pasa ruff, pero falta correr un type-check formal. Enganchar en f1.apis-rest-fastapi.",
-    "Gestion completa de proyectos con uv (uv init/add/run, lockfile) vista de forma conceptual pero no practicada a fondo. Reforzar al montar el capstone.",
+    "Revision de tipos con type-checker dedicado (mypy/pyright) aun NO ejecutada: el codigo esta tipado y pasa ruff, pero falta correr un type-check formal. Enganchar en fastapi PARTE 2 (el proyecto uv del ejercicio 01 es el candidato ideal).",
     "Conciencia de HEAD: parte conceptual cerrada en S9 (explico HEAD y verificacion de memoria), pero NO conocia git checkout -b / git switch -c (crear branch != moverse a ella — causa raiz del incidente S5). Exigir switch -c + git status en el 2do PR sin recordarselo.",
     "Mensajes de commit/merge: mejoro (documento el merge del conflicto) pero solo menciono 1 de los 3 parametros de la decision. Seguir puliendo 'el mensaje documenta el porque completo'.",
     "Criterio de dominio de f1.git-flujo INCOMPLETO: lleva 1 branch via PR (necesita 2+) y 9 commits (necesita 10+). Falta ademas conflicto resuelto VIA PR. Cerrar en el review del topico.",
     "PATRON guard invertido (2 ocurrencias historicas): EN REMISION — en S7 escribio 3/3 condiciones de rechazo correctas a la primera usando el habito de leerlas en voz alta. Una sesion mas limpia y se retira de esta lista.",
     "Tests que pasan por la razon equivocada: en S7 puso asserts DENTRO del with pytest.raises (nunca se ejecutan) y un caso invalido que disparaba otro validator del esperado. Corregidos con guia; reforzar el habito de auditar 'por que pasa este test' cuando llegue f1.testing-pytest.",
-    "Nombres que sombrean builtins (iter, id): TERCERA ocurrencia en S9, con advertencia explicita en el enunciado. Solo los corrigio al segundo aviso. Seguir exigiendo en cada review de codigo.",
+    "Nombres que sombrean builtins (iter, id): 3 ocurrencias historicas, pero EN REMISION — S10 fue la primera sesion limpia a la primera (model_id sin aviso). Una sesion limpia mas y se retira.",
+    "Diseno de asignacion de ids (S10): en la pregunta del max(keys)+1 solo vio el caso del store vacio (ValueError->500); el RECICLAJE de ids al borrar el mas alto se le tuvo que explicar. Pregunta candidata para el review de fastapi.",
     "Manejo de lo inesperado (S9): excepcion desconocida primero clasificada como ok (cliente que miente), luego dejada caer en silencio (cliente que desaparece errores); el contrato 'else -> raise' requirio 2 iteraciones. Ademas confundio excepcion de red con error HTTP 404/500. Higiene: dejo codigo muerto comentado hasta el 3er aviso.",
     "Entorno Python: el terminal de VS Code resolvia python3 al del sistema (/usr/bin) en vez del de pyenv → 'No module named pytest'. Fix de raiz pendiente (pyenv init en el shell del terminal integrado). Se resolvera de fondo con uv por proyecto en el capstone.",
     "Todo el stack de AI Engineer de F2 en adelante: sin exposicion."
@@ -109,10 +112,24 @@
         "Errores S7 (todos corregidos por el mismo): self.name vs self.nombre; asserts muertos dentro del with pytest.raises (tests verdes mentirosos); test 5 con Forma A no ejercitaba la anidacion. Guard invertido NO reaparecio (3/3 condiciones de rechazo derechas).",
         "DEUDA para proximo repaso (sin material a la vista): que excepcion lanza self.name cuando el campo es nombre (AttributeError, no ValidationError). Extra: no distinguia aun model_dump() (dict) de model_dump_json() (string) — solo uso la segunda."
       ]
+    },
+    "f1.apis-rest-fastapi": {
+      "status": "aprendido",
+      "ultima_sesion": "2026-08-05",
+      "next_review": "2026-08-07",
+      "intentos": 1,
+      "notas": [
+        "S10 (2026-08-04/05): parte 1 — routing por decorador, path param tipado (valida con 422 en loc path), body como modelo Pydantic, HTTPException 404, 422 vs 400, status_code=201 en decorador, /docs autogenerado. Ejercicio 01-registro-modelos (completar+predecir): 4 endpoints resueltos por su cuenta con pistas 1-2, verificado ejecutando (200/404/201/422 body y path).",
+        "Proyecto montado con uv de verdad (init --bare, add fastapi[standard], lock, uv run fastapi dev) — deuda de S6 cobrada.",
+        "Pregunta al porque (max(keys)+1): acerto ValueError con store vacio; NO vio el reciclaje de ids (borrar el mas alto -> POST reusa id -> cliente con referencia vieja recibe datos ajenos con 200). Explicado. PREGUNTA CANDIDATA para el review 2026-08-07.",
+        "P1 reescrita antes de ejecutar (analisis legitimo): se acordo la regla de conservar ambas versiones de una prediccion.",
+        "CONTENIDO INCOMPLETO — parte 2 pendiente: autenticacion por API key (criterio_dominio la exige) + correr mypy/pyright sobre este proyecto (deuda de f1.python-profesional).",
+        "Primera sesion sin sombrear builtins (model_id a la primera)."
+      ]
     }
   },
-  "sesiones_completadas": 9,
-  "ultima_sesion": "2026-08-03",
+  "sesiones_completadas": 10,
+  "ultima_sesion": "2026-08-05",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
