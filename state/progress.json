@@ -16,7 +16,7 @@
       "Frontera: inicio de F1. Primer topico a trabajar: f1.python-profesional."
     ]
   },
-  "posicion_actual": "f1.apis-rest-fastapi",
+  "posicion_actual": "f1.testing-pytest",
   "fortalezas": [
     "Sintaxis basica de Python (funciones, loops, guardas, continue) verificada sin ayuda.",
     "Type hints en firmas + excepciones propias (ejercicio 01, 4/4).",
@@ -34,19 +34,21 @@
     "Conciencia de HEAD recuperada (S9): explico de memoria que el commit cae donde esta HEAD y como verificarlo (git branch / git status) — el gap del incidente S5 cerro su parte conceptual.",
     "FastAPI parte 1 (S10): API de 4 endpoints (path param tipado, body Pydantic, HTTPException 404, 201 en decorador) resuelta por su cuenta con pistas 1-2 y verificada ejecutando (200/404/201/422). P2 (422 y quien lo decide) correcta.",
     "uv real practicado (S10, deuda cobrada): uv init --bare, uv add fastapi[standard], distincion pyproject (lo pedido) vs uv.lock (lo resuelto), uv run. Entiende .python-version como fix del problema pyenv/python3.",
-    "Conecto conocimiento nuevo en caliente (S10): aplico model_dump() + desempaque ** al POST minutos despues de aprenderlo."
+    "Conecto conocimiento nuevo en caliente (S10): aplico model_dump() + desempaque ** al POST minutos despues de aprenderlo.",
+    "FastAPI parte 2 (S11): API key con APIKeyHeader + Depends (inyeccion de dependencias), key desde env var con fallo en arranque, None-check + compare_digest, DELETE 204/404. Resuelto por su cuenta (pistas 1-2), verificado ejecutando: 8/8 curls, mypy limpio, ruff limpio, security scheme en OpenAPI.",
+    "Leyo el codigo fuente de APIKeyHeader.__call__ por iniciativa propia para verificar el mecanismo (auto_error, return None). Habito de fuente primaria.",
+    "P2 de S11 (reciclaje de ids al borrar el mas alto) predicha correctamente ANTES de ejecutar — el gap de diseno de ids de S10 quedo cerrado. Ademas tapo el 500 del store vacio con max(keys, default=0) por iniciativa propia.",
+    "Type-checking formal: mypy corrido y limpio sobre el proyecto FastAPI (deuda de f1.python-profesional COBRADA). Entendio el narrowing de str | None y que el None-check de seguridad y el de mypy son el mismo chequeo.",
+    "Diagnostico causal correcto del 500 de su primera version (compare_digest(None, str) -> TypeError) al preguntarle el porque."
   ],
   "debilidades": [
     "Error de frontera <= vs < y olvido de 'raise' (cometidos y corregidos en 02). Vigilar en validators futuros.",
     "Import circular por self-import en __init__.py (cometido y corregido en 03). Reforzar imports relativos.",
-    "Revision de tipos con type-checker dedicado (mypy/pyright) aun NO ejecutada: el codigo esta tipado y pasa ruff, pero falta correr un type-check formal. Enganchar en fastapi PARTE 2 (el proyecto uv del ejercicio 01 es el candidato ideal).",
     "Conciencia de HEAD: parte conceptual cerrada en S9 (explico HEAD y verificacion de memoria), pero NO conocia git checkout -b / git switch -c (crear branch != moverse a ella — causa raiz del incidente S5). Exigir switch -c + git status en el 2do PR sin recordarselo.",
     "Mensajes de commit/merge: mejoro (documento el merge del conflicto) pero solo menciono 1 de los 3 parametros de la decision. Seguir puliendo 'el mensaje documenta el porque completo'.",
     "Criterio de dominio de f1.git-flujo INCOMPLETO: lleva 1 branch via PR (necesita 2+) y 9 commits (necesita 10+). Falta ademas conflicto resuelto VIA PR. Cerrar en el review del topico.",
-    "PATRON guard invertido (2 ocurrencias historicas): EN REMISION — en S7 escribio 3/3 condiciones de rechazo correctas a la primera usando el habito de leerlas en voz alta. Una sesion mas limpia y se retira de esta lista.",
     "Tests que pasan por la razon equivocada: en S7 puso asserts DENTRO del with pytest.raises (nunca se ejecutan) y un caso invalido que disparaba otro validator del esperado. Corregidos con guia; reforzar el habito de auditar 'por que pasa este test' cuando llegue f1.testing-pytest.",
-    "Nombres que sombrean builtins (iter, id): 3 ocurrencias historicas, pero EN REMISION — S10 fue la primera sesion limpia a la primera (model_id sin aviso). Una sesion limpia mas y se retira.",
-    "Diseno de asignacion de ids (S10): en la pregunta del max(keys)+1 solo vio el caso del store vacio (ValueError->500); el RECICLAJE de ids al borrar el mas alto se le tuvo que explicar. Pregunta candidata para el review de fastapi.",
+    "RETIRADAS en S11 (dejar de vigilar): guard invertido (S7+S11 limpias), sombreado de builtins (S10+S11 limpias), diseno de ids (P2 de S11 predijo el reciclaje por su cuenta), type-check formal (mypy corrido y limpio en S11).",
     "Manejo de lo inesperado (S9): excepcion desconocida primero clasificada como ok (cliente que miente), luego dejada caer en silencio (cliente que desaparece errores); el contrato 'else -> raise' requirio 2 iteraciones. Ademas confundio excepcion de red con error HTTP 404/500. Higiene: dejo codigo muerto comentado hasta el 3er aviso.",
     "Entorno Python: el terminal de VS Code resolvia python3 al del sistema (/usr/bin) en vez del de pyenv → 'No module named pytest'. Fix de raiz pendiente (pyenv init en el shell del terminal integrado). Se resolvera de fondo con uv por proyecto en el capstone.",
     "Todo el stack de AI Engineer de F2 en adelante: sin exposicion."
@@ -54,16 +56,16 @@
   "topicos": {
     "f1.python-profesional": {
       "status": "dominado",
-      "ultima_sesion": "2026-07-29",
-      "next_review": "2026-08-05",
-      "intentos": 3,
+      "ultima_sesion": "2026-08-06",
+      "next_review": "2026-08-27",
+      "intentos": 4,
       "notas": [
         "S1: type hints + excepciones propias + control de flujo. Ejercicio 01-tags-tipados 4/4.",
         "S2: dataclasses (@dataclass, defaults/orden, __post_init__ fail-fast, __repr__/__eq__). Ejercicio 02-config-dataclass 5/5.",
         "S3: paquete aiconfig (tags.py + config.py + __init__.py con imports relativos y __all__) + ruff limpio + pytest 4/4. Ejercicio 03-paquete-config. Aprendio a distinguir F401 basura vs re-export.",
         "S4 (2026-07-29): REVIEW SUPERADA de memoria (orden de campos default, self-import circular vs import relativo, dos salidas del F401). PASA A DOMINADO. Unico cabo: no nombro el TypeError exacto de defaults mal ordenados.",
-        "CAVEAT del criterio_dominio: 'revision de tipos sin errores' con type-checker dedicado (mypy/pyright) NO corrida aun; codigo tipado y ruff-clean. Cerrar ese cabo en f1.apis-rest-fastapi.",
-        "Proximo review (2026-08-05): intervalo +7. Si supera, siguiente +21."
+        "S11 (2026-08-06): review SUPERADA de memoria (TypeError + regla 'sin default no puede ir tras default' — el cabo de S4 cerrado; F401 con sus dos salidas y criterio de uso). Intervalo extendido a +21: next_review 2026-08-27.",
+        "CAVEAT del criterio_dominio CERRADO en S11: mypy corrido y limpio sobre el proyecto FastAPI (uv add --dev mypy + uv run mypy). Criterio de dominio completo."
       ]
     },
     "f1.git-flujo": {
@@ -84,9 +86,9 @@
     },
     "f1.async-basico": {
       "status": "aprendido",
-      "ultima_sesion": "2026-08-03",
-      "next_review": "2026-08-05",
-      "intentos": 2,
+      "ultima_sesion": "2026-08-06",
+      "next_review": "2026-08-13",
+      "intentos": 3,
       "notas": [
         "S8 (2026-07-30): event loop, corrutinas, await como 'me pauso y libero al loop', gather vs await secuencial. Ejercicio 01-cliente-concurrente (completar+predecir): 3 TODOs resueltos por su cuenta, 10 requests secuencial 3.14s vs concurrente 0.43s (7.3x), predicciones correctas. Verificado ejecutando.",
         "Confusion inicial S8 (corregida): creia que await = 'sigo con otra cosa'; se asento que await pausa al que lo escribe y libera al loop, y que la concurrencia la crea REGISTRAR varias tareas antes de esperar, no await en si.",
@@ -94,7 +96,7 @@
         "S9 parte 2: timeouts (AsyncClient(timeout=), jerarquia TimeoutException > Read/ConnectTimeout) + gather return_exceptions=True + clasificacion isinstance + raise de lo desconocido. Ejercicio 02-cliente-robusto (script+predecir) RESUELTO con pistas 1-2 y verificado con 3 experimentos (8/1/1 en ~1.1s; puerto muerto -> timeouts honestos; ValueError inyectado -> traceback). CONTENIDO DEL TOPICO COMPLETO.",
         "Confusion S9 (desarmada con demo): excepcion de red vs error HTTP 404/500 (el 500 trae Response; la excepcion no). Iteraciones: excepcion desconocida tragada 2 veces antes del else->raise.",
         "Smell x3: iter/id sombreando builtins DE NUEVO pese a advertencia en el enunciado. Codigo muerto comentado: 3 avisos.",
-        "Al pasar review del 2026-08-05: extender +7. Pregunta candidata para ese review: por que compartimos UN AsyncClient (pool) y que pasa con una excepcion no manejada en la lista de gather."
+        "S11 (2026-08-06): review SUPERADA de memoria con las 2 preguntas candidatas — pool de conexiones (handshakes que no se repiten) exacta; gather sin return_exceptions correcta en lo esencial (propaga y results no se asigna). Precision dada: la excepcion llega a quien hace await, no 'al event loop'; las demas tareas siguen corriendo. Intervalo extendido a +7: next_review 2026-08-13. Si supera, siguiente +21."
       ]
     },
     "f1.pydantic-validacion": {
@@ -115,21 +117,25 @@
     },
     "f1.apis-rest-fastapi": {
       "status": "aprendido",
-      "ultima_sesion": "2026-08-05",
-      "next_review": "2026-08-07",
-      "intentos": 1,
+      "ultima_sesion": "2026-08-06",
+      "next_review": "2026-08-08",
+      "intentos": 2,
       "notas": [
         "S10 (2026-08-04/05): parte 1 — routing por decorador, path param tipado (valida con 422 en loc path), body como modelo Pydantic, HTTPException 404, 422 vs 400, status_code=201 en decorador, /docs autogenerado. Ejercicio 01-registro-modelos (completar+predecir): 4 endpoints resueltos por su cuenta con pistas 1-2, verificado ejecutando (200/404/201/422 body y path).",
         "Proyecto montado con uv de verdad (init --bare, add fastapi[standard], lock, uv run fastapi dev) — deuda de S6 cobrada.",
         "Pregunta al porque (max(keys)+1): acerto ValueError con store vacio; NO vio el reciclaje de ids (borrar el mas alto -> POST reusa id -> cliente con referencia vieja recibe datos ajenos con 200). Explicado. PREGUNTA CANDIDATA para el review 2026-08-07.",
         "P1 reescrita antes de ejecutar (analisis legitimo): se acordo la regla de conservar ambas versiones de una prediccion.",
-        "CONTENIDO INCOMPLETO — parte 2 pendiente: autenticacion por API key (criterio_dominio la exige) + correr mypy/pyright sobre este proyecto (deuda de f1.python-profesional).",
-        "Primera sesion sin sombrear builtins (model_id a la primera)."
+        "Primera sesion sin sombrear builtins (model_id a la primera).",
+        "S11 (2026-08-06): parte 2 — API key (APIKeyHeader auto_error=False + Depends + dependencies=[...] en decorador, None-check + compare_digest, key desde os.environ con fallo en arranque) + DELETE 204/404 + mypy limpio. Ejercicio 02-api-key (script+predecir) resuelto por su cuenta, verificado ejecutando (8/8 curls, KeyError sin env var, security scheme en OpenAPI). CONTENIDO DEL TOPICO COMPLETO — criterio_dominio cubierto: 6 endpoints, API key, /docs con Authorize.",
+        "P1 de S11 documento honesto: primera version sin None-check dio 500 (TypeError None vs str en compare_digest); el mismo diagnostico la causa al preguntarle. Conexion hecha: mypy marca exactamente ese bug.",
+        "P2 de S11 (reciclaje de ids): predicha correctamente — gap de S10 cerrado.",
+        "Incidente didactico S11: la demo del concepto se perdio (texto de chat previo a tool calls no visible para el estudiante; 2da vez). Regla nueva permanente: demos SIEMPRE como archivo (demo_api_key.py funciono bien). Ademas: entorno Windows/PowerShell detectado — enunciados con comandos en ambas variantes (curl.exe, $env:).",
+        "Pregunta candidata para review 2026-08-08: por que auto_error=False en vez de True (quien decide el error y que status) y por que compare_digest en secretos."
       ]
     }
   },
-  "sesiones_completadas": 10,
-  "ultima_sesion": "2026-08-05",
+  "sesiones_completadas": 11,
+  "ultima_sesion": "2026-08-06",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
