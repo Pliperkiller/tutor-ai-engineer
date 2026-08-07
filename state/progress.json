@@ -39,7 +39,11 @@
     "Leyo el codigo fuente de APIKeyHeader.__call__ por iniciativa propia para verificar el mecanismo (auto_error, return None). Habito de fuente primaria.",
     "P2 de S11 (reciclaje de ids al borrar el mas alto) predicha correctamente ANTES de ejecutar — el gap de diseno de ids de S10 quedo cerrado. Ademas tapo el 500 del store vacio con max(keys, default=0) por iniciativa propia.",
     "Type-checking formal: mypy corrido y limpio sobre el proyecto FastAPI (deuda de f1.python-profesional COBRADA). Entendio el narrowing de str | None y que el None-check de seguridad y el de mypy son el mismo chequeo.",
-    "Diagnostico causal correcto del 500 de su primera version (compare_digest(None, str) -> TypeError) al preguntarle el porque."
+    "Diagnostico causal correcto del 500 de su primera version (compare_digest(None, str) -> TypeError) al preguntarle el porque.",
+    "Testing parte 1 (S12): los 5 tests con TestClient escritos por su cuenta sin pistas (health 200, 404, POST sin header 401, POST con header 201 + assert sobre el body, DELETE 204 + GET 404 de verificacion). Verde tambien aislados con -k: la fixture autouse aisla de verdad.",
+    "Auditoria de mutacion S12: las 3 roturas de main.py (404->200, POST sin dependencies, delete que no borra) ponen la suite en rojo. Sus tests son portantes, no decorativos — el antidoto a la debilidad de S7 quedo demostrado en su codigo.",
+    "Diagnostico del bug de identidad en conftest (habia redeclarado MODELS copiando el dict en vez de importarlo) tras UNA sola pregunta socratica, sin mas ayuda.",
+    "Preguntas de ingenieria real por iniciativa propia (S12): como gestionan los equipos los secretos en produccion, tras notar que el conftest hardcodea una key. Conecta lo que escribe con el riesgo real."
   ],
   "debilidades": [
     "Error de frontera <= vs < y olvido de 'raise' (cometidos y corregidos en 02). Vigilar en validators futuros.",
@@ -51,6 +55,10 @@
     "RETIRADAS en S11 (dejar de vigilar): guard invertido (S7+S11 limpias), sombreado de builtins (S10+S11 limpias), diseno de ids (P2 de S11 predijo el reciclaje por su cuenta), type-check formal (mypy corrido y limpio en S11).",
     "Manejo de lo inesperado (S9): excepcion desconocida primero clasificada como ok (cliente que miente), luego dejada caer en silencio (cliente que desaparece errores); el contrato 'else -> raise' requirio 2 iteraciones. Ademas confundio excepcion de red con error HTTP 404/500. Higiene: dejo codigo muerto comentado hasta el 3er aviso.",
     "Entorno Python: el terminal de VS Code resolvia python3 al del sistema (/usr/bin) en vez del de pyenv → 'No module named pytest'. Fix de raiz pendiente (pyenv init en el shell del terminal integrado). Se resolvera de fondo con uv por proyecto en el capstone.",
+    "Ritmo de sesion (S12): ~8 preguntas conceptuales encadenadas (yield, next, generadores con argumentos, conftest, .clear/.update, mypy, gestion de secretos) ANTES de escribir una sola linea. Todas legitimas y varias excelentes, pero consumieron la sesion: el paso 6 (auditoria de mutacion) lo tuvo que correr el tutor. ACUERDO a aplicar en S13: la primera pregunta se responde; las siguientes van a una lista y se resuelven DESPUES de producir.",
+    "Bloque A del conftest (escribir os.environ ANTES del import de main) requirio pista 3 (estructura con huecos). Causa: no tenia disponible que 'from X import Y ejecuta X entero'. Verificar en el review que ya lo tiene.",
+    "P2 de S12 respondida a medias: nombro el sintoma (el orden importa, hace falta refrescar MODELS) pero no contesto los 3 casos concretos ni le puso nombre a la propiedad (aislamiento / independencia del orden). Preguntarlo en el review.",
+    "Nit S12 sin cerrar: falta el comentario que justifica por que os.environ va encima de los imports en conftest.py, pese a habersele pedido explicitamente. Sin el, el proximo lector lo 'ordena' y rompe la suite. Ruff no se llego a correr (E402 esperado + noqa justificado).",
     "Todo el stack de AI Engineer de F2 en adelante: sin exposicion."
   ],
   "topicos": {
@@ -132,10 +140,26 @@
         "Incidente didactico S11: la demo del concepto se perdio (texto de chat previo a tool calls no visible para el estudiante; 2da vez). Regla nueva permanente: demos SIEMPRE como archivo (demo_api_key.py funciono bien). Ademas: entorno Windows/PowerShell detectado — enunciados con comandos en ambas variantes (curl.exe, $env:).",
         "Pregunta candidata para review 2026-08-08: por que auto_error=False en vez de True (quien decide el error y que status) y por que compare_digest en secretos."
       ]
+    },
+    "f1.testing-pytest": {
+      "status": "visto",
+      "ultima_sesion": "2026-08-07",
+      "next_review": null,
+      "intentos": 1,
+      "notas": [
+        "S12 (2026-08-07): parte 1 — test como funcion + assert pelado, TestClient (requests contra la app sin red ni servidor), fixtures (@pytest.fixture, yield = setup/teardown, autouse), conftest.py (carga automatica, alcance por directorio, ventana previa al import de los tests).",
+        "Se explicaron generadores a fondo a peticion suya: yield congela el frame (no lo destruye como return), next() reanuda, y llamar la funcion otra vez crea un generador NUEVO. El estudiante dedujo solo de ahi por que cada test recibe estado fresco. Conexion hecha con await/event loop de S8.",
+        "Ejercicio 01-suite-api: conftest.py (3 bloques) + test_main.py (5 tests) sobre su propia API de S10/S11. Resultado: 5/5 verdes y verdes tambien aislados (-k delete_process, -k undefined_model).",
+        "Auditoria de mutacion (paso 6, corrida por el TUTOR por falta de tiempo): 404->200 en get_model tumba 2 tests; POST sin dependencies tumba 1; delete sin borrar tumba 1. Las 3 roturas detectadas. main.py restaurado (git diff vacio).",
+        "Bugs propios en conftest, ambos corregidos por el: (1) redeclaro MODELS copiando el dict en vez de importarlo -> su fixture limpiaba un objeto que nadie usaba; misma familia del bug identidad/reasignar-vs-mutar. (2) def client(app) -> pytest solo llena parametros de fixture con otras fixtures.",
+        "P1 FALLADA y valiosa: predijo 'fallaran los tests con dependencia de api key'. La realidad es que el KeyError ocurre en la COLECCION, al importar main desde conftest, y no llega a correr ni un test. Reescribio la prediccion tras verlo.",
+        "STATUS visto (no aprendido) por tres razones: el bloque A necesito pista 3 (estructura con huecos), el paso 6 lo corrio el tutor y no el estudiante, y el criterio_dominio del topico exige mocks de una API externa — sin tocar todavia.",
+        "PARTE 2 pendiente (S13): mocking de API externa con respx/monkeypatch sobre el cliente httpx de f1.async-basico, pytest.mark.parametrize y cobertura. El estudiante corre la auditoria de mutacion el mismo. Preguntar antes de empezar: los 3 casos de P2 y el nombre de la propiedad."
+      ]
     }
   },
-  "sesiones_completadas": 11,
-  "ultima_sesion": "2026-08-06",
+  "sesiones_completadas": 12,
+  "ultima_sesion": "2026-08-07",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
