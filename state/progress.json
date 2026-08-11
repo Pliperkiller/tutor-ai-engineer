@@ -16,7 +16,12 @@
       "Frontera: inicio de F1. Primer topico a trabajar: f1.python-profesional."
     ]
   },
-  "posicion_actual": "f1.testing-pytest",
+  "posicion_actual": "f2.como-funciona-llm",
+  "_gate_cierre_f1": [
+    "TODOS los topicos de F1 estan en aprendido o dominado tras la S13, pero la FASE no esta cerrada. Antes de entrar a F2, la proxima sesion debe abrir con esto:",
+    "1. f1.git-flujo: criterio_dominio INCOMPLETO — lleva 1 branch via PR (necesita 2+) y ~9 commits en el repo asistente-config (necesita 10+), y falta un conflicto resuelto VIA PR. Se cierra con un 2do PR con conflicto, exigiendo switch -c + git status sin recordarselo.",
+    "2. criterio_dominio_fase de F1: 'API REST con FastAPI que CONSUMA una API publica externa'. Hoy la API (01-registro-modelos) y el cliente httpx (02-mocks-cliente-http) viven separados: falta el endpoint que consuma la API externa desde dentro de FastAPI, con sus tests mockeados. Esa integracion es el cierre natural de F1 y el arranque del capstone."
+  ],
   "fortalezas": [
     "Sintaxis basica de Python (funciones, loops, guardas, continue) verificada sin ayuda.",
     "Type hints en firmas + excepciones propias (ejercicio 01, 4/4).",
@@ -43,7 +48,12 @@
     "Testing parte 1 (S12): los 5 tests con TestClient escritos por su cuenta sin pistas (health 200, 404, POST sin header 401, POST con header 201 + assert sobre el body, DELETE 204 + GET 404 de verificacion). Verde tambien aislados con -k: la fixture autouse aisla de verdad.",
     "Auditoria de mutacion S12: las 3 roturas de main.py (404->200, POST sin dependencies, delete que no borra) ponen la suite en rojo. Sus tests son portantes, no decorativos — el antidoto a la debilidad de S7 quedo demostrado en su codigo.",
     "Diagnostico del bug de identidad en conftest (habia redeclarado MODELS copiando el dict en vez de importarlo) tras UNA sola pregunta socratica, sin mas ayuda.",
-    "Preguntas de ingenieria real por iniciativa propia (S12): como gestionan los equipos los secretos en produccion, tras notar que el conftest hardcodea una key. Conecta lo que escribe con el riesgo real."
+    "Preguntas de ingenieria real por iniciativa propia (S12): como gestionan los equipos los secretos en produccion, tras notar que el conftest hardcodea una key. Conecta lo que escribe con el riesgo real.",
+    "Testing parte 2 (S13): 5 tests con respx sobre su cliente httpx (happy path, parametrize de status de error, timeout con side_effect, escenario mixto de 10 rutas, mock como espia) + fixture async en conftest. 7/7 verdes, ruff limpio, criterio_dominio del topico cumplido.",
+    "Auditoria de mutacion S13 CORRIDA POR EL (deuda de S12 cobrada): las 3 roturas de robust_client.py detectadas y leidas correctamente, incluida la lectura fina de que sin raise_for_status los tests caen por JSONDecodeError y no por DID NOT RAISE.",
+    "Lectura de cobertura madura y propia (S13): ante el 41% concluyo sin ayuda que un numero bajo no implica malos tests, sino que puede senalar codigo que no pertenece al producto final (summary() es un helper de demo). Criterio de ingenieria, no de metrica.",
+    "Corrigio sus 3 bugs del test mixto (falta de asserts, MODEL_IDS[1:9], Response(200) sin json=) solo con preguntas socraticas, sin que se le dijera cual era el arreglo.",
+    "Da feedback critico y fundado sobre el metodo del tutor (S13): senalo que el enunciado exigia sintaxis no demostrada. Tenia razon y forzo un arreglo real del material. Capacidad de auditar el proceso, no solo el codigo."
   ],
   "debilidades": [
     "Error de frontera <= vs < y olvido de 'raise' (cometidos y corregidos en 02). Vigilar en validators futuros.",
@@ -59,6 +69,11 @@
     "Bloque A del conftest (escribir os.environ ANTES del import de main) requirio pista 3 (estructura con huecos). Causa: no tenia disponible que 'from X import Y ejecuta X entero'. Verificar en el review que ya lo tiene.",
     "P2 de S12 respondida a medias: nombro el sintoma (el orden importa, hace falta refrescar MODELS) pero no contesto los 3 casos concretos ni le puso nombre a la propiedad (aislamiento / independencia del orden). Preguntarlo en el review.",
     "Nit S12 sin cerrar: falta el comentario que justifica por que os.environ va encima de los imports en conftest.py, pese a habersele pedido explicitamente. Sin el, el proximo lector lo 'ordena' y rompe la suite. Ruff no se llego a correr (E402 esperado + noqa justificado).",
+    "PATRON CONFIRMADO (S12 + S13): al predecir un fallo, dice 'falla el assert / fallan los tests' cuando la realidad es 'revienta antes y ningun assert se ejecuta'. S12: KeyError en la coleccion (ERROR). S13: gather con return_exceptions=False propaga y mata el test (FAILED sin assert). Le falta el modelo de DONDE revienta el codigo, no SI revienta. Preguntarlo asi en el review del 2026-08-13.",
+    "Escribio un test sin un solo assert (S13, test_mixed_case) y lo dio por bueno porque pytest lo marco verde. Es la tercera aparicion de la familia 'tests que pasan por la razon equivocada' (S7 asserts muertos, S12 P2, S13). Vigilar en toda suite futura: preguntar siempre 'que pregunta este test'.",
+    "Ritmo (S13): 4 preguntas conceptuales antes de correr un solo comando, pese al acuerdo de S12. Atenuante real: 2 de esas 4 las causo un enunciado incompleto. Mantener el acuerdo, y del lado del tutor mantener la regla de que toda sintaxis nueva este en la demo ejecutable.",
+    "Duracion de sesion FUERA DE CONTROL (S13): la sesion se extendio muchisimo mas alla de los ~30 min del protocolo, incluso tras proponer cierre. El tutor no puso freno. Regla para S14: a los ~35 min se cierra, aunque el ejercicio quede a medias.",
+    "DEUDA DE TOOLING DEL TUTOR (abierta desde S5): ejercicios/fase-1/f1.git-flujo/01-branches-conflicto/setup.sh linea 7 hace 'rm -rf repo-practica' sin guarda ni aviso. Causo la perdida de historia local del estudiante. Ofrecido el arreglo en S13, sin respuesta. Arreglarlo.",
     "Todo el stack de AI Engineer de F2 en adelante: sin exposicion."
   ],
   "topicos": {
@@ -78,10 +93,11 @@
     },
     "f1.git-flujo": {
       "status": "aprendido",
-      "ultima_sesion": "2026-08-03",
-      "next_review": "2026-08-10",
-      "intentos": 2,
+      "ultima_sesion": "2026-08-11",
+      "next_review": "2026-09-01",
+      "intentos": 3,
       "notas": [
+        "S13 (2026-08-11): review SUPERADA de memoria — 'git branch feature-x' no mueve HEAD, el commit cae en la branch actual; dio el procedimiento correcto (branch + switch). El gap de S9 quedo cerrado. Faltó solo el comando de verificacion previa (git status / git branch --show-current), que si sabia en S9. Intervalo extendido a +21.",
         "S9 (2026-08-03): review SUPERADA en el nucleo — explico de memoria que el commit cae donde esta HEAD y como verificarlo (git branch, git status). Hueco: no conocia checkout -b / switch -c (nunca lo habia aprendido; causa raiz del PR main-into-main de S5). Se le dio el dato. next_review +7.",
         "S4 (2026-07-29): branches, merge, fast-forward vs merge commit, resolucion de conflicto. Ejercicio 01-branches-conflicto (debug+predecir) resuelto por su cuenta.",
         "S5 (2026-07-29, mismo dia): parte 2 — remoto GitHub y PRs. Ejercicio 02-remoto-pr: publico repo asistente-config (Pliperkiller/asistente-config), branch docs-parametros con 2 commits atomicos, PR #1 creado y fusionado via gh. P1/P2/P3 escritas antes de ejecutar; en P3 detecto el mismo que GitHub --merge crea merge commit donde git local haria FF.",
@@ -109,10 +125,11 @@
     },
     "f1.pydantic-validacion": {
       "status": "aprendido",
-      "ultima_sesion": "2026-08-03",
-      "next_review": "2026-08-10",
-      "intentos": 2,
+      "ultima_sesion": "2026-08-11",
+      "next_review": "2026-08-18",
+      "intentos": 3,
       "notas": [
+        "S13 (2026-08-11): review PARCIAL — acerto los tres comportamientos de max_tokens: int = Field(gt=0) ('64000' coerciona, 'abc' falla, -5 falla) pero atribuyo los dos fallos a un 'field validator' que NO EXISTE en ese modelo, y omitio los status codes pese a pedirse explicitamente. Las tres vias son distintas: coercion de tipo / parseo del tipo / constraint de Field, y las dos ultimas dan 422. INTERVALO NO EXTENDIDO (+7). Repreguntar nombrando el mecanismo.",
         "S9 (2026-08-03): review SUPERADA limpia — field_validator (un campo) vs model_validator mode=after (cruza campos) con ejemplo valido propio (area <= 4 con ancho y largo). Nit: nombro atributos ancho/largo y escribio largo*alto (nombres que mienten). next_review +7; si supera el de 2026-08-10, siguiente +21.",
         "S6 (2026-07-29): parte 1 — BaseModel, coercion desde dicts/JSON, Field constraints (ge/le/gt/default), field_validator con el contrato recibe-valida-devuelve. Ejercicio 01-config-pydantic (tipo test): 6/6 tras pistas nivel 1-2.",
         "Entiende el contraste con __post_init__ de dataclasses: validacion declarativa + coercion + errores en lote vs fail-fast manual.",
@@ -125,10 +142,11 @@
     },
     "f1.apis-rest-fastapi": {
       "status": "aprendido",
-      "ultima_sesion": "2026-08-06",
-      "next_review": "2026-08-08",
-      "intentos": 2,
+      "ultima_sesion": "2026-08-11",
+      "next_review": "2026-09-01",
+      "intentos": 3,
       "notas": [
+        "S13 (2026-08-11): review SUPERADA de memoria con las 2 preguntas candidatas — auto_error True vs False (True corta la request en la dependencia, False devuelve None y delega la decision al endpoint) y compare_digest (explico el timing attack con un ejemplo propio de adivinanza caracter a caracter). Precisiones dadas: el error automatico de APIKeyHeader en esta version es 401 'Not authenticated' (historicamente 403), y '==' es cortocircuito, no 'lazy'. Intervalo extendido a +21.",
         "S10 (2026-08-04/05): parte 1 — routing por decorador, path param tipado (valida con 422 en loc path), body como modelo Pydantic, HTTPException 404, 422 vs 400, status_code=201 en decorador, /docs autogenerado. Ejercicio 01-registro-modelos (completar+predecir): 4 endpoints resueltos por su cuenta con pistas 1-2, verificado ejecutando (200/404/201/422 body y path).",
         "Proyecto montado con uv de verdad (init --bare, add fastapi[standard], lock, uv run fastapi dev) — deuda de S6 cobrada.",
         "Pregunta al porque (max(keys)+1): acerto ValueError con store vacio; NO vio el reciclaje de ids (borrar el mas alto -> POST reusa id -> cliente con referencia vieja recibe datos ajenos con 200). Explicado. PREGUNTA CANDIDATA para el review 2026-08-07.",
@@ -142,11 +160,21 @@
       ]
     },
     "f1.testing-pytest": {
-      "status": "visto",
-      "ultima_sesion": "2026-08-07",
-      "next_review": null,
-      "intentos": 1,
+      "status": "aprendido",
+      "ultima_sesion": "2026-08-11",
+      "next_review": "2026-08-13",
+      "intentos": 2,
       "notas": [
+        "S13 (2026-08-11): parte 2 — respx (transporte falso, no micro-servidor), return_value vs side_effect, parametrize, fixture async, cobertura, ERROR vs FAILED. Ejercicio 02-mocks-cliente-http: conftest con fixture async + 5 tests (7 casos) sobre su cliente httpx de la S9. 7/7 verdes, ruff limpio, cobertura 41%.",
+        "PASA A APRENDIDO: criterio_dominio del topico CUMPLIDO (fixtures + mocks de API externa + caminos felices y de error del cliente HTTP). Corrio EL MISMO la auditoria de mutacion (deuda de S12 cobrada): las 3 roturas detectadas y leidas correctamente.",
+        "CAVEAT del aprendido: la fixture async necesito pista 3 (estructura con huecos) y el test 4 pista 2 (estructura sin codigo). Atenuante: la pista 3 tapaba un hueco DEL MATERIAL (la demo no cubria fixtures async ni parametrize), no del estudiante. En el review de 2026-08-13 exigir la fixture async de memoria, sin material.",
+        "Test 4 mejor de lo pedido: en vez de contar 8 dicts, afirma el contenido exacto de cada resultado feliz. Assert mas fuerte que el especificado.",
+        "P1 acertada en el razonamiento (30% aprox porque summary() no se ejercita; real 41%, faltando 34-61 y 65). Lectura de cobertura excelente y propia: 'un numero bajo tambien puede significar codigo que no es necesario en el producto final'.",
+        "P2 FALLADA y del mismo modo que la P1 de S12: predijo 'se queda atorado en el assert que falla' cuando en realidad el await revienta y NINGUN assert se ejecuta. Patron confirmado dos sesiones seguidas: predice 'falla un assert' donde la realidad es 'revienta antes'. Corregido tras correr la mutacion.",
+        "Bug mas valioso del dia: escribio test_mixed_case SIN UN SOLO ASSERT y pytest lo dio verde. Detras de ese verde habia dos bugs mas (MODEL_IDS[1:9] dejaba 0 y 9 sin mockear; Response(200) sin json= habria dado JSONDecodeError). Los tres corregidos por el tras preguntas socraticas.",
+        "Aplico parametrize al escenario mixto (N corridas independientes) cuando se necesitaban 10 mocks simultaneos en UN test. Corregido tras la pregunta socratica.",
+        "FALLO DEL TUTOR reconocido en sesion: el enunciado introdujo 3 herramientas nuevas y la demo solo cubria 1 (respx); parametrize y fixture async iban solo en prosa, y habia una pista-acertijo ('ojo al orden de los decoradores'). El estudiante lo reclamo con razon. Arreglado en sesion: demo_respx.py ahora tiene PARTE 5 (parametrize) y PARTE 6 (fixture async), y el enunciado da la sintaxis explicita.",
+        "--- Parte 1 (S12) ---",
         "S12 (2026-08-07): parte 1 — test como funcion + assert pelado, TestClient (requests contra la app sin red ni servidor), fixtures (@pytest.fixture, yield = setup/teardown, autouse), conftest.py (carga automatica, alcance por directorio, ventana previa al import de los tests).",
         "Se explicaron generadores a fondo a peticion suya: yield congela el frame (no lo destruye como return), next() reanuda, y llamar la funcion otra vez crea un generador NUEVO. El estudiante dedujo solo de ahi por que cada test recibe estado fresco. Conexion hecha con await/event loop de S8.",
         "Ejercicio 01-suite-api: conftest.py (3 bloques) + test_main.py (5 tests) sobre su propia API de S10/S11. Resultado: 5/5 verdes y verdes tambien aislados (-k delete_process, -k undefined_model).",
@@ -154,12 +182,13 @@
         "Bugs propios en conftest, ambos corregidos por el: (1) redeclaro MODELS copiando el dict en vez de importarlo -> su fixture limpiaba un objeto que nadie usaba; misma familia del bug identidad/reasignar-vs-mutar. (2) def client(app) -> pytest solo llena parametros de fixture con otras fixtures.",
         "P1 FALLADA y valiosa: predijo 'fallaran los tests con dependencia de api key'. La realidad es que el KeyError ocurre en la COLECCION, al importar main desde conftest, y no llega a correr ni un test. Reescribio la prediccion tras verlo.",
         "STATUS visto (no aprendido) por tres razones: el bloque A necesito pista 3 (estructura con huecos), el paso 6 lo corrio el tutor y no el estudiante, y el criterio_dominio del topico exige mocks de una API externa — sin tocar todavia.",
-        "PARTE 2 pendiente (S13): mocking de API externa con respx/monkeypatch sobre el cliente httpx de f1.async-basico, pytest.mark.parametrize y cobertura. El estudiante corre la auditoria de mutacion el mismo. Preguntar antes de empezar: los 3 casos de P2 y el nombre de la propiedad."
+        "PARTE 2 COMPLETADA en S13. Cabo de S12 cerrado a medias: los 3 casos de P2 los conteo bien, pero no vio que el tercero PASA por accidente (2 modelos, pero {2,3} en vez de {1,2}) y llamo 'fixture' a la propiedad — es AISLAMIENTO; la fixture es el mecanismo. Corregido en sesion.",
+        "Nit S12 sin cerrar (sigue): falta el comentario que justifica os.environ encima de los imports en el conftest de 01-registro-modelos, y ruff nunca se corrio ahi (E402 esperado + noqa justificado)."
       ]
     }
   },
-  "sesiones_completadas": 12,
-  "ultima_sesion": "2026-08-07",
+  "sesiones_completadas": 13,
+  "ultima_sesion": "2026-08-11",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
