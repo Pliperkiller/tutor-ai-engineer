@@ -16,11 +16,11 @@
       "Frontera: inicio de F1. Primer topico a trabajar: f1.python-profesional."
     ]
   },
-  "posicion_actual": "f2.como-funciona-llm",
+  "posicion_actual": "f1.apis-rest-fastapi",
   "_gate_cierre_f1": [
-    "TODOS los topicos de F1 estan en aprendido o dominado tras la S13, pero la FASE no esta cerrada. Antes de entrar a F2, la proxima sesion debe abrir con esto:",
+    "La FASE 1 NO esta cerrada. Antes de entrar a F2 faltan dos cosas:",
     "1. f1.git-flujo: criterio_dominio INCOMPLETO — lleva 1 branch via PR (necesita 2+) y ~9 commits en el repo asistente-config (necesita 10+), y falta un conflicto resuelto VIA PR. Se cierra con un 2do PR con conflicto, exigiendo switch -c + git status sin recordarselo.",
-    "2. criterio_dominio_fase de F1: 'API REST con FastAPI que CONSUMA una API publica externa'. Hoy la API (01-registro-modelos) y el cliente httpx (02-mocks-cliente-http) viven separados: falta el endpoint que consuma la API externa desde dentro de FastAPI, con sus tests mockeados. Esa integracion es el cierre natural de F1 y el arranque del capstone."
+    "2. criterio_dominio_fase de F1: 'API REST con FastAPI que CONSUMA una API publica externa'. EN CURSO desde S14: ejercicios/fase-1/f1.apis-rest-fastapi/03-api-externa/ (endpoint GET /models/{id}/cost que consulta Frankfurter + 5 tests con respx). Hecho el paso 3 de 8 (lifespan + get_client). S15 debe arrancar por ahi: arreglar lifespan=lifespan y los 2 avisos de ruff, y seguir con pasos 4-8."
   ],
   "fortalezas": [
     "Sintaxis basica de Python (funciones, loops, guardas, continue) verificada sin ayuda.",
@@ -74,6 +74,8 @@
     "Ritmo (S13): 4 preguntas conceptuales antes de correr un solo comando, pese al acuerdo de S12. Atenuante real: 2 de esas 4 las causo un enunciado incompleto. Mantener el acuerdo, y del lado del tutor mantener la regla de que toda sintaxis nueva este en la demo ejecutable.",
     "Duracion de sesion FUERA DE CONTROL (S13): la sesion se extendio muchisimo mas alla de los ~30 min del protocolo, incluso tras proponer cierre. El tutor no puso freno. Regla para S14: a los ~35 min se cierra, aunque el ejercicio quede a medias.",
     "DEUDA DE TOOLING DEL TUTOR (abierta desde S5): ejercicios/fase-1/f1.git-flujo/01-branches-conflicto/setup.sh linea 7 hace 'rm -rf repo-practica' sin guarda ni aviso. Causo la perdida de historia local del estudiante. Ofrecido el arreglo en S13, sin respuesta. Arreglarlo.",
+    "REGRESION S14 (concurrencia): ante 10 requests concurrentes de 0.8s respondio ~8s (sumo secuencialmente) pese a haber MEDIDO 0.43s para 10 de 0.3s en la S8. El modelo mental del gather no esta asentado bajo pregunta abstracta, solo tras la medicion. Reanclar siempre a su propia medicion.",
+    "RITMO — TERCERA SESION SEGUIDA (S12, S13, S14) con el mismo patron, ahora peor: SEIS preguntas conceptuales encadenadas antes de ejecutar un solo comando (que hace el lifespan, que es un context manager, que es upstream, 'o sea que mi api llama a otra api?', por que lo hacemos asi, en que archivo escribo). Todas legitimas, ninguna redundante, pero de 8 pasos del ejercicio se hizo 1. El acuerdo 'la primera se responde, las demas a la lista' no se sostiene por si solo. PROBAR EN S15 OTRA ESTRATEGIA: dar 3-4 min de lectura silenciosa del enunciado + demo ANTES de abrir turno de preguntas, y exigir el primer comando corrido antes de responder la segunda pregunta.",
     "Todo el stack de AI Engineer de F2 en adelante: sin exposicion."
   ],
   "topicos": {
@@ -109,11 +111,12 @@
       ]
     },
     "f1.async-basico": {
-      "status": "aprendido",
-      "ultima_sesion": "2026-08-06",
-      "next_review": "2026-08-13",
-      "intentos": 3,
+      "status": "visto",
+      "ultima_sesion": "2026-08-13",
+      "next_review": "2026-08-15",
+      "intentos": 4,
       "notas": [
+        "S14 (2026-08-13): review FALLADA — REGRESION del nucleo del topico. Ante 'AsyncClient(timeout=1.0), 10 requests concurrentes de 0.8s': acerto que el timeout es por request y que no falla ninguna, pero dijo que el gather tarda ~8 SEGUNDOS. Sumo los tiempos como si fueran secuenciales, cuando el mismo midio 10 requests de 0.3s en 0.43s en la S8. Respuesta correcta: ~0.8s. BAJA A VISTO, next_review +2. En el proximo repaso preguntar primero por la medicion de S8 y que la explique.",
         "S8 (2026-07-30): event loop, corrutinas, await como 'me pauso y libero al loop', gather vs await secuencial. Ejercicio 01-cliente-concurrente (completar+predecir): 3 TODOs resueltos por su cuenta, 10 requests secuencial 3.14s vs concurrente 0.43s (7.3x), predicciones correctas. Verificado ejecutando.",
         "Confusion inicial S8 (corregida): creia que await = 'sigo con otra cosa'; se asento que await pausa al que lo escribe y libera al loop, y que la concurrencia la crea REGISTRAR varias tareas antes de esperar, no await en si.",
         "S9 (2026-08-03): review superado CON ANDAMIAJE (necesito refrescos de event loop, TCP, pool, AsyncClient; con las piezas concluyo bien los 10 handshakes + capacidad del servidor) — intervalo no extendido, next_review +2.",
@@ -142,10 +145,13 @@
     },
     "f1.apis-rest-fastapi": {
       "status": "aprendido",
-      "ultima_sesion": "2026-08-11",
+      "ultima_sesion": "2026-08-13",
       "next_review": "2026-09-01",
-      "intentos": 3,
+      "intentos": 4,
       "notas": [
+        "S14 (2026-08-13): parte 3 (cierre de fase) — la API como CLIENTE de otra API. Concepto dado: lifespan + app.state (un AsyncClient compartido; uno por request tira el pool de S9), dependencia get_client(request), traduccion de fallos del upstream a 502/504 en vez de 500, y respx + TestClient como context manager. Demo demo_upstream.py corrida (200/502/504).",
+        "Ejercicio 03-api-externa (GET /models/{id}/cost contra Frankfurter + 5 tests mockeados) A MEDIAS: solo el paso 3 de 8. lifespan y get_client escritos CORRECTAMENTE por su cuenta (estructura, AsyncIterator, aclose tras el yield, request.app.state).",
+        "Defecto S14 pendiente: dejo 'app = FastAPI(title=...)' SIN lifespan=lifespan — la funcion existe pero nadie la llama (app.state vacio, AttributeError en el primer endpoint que lo pida). Señalado socraticamente 5 min despues de haberle explicado justo ese argumento. Tambien 2 avisos de ruff sin arreglar (F401 'from asyncio import timeout' del autoimport del editor, y AsyncIterator desde typing en vez de collections.abc). VERIFICAR EN S15.",
         "S13 (2026-08-11): review SUPERADA de memoria con las 2 preguntas candidatas — auto_error True vs False (True corta la request en la dependencia, False devuelve None y delega la decision al endpoint) y compare_digest (explico el timing attack con un ejemplo propio de adivinanza caracter a caracter). Precisiones dadas: el error automatico de APIKeyHeader en esta version es 401 'Not authenticated' (historicamente 403), y '==' es cortocircuito, no 'lazy'. Intervalo extendido a +21.",
         "S10 (2026-08-04/05): parte 1 — routing por decorador, path param tipado (valida con 422 en loc path), body como modelo Pydantic, HTTPException 404, 422 vs 400, status_code=201 en decorador, /docs autogenerado. Ejercicio 01-registro-modelos (completar+predecir): 4 endpoints resueltos por su cuenta con pistas 1-2, verificado ejecutando (200/404/201/422 body y path).",
         "Proyecto montado con uv de verdad (init --bare, add fastapi[standard], lock, uv run fastapi dev) — deuda de S6 cobrada.",
@@ -160,11 +166,12 @@
       ]
     },
     "f1.testing-pytest": {
-      "status": "aprendido",
-      "ultima_sesion": "2026-08-11",
-      "next_review": "2026-08-13",
-      "intentos": 2,
+      "status": "visto",
+      "ultima_sesion": "2026-08-13",
+      "next_review": "2026-08-15",
+      "intentos": 3,
       "notas": [
+        "S14 (2026-08-13): review FALLADA — la deuda explicita de S13 (escribir la fixture async de memoria) no la pudo escribir: 'de memoria me es dificil aun por que no recuerdo el cliente'. Ademas confundio DOS fixtures al justificar el yield: dio la razon de la fixture de MODELS (aislamiento del store, agnostico al orden) en vez de la del cliente (con return, el async with cerraria el cliente ANTES de que el test lo use). BAJA A VISTO, next_review +2. Volver a pedirla de memoria en S15.",
         "S13 (2026-08-11): parte 2 — respx (transporte falso, no micro-servidor), return_value vs side_effect, parametrize, fixture async, cobertura, ERROR vs FAILED. Ejercicio 02-mocks-cliente-http: conftest con fixture async + 5 tests (7 casos) sobre su cliente httpx de la S9. 7/7 verdes, ruff limpio, cobertura 41%.",
         "PASA A APRENDIDO: criterio_dominio del topico CUMPLIDO (fixtures + mocks de API externa + caminos felices y de error del cliente HTTP). Corrio EL MISMO la auditoria de mutacion (deuda de S12 cobrada): las 3 roturas detectadas y leidas correctamente.",
         "CAVEAT del aprendido: la fixture async necesito pista 3 (estructura con huecos) y el test 4 pista 2 (estructura sin codigo). Atenuante: la pista 3 tapaba un hueco DEL MATERIAL (la demo no cubria fixtures async ni parametrize), no del estudiante. En el review de 2026-08-13 exigir la fixture async de memoria, sin material.",
@@ -187,8 +194,8 @@
       ]
     }
   },
-  "sesiones_completadas": 13,
-  "ultima_sesion": "2026-08-11",
+  "sesiones_completadas": 14,
+  "ultima_sesion": "2026-08-13",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
