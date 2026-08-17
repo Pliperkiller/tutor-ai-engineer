@@ -20,7 +20,8 @@
   "_gate_cierre_f1": [
     "La FASE 1 NO esta cerrada. Antes de entrar a F2 faltan dos cosas:",
     "1. f1.git-flujo: criterio_dominio INCOMPLETO — lleva 1 branch via PR (necesita 2+) y ~9 commits en el repo asistente-config (necesita 10+), y falta un conflicto resuelto VIA PR. Se cierra con un 2do PR con conflicto, exigiendo switch -c + git status sin recordarselo.",
-    "2. criterio_dominio_fase de F1: 'API REST con FastAPI que CONSUMA una API publica externa'. EN CURSO desde S14: ejercicios/fase-1/f1.apis-rest-fastapi/03-api-externa/ (endpoint GET /models/{id}/cost que consulta Frankfurter + 5 tests con respx). Hecho el paso 3 de 8 (lifespan + get_client). S15 debe arrancar por ahi: arreglar lifespan=lifespan y los 2 avisos de ruff, y seguir con pasos 4-8."
+    "2. criterio_dominio_fase de F1: 'API REST con FastAPI que CONSUMA una API publica externa'. EN CURSO desde S14: ejercicios/fase-1/f1.apis-rest-fastapi/03-api-externa/ (endpoint GET /models/{id}/cost que consulta Frankfurter + 5 tests con respx). Tras S15: pasos 1-3 hechos y paso 4 A MEDIAS (camino feliz verificado con red: 200 con EUR y con eur, 404, cost 165.99, mypy limpio).",
+    "S16 ARRANCA DIRECTO EN EL EJERCICIO, sin topico nuevo. (a) 3 puntos pendientes del endpoint: variable para la moneda normalizada (currency.upper() escrito 4 veces), la guarda de rates es CODIGO MUERTO por estar debajo del payload['rates'] que pretende proteger (punto 4.3 del contrato sin cumplir), y '-> dict' + model_dump() en vez de '-> CostOut' + return cost_out (punto 4.5). (b) ruff check . da 6 errores: F401 'from pyexpat import model' (autoimport del editor), F811, B008 (falta el # noqa: B008 del Depends en default), SIM118 x3 (.keys()). (c) Pasos 5-8: P1, fixture del TestClient como context manager, los 5 tests con respx, verificacion."
   ],
   "fortalezas": [
     "Sintaxis basica de Python (funciones, loops, guardas, continue) verificada sin ayuda.",
@@ -53,7 +54,12 @@
     "Auditoria de mutacion S13 CORRIDA POR EL (deuda de S12 cobrada): las 3 roturas de robust_client.py detectadas y leidas correctamente, incluida la lectura fina de que sin raise_for_status los tests caen por JSONDecodeError y no por DID NOT RAISE.",
     "Lectura de cobertura madura y propia (S13): ante el 41% concluyo sin ayuda que un numero bajo no implica malos tests, sino que puede senalar codigo que no pertenece al producto final (summary() es un helper de demo). Criterio de ingenieria, no de metrica.",
     "Corrigio sus 3 bugs del test mixto (falta de asserts, MODEL_IDS[1:9], Response(200) sin json=) solo con preguntas socraticas, sin que se le dijera cual era el arreglo.",
-    "Da feedback critico y fundado sobre el metodo del tutor (S13): senalo que el enunciado exigia sintaxis no demostrada. Tenia razon y forzo un arreglo real del material. Capacidad de auditar el proceso, no solo el codigo."
+    "Da feedback critico y fundado sobre el metodo del tutor (S13): senalo que el enunciado exigia sintaxis no demostrada. Tenia razon y forzo un arreglo real del material. Capacidad de auditar el proceso, no solo el codigo.",
+    "REGRESION DE S14 CERRADA (S15): ante '10 requests de 0.8s con gather y timeout=1.0' respondio ~0.8-1s (correcto), tras reanclarlo a su propia medicion de la S8. Ademas trajo por su cuenta el matiz de que el timeout es POR REQUEST, asi que ninguna falla. La tecnica de reanclaje a su medicion funciona: usarla siempre en repasos de async.",
+    "Deuda de S13/S14 COBRADA (S15): escribio de memoria y EXACTA la fixture async del cliente httpx (decorador, -> AsyncIterator[httpx.AsyncClient], async with, yield http_client) y justifico el yield vs return en el mecanismo (teardown, la funcion no termina en esa linea).",
+    "RITMO — PATRON ROTO EN S15 tras 3 sesiones seguidas de bloqueo. Levanto el servidor y itero con curls POR SU CUENTA, sin pedir validacion entre intento e intento. El bucle de feedback dejo de pasar por el tutor: los 3 bugs de normalizacion los descubrio ejecutando, no preguntando. La estrategia que funciono: entregar el turno con orden explicito (a/b/c) + exigir el primer comando corrido antes de la 2da pregunta + empujar a 'no me preguntes, correlo tu'.",
+    "Pregunta de arquitectura por iniciativa propia (S15): 'definir el modelo Pydantic en main.py no es mala practica?'. Correcta como observacion; se le dio la estructura estandar de FastAPI (schemas.py / routers/ / services/) y el umbral real para partir un archivo. Piensa en estructura, no solo en que funcione.",
+    "Endpoint que consume una API externa FUNCIONANDO contra la red real (S15): 404 antes de tocar la red, try/except con 504/502 diferenciados, CostOut declarado, funcion renombrada de 'quote' (heredado de la demo) a 'get_cost'. Camino feliz verificado con curl: 200 con EUR y con eur, cost 165.99 exacto, 404 para modelo inexistente, mypy limpio."
   ],
   "debilidades": [
     "Error de frontera <= vs < y olvido de 'raise' (cometidos y corregidos en 02). Vigilar en validators futuros.",
@@ -75,7 +81,13 @@
     "Duracion de sesion FUERA DE CONTROL (S13): la sesion se extendio muchisimo mas alla de los ~30 min del protocolo, incluso tras proponer cierre. El tutor no puso freno. Regla para S14: a los ~35 min se cierra, aunque el ejercicio quede a medias.",
     "DEUDA DE TOOLING DEL TUTOR (abierta desde S5): ejercicios/fase-1/f1.git-flujo/01-branches-conflicto/setup.sh linea 7 hace 'rm -rf repo-practica' sin guarda ni aviso. Causo la perdida de historia local del estudiante. Ofrecido el arreglo en S13, sin respuesta. Arreglarlo.",
     "REGRESION S14 (concurrencia): ante 10 requests concurrentes de 0.8s respondio ~8s (sumo secuencialmente) pese a haber MEDIDO 0.43s para 10 de 0.3s en la S8. El modelo mental del gather no esta asentado bajo pregunta abstracta, solo tras la medicion. Reanclar siempre a su propia medicion.",
-    "RITMO — TERCERA SESION SEGUIDA (S12, S13, S14) con el mismo patron, ahora peor: SEIS preguntas conceptuales encadenadas antes de ejecutar un solo comando (que hace el lifespan, que es un context manager, que es upstream, 'o sea que mi api llama a otra api?', por que lo hacemos asi, en que archivo escribo). Todas legitimas, ninguna redundante, pero de 8 pasos del ejercicio se hizo 1. El acuerdo 'la primera se responde, las demas a la lista' no se sostiene por si solo. PROBAR EN S15 OTRA ESTRATEGIA: dar 3-4 min de lectura silenciosa del enunciado + demo ANTES de abrir turno de preguntas, y exigir el primer comando corrido antes de responder la segunda pregunta.",
+    "RITMO — RESUELTO EN S15 (era: 3 sesiones seguidas S12/S13/S14 con preguntas encadenadas antes de ejecutar). La estrategia que funciono: entregar el turno con orden explicito a/b/c, exigir el primer comando corrido antes de responder la 2da pregunta, y empujar con 'no me preguntes, correlo tu'. MANTENERLA en S16.",
+    "GUARDA INVERTIDA — REAPARECIO EN S15 tras haberse retirado en la S11. Escribio 'if not \"rates\" not in payload.keys():' (doble negacion): dispara el 502 exactamente cuando el payload esta BIEN. Se detecto porque el curl del camino feliz devolvio el detail de error sobre una respuesta valida. VUELVE A VIGILANCIA. Antidoto acordado: leer la condicion en voz alta como frase y comparar con la intencion.",
+    "PARCHEA SITIO POR SITIO EN VEZ DE NOMBRAR EL VALOR (S15, nuevo): se le pidio explicitamente 'symbol = currency.upper() arriba, usalo en los 5 sitios' y en su lugar fue escribiendo .upper() a mano en cada linea, olvidando una cada vez. Resultado: TRES 500 consecutivos con ?currency=eur (502 falso, KeyError en rate=, KeyError en cost=). Le costo 3 iteraciones y aun asi cerro la sesion con .upper() escrito 4 veces en vez de la variable. Vigilar: cuando un valor se usa mas de una vez, exigir que lo nombre.",
+    "GUARDA DESPUES DEL ACCESO QUE PROTEGE (S15): puso 'if \"rates\" not in payload' DEBAJO de la linea que ya hace payload['rates']. La guarda es codigo muerto: nunca llega a ejecutarse porque el KeyError ya salto. Familia nueva: el ORDEN de las guardas, no solo su contenido. Sigue sin arreglar al cierre de S15.",
+    "AUTOIMPORT DEL EDITOR — SEGUNDA SESION SEGUIDA metiendo imports basura que el estudiante no escribio: 'from asyncio import timeout' (S14) y 'from pyexpat import model' (S15). Ninguno se ve sin correr ruff. Habito a instalar: ruff ANTES de decir 'listo', no despues de que lo pida el tutor.",
+    "Reclamo infundado en S15 ('y de donde carajos la iba a sacar?' por la URL de Frankfurter): estaba en el enunciado dos veces (Contexto linea 20 y paso 4.3). Se le mostro. Distinto de sus reclamos de S13, que si tenian razon. Nota para el tutor: verificar el enunciado antes de conceder, y conceder solo lo que en efecto falto (aqui: el nombre FRANKFURTER_URL y la decision de hacerla constante, que si las dio el tutor).",
+    "DURACION DE SESION — TERCERA SEGUIDA fuera de control (S13, S14, S15). En S15 el tutor si propuso el cierre a tiempo y ofrecio A/B, pero la sesion ya iba muy por encima de los 35 min cuando lo hizo. Para S16: proponer el corte ANTES, en cuanto el paso en curso quede verificable.",
     "Todo el stack de AI Engineer de F2 en adelante: sin exposicion."
   ],
   "topicos": {
@@ -111,11 +123,12 @@
       ]
     },
     "f1.async-basico": {
-      "status": "visto",
-      "ultima_sesion": "2026-08-13",
-      "next_review": "2026-08-15",
-      "intentos": 4,
+      "status": "aprendido",
+      "ultima_sesion": "2026-08-16",
+      "next_review": "2026-08-23",
+      "intentos": 5,
       "notas": [
+        "S15 (2026-08-16): review SUPERADA — REGRESION DE S14 CERRADA. Se le reanclo primero a su propia medicion de la S8 (10 requests de 0.3s: 3.14s secuencial vs 0.43s con gather) y luego se repitio la pregunta que fallo: 10 requests de 0.8s con AsyncClient(timeout=1.0) -> respondio ~0.8-1s, correcto. Ademas trajo por su cuenta que el timeout es POR REQUEST y por eso no falla ninguna. PRECISION DADA: su explicacion del porque se apoyaba en el handshake/pool; el motor real es que await sobre I/O devuelve el control al event loop y las diez esperas SE SOLAPAN, asi que el total = la mas lenta, no la suma (el pool es ahorro de segundo orden: aun con handshake gratis, secuencial serian 3.0s). Regla acordada: gather -> MAX, no SUM. VUELVE A APRENDIDO, next_review +7. TECNICA QUE FUNCIONO: reanclar a su propia medicion antes de preguntar en abstracto.",
         "S14 (2026-08-13): review FALLADA — REGRESION del nucleo del topico. Ante 'AsyncClient(timeout=1.0), 10 requests concurrentes de 0.8s': acerto que el timeout es por request y que no falla ninguna, pero dijo que el gather tarda ~8 SEGUNDOS. Sumo los tiempos como si fueran secuenciales, cuando el mismo midio 10 requests de 0.3s en 0.43s en la S8. Respuesta correcta: ~0.8s. BAJA A VISTO, next_review +2. En el proximo repaso preguntar primero por la medicion de S8 y que la explique.",
         "S8 (2026-07-30): event loop, corrutinas, await como 'me pauso y libero al loop', gather vs await secuencial. Ejercicio 01-cliente-concurrente (completar+predecir): 3 TODOs resueltos por su cuenta, 10 requests secuencial 3.14s vs concurrente 0.43s (7.3x), predicciones correctas. Verificado ejecutando.",
         "Confusion inicial S8 (corregida): creia que await = 'sigo con otra cosa'; se asento que await pausa al que lo escribe y libera al loop, y que la concurrencia la crea REGISTRAR varias tareas antes de esperar, no await en si.",
@@ -145,10 +158,15 @@
     },
     "f1.apis-rest-fastapi": {
       "status": "aprendido",
-      "ultima_sesion": "2026-08-13",
+      "ultima_sesion": "2026-08-16",
       "next_review": "2026-09-01",
-      "intentos": 4,
+      "intentos": 5,
       "notas": [
+        "S15 (2026-08-16): continuacion del ejercicio 03-api-externa. DEUDA DE S14 CERRADA por su cuenta: corrio ruff y arreglo los 2 avisos (fuera 'from asyncio import timeout', AsyncIterator desde collections.abc); lifespan=lifespan ya estaba puesto desde el cierre de S14.",
+        "S15 paso 4 A MEDIAS pero con CAMINO FELIZ VERIFICADO CONTRA LA RED REAL: GET /models/1/cost?currency=EUR -> 200 {id,name,currency:EUR,rate:0.86453,cost:165.99}; ?currency=eur -> 200 igual (tras 3 iteraciones); /models/999/cost -> 404. Aritmetica verificada (64000/1000*3.0=192 USD * 0.86453 = 165.99). mypy limpio. Logrado por su cuenta: 404 ANTES de tocar la red, try/except con 504/502 diferenciados, CostOut declarado con los 5 campos, funcion renombrada de 'quote' (copiada de la demo) a 'get_cost' tras senalarle que el nombre mentia.",
+        "S15 PENDIENTE (abre la S16): (1) sin variable para la moneda normalizada — currency.upper() escrito 4 veces; (2) la guarda de rates es CODIGO MUERTO, esta debajo del payload['rates'] que pretende proteger, asi que el punto 4.3 del contrato (no confiar en la forma del payload ajeno) sigue sin cumplirse: un 200 sin rates da 500 y no 502; (3) firma '-> dict' + return cost_out.model_dump() en vez de '-> CostOut' + return cost_out (punto 4.5); (4) ruff con 6 errores (F401 'from pyexpat import model' del autoimport, F811, B008 sin el # noqa, SIM118 x3). Pasos 5-8 SIN EMPEZAR.",
+        "MOMENTO DIDACTICO DEL DIA (S15): tres 500 consecutivos con ?currency=eur, descubiertos POR EL corriendo servidor+curls. Secuencia: 502 falso (guarda con .upper(), lookups sin el) -> KeyError en rate= -> KeyError en cost=. Cada arreglo parcial destapaba el siguiente sitio olvidado. Demostracion empirica de por que un valor usado 4-5 veces se nombra UNA vez. Aun asi cerro sin introducir la variable.",
+        "APRENDIZAJE NUEVO DE CONTENIDO (S15): CostOut es su PRIMER modelo Pydantic de SALIDA (hasta hoy solo habia modelado la entrada con ModelIn). Se le explico que anotar '-> CostOut' da tres cosas — serializacion, VALIDACION DE SALIDA y esquema en /docs — y que model_dump_json() devuelve un string que FastAPI enviaria como JSON de un string.",
         "S14 (2026-08-13): parte 3 (cierre de fase) — la API como CLIENTE de otra API. Concepto dado: lifespan + app.state (un AsyncClient compartido; uno por request tira el pool de S9), dependencia get_client(request), traduccion de fallos del upstream a 502/504 en vez de 500, y respx + TestClient como context manager. Demo demo_upstream.py corrida (200/502/504).",
         "Ejercicio 03-api-externa (GET /models/{id}/cost contra Frankfurter + 5 tests mockeados) A MEDIAS: solo el paso 3 de 8. lifespan y get_client escritos CORRECTAMENTE por su cuenta (estructura, AsyncIterator, aclose tras el yield, request.app.state).",
         "Defecto S14 pendiente: dejo 'app = FastAPI(title=...)' SIN lifespan=lifespan — la funcion existe pero nadie la llama (app.state vacio, AttributeError en el primer endpoint que lo pida). Señalado socraticamente 5 min despues de haberle explicado justo ese argumento. Tambien 2 avisos de ruff sin arreglar (F401 'from asyncio import timeout' del autoimport del editor, y AsyncIterator desde typing en vez de collections.abc). VERIFICAR EN S15.",
@@ -166,11 +184,12 @@
       ]
     },
     "f1.testing-pytest": {
-      "status": "visto",
-      "ultima_sesion": "2026-08-13",
-      "next_review": "2026-08-15",
-      "intentos": 3,
+      "status": "aprendido",
+      "ultima_sesion": "2026-08-16",
+      "next_review": "2026-08-23",
+      "intentos": 4,
       "notas": [
+        "S15 (2026-08-16): review SUPERADA — DEUDA DE S13/S14 COBRADA. Escribio de memoria y EXACTA la fixture async del cliente httpx: @pytest.fixture, 'async def client() -> AsyncIterator[httpx.AsyncClient]', 'async with httpx.AsyncClient(timeout=1.0) as http_client:', 'yield http_client'. Justificacion del yield correcta en el mecanismo generico (fixture con teardown; con return la funcion termina en esa linea). PRECISION DADA sobre la consecuencia concreta, que era el gap exacto de la S14: con 'return http_client' el async with sale de inmediato -> aclose() -> el test recibe un CLIENTE YA CERRADO y revienta en el primer await; no recibe None. Corregido tambien un detalle suyo: 'return http_client' si devuelve el cliente, None lo devolveria un return pelado; la diferencia real es CUANDO se cierra, no QUE se devuelve. VUELVE A APRENDIDO, next_review +7.",
         "S14 (2026-08-13): review FALLADA — la deuda explicita de S13 (escribir la fixture async de memoria) no la pudo escribir: 'de memoria me es dificil aun por que no recuerdo el cliente'. Ademas confundio DOS fixtures al justificar el yield: dio la razon de la fixture de MODELS (aislamiento del store, agnostico al orden) en vez de la del cliente (con return, el async with cerraria el cliente ANTES de que el test lo use). BAJA A VISTO, next_review +2. Volver a pedirla de memoria en S15.",
         "S13 (2026-08-11): parte 2 — respx (transporte falso, no micro-servidor), return_value vs side_effect, parametrize, fixture async, cobertura, ERROR vs FAILED. Ejercicio 02-mocks-cliente-http: conftest con fixture async + 5 tests (7 casos) sobre su cliente httpx de la S9. 7/7 verdes, ruff limpio, cobertura 41%.",
         "PASA A APRENDIDO: criterio_dominio del topico CUMPLIDO (fixtures + mocks de API externa + caminos felices y de error del cliente HTTP). Corrio EL MISMO la auditoria de mutacion (deuda de S12 cobrada): las 3 roturas detectadas y leidas correctamente.",
@@ -194,8 +213,8 @@
       ]
     }
   },
-  "sesiones_completadas": 14,
-  "ultima_sesion": "2026-08-13",
+  "sesiones_completadas": 15,
+  "ultima_sesion": "2026-08-16",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",

@@ -26,9 +26,9 @@ Docs at: http://127.0.0.1:8000/docs
 
 import os
 import secrets
-from asyncio import timeout
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import AsyncIterator
+from pyexpat import model
 
 import httpx
 from fastapi import Depends, FastAPI, HTTPException, Request
@@ -50,7 +50,8 @@ MODELS: dict[int, dict] = {
     1: {"name": "claude-fable-5", "provider": "anthropic", "max_tokens": 64000},
     2: {"name": "gpt-5", "provider": "openai", "max_tokens": 32000},
 }
-
+USD_PER_1K_TOKENS = 3.0
+FRANKFURTER_URL = "https://api.frankfurter.dev/v1/latest"
 EXPECTED_KEY = os.environ["MODEL_REGISTRY_API_KEY"]
 
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
@@ -75,6 +76,14 @@ class ModelIn(BaseModel):
     name: str
     provider: str
     max_tokens: int = Field(gt=0)
+
+
+class CostOut(BaseModel):
+    id: int
+    name: str
+    currency: str
+    rate: float
+    cost: float
 
 
 @app.get("/health")
@@ -118,3 +127,42 @@ async def delete_model(model_id: int) -> None:
         raise HTTPException(status_code=404, detail="Model not listed in the database")
 
     del MODELS[model_id]
+
+
+@app.get("/models/{model_id}/cost")
+async def get_cost(
+    currency: str,
+    model_id: int,
+    client: httpx.AsyncClient = Depends(get_client),
+) -> dict:
+    if model_id not in MODELS.keys():
+        raise HTTPException(status_code=404, detail="Model not found")
+    try:
+        response = await client.get(
+            f"{FRANKFURTER_URL}",
+            params={"base": "USD", "symbols": currency.upper()},
+        )
+        response.raise_for_status()
+    except httpx.TimeoutException as exc:
+        raise HTTPException(status_code=504, detail="Upstream timed out") from exc
+    except httpx.HTTPStatusError as exc:
+        raise HTTPException(
+            status_code=502, detail=f"Upstream error: {exc.response.status_code}"
+        ) from exc
+
+    payload = response.json()
+    if currency.upper() not in payload["rates"].keys():
+        raise HTTPException(status_code=502, detail="Currency not found in upstream")
+
+    if "rates" not in payload.keys():
+        raise HTTPException(status_code=502, detail="rates not in upstream")
+
+    cost_usd = MODELS[model_id]["max_tokens"] / 1000 * USD_PER_1K_TOKENS
+    cost_out = CostOut(
+        id=model_id,
+        name=MODELS[model_id]["name"],
+        currency=currency.upper(),
+        rate=payload["rates"][currency.upper()],
+        cost=round(cost_usd * payload["rates"][currency.upper()], 2),
+    )
+    return cost_out.model_dump()
