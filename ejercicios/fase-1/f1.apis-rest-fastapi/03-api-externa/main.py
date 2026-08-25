@@ -28,7 +28,7 @@ import os
 import secrets
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from pyexpat import model
+from typing import Annotated
 
 import httpx
 from fastapi import Depends, FastAPI, HTTPException, Request
@@ -133,36 +133,43 @@ async def delete_model(model_id: int) -> None:
 async def get_cost(
     currency: str,
     model_id: int,
-    client: httpx.AsyncClient = Depends(get_client),
-) -> dict:
-    if model_id not in MODELS.keys():
+    client: Annotated[httpx.AsyncClient, Depends(get_client)],
+) -> CostOut:
+
+    if model_id not in MODELS:
         raise HTTPException(status_code=404, detail="Model not found")
+
     try:
         response = await client.get(
             f"{FRANKFURTER_URL}",
             params={"base": "USD", "symbols": currency.upper()},
         )
         response.raise_for_status()
+
     except httpx.TimeoutException as exc:
         raise HTTPException(status_code=504, detail="Upstream timed out") from exc
+
     except httpx.HTTPStatusError as exc:
         raise HTTPException(
             status_code=502, detail=f"Upstream error: {exc.response.status_code}"
         ) from exc
 
     payload = response.json()
-    if currency.upper() not in payload["rates"].keys():
+    symbol = currency.upper()
+
+    if "rates" not in payload:
+        raise HTTPException(status_code=502, detail="symbols not in upstream")
+
+    if symbol not in payload["rates"]:
         raise HTTPException(status_code=502, detail="Currency not found in upstream")
 
-    if "rates" not in payload.keys():
-        raise HTTPException(status_code=502, detail="rates not in upstream")
-
     cost_usd = MODELS[model_id]["max_tokens"] / 1000 * USD_PER_1K_TOKENS
+
     cost_out = CostOut(
         id=model_id,
         name=MODELS[model_id]["name"],
-        currency=currency.upper(),
-        rate=payload["rates"][currency.upper()],
-        cost=round(cost_usd * payload["rates"][currency.upper()], 2),
+        currency=symbol,
+        rate=payload["rates"][symbol],
+        cost=round(cost_usd * payload["rates"][symbol], 2),
     )
-    return cost_out.model_dump()
+    return cost_out

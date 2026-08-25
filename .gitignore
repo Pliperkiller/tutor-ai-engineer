@@ -1,27 +1,25 @@
-# Secretos y datos locales
-.env
-data/
 
-# Claude Code (config local de esta máquina)
-.claude/settings.local.json
-
-# SO / editor
-.DS_Store
-
-# Repos de práctica de git (anidados, no se trackean desde este repo)
-ejercicios/fase-1/f1.git-flujo/*/repo-practica/
-
-# Stack del tema (AI Engineer)
 __pycache__/
-*.py[cod]
-.venv/
+.claude/settings.local.json
+.coverage
+.DS_Store
+.env
+.ipynb_checkpoints/
+.mypy_cache/
 .pytest_cache/
 .ruff_cache/
-.coverage
-htmlcov/
-.ipynb_checkpoints/
+.venv/
 *.egg-info/
-# artefactos pesados de modelos y vectores
-models/
 *.gguf
+*.py[cod]
 *.safetensors
+# artefactos pesados de modelos y vectores
+# Claude Code (config local de esta máquina)
+# Repos de práctica de git (anidados, no se trackean desde este repo)
+# Secretos y datos locales
+# SO / editor
+# Stack del tema (AI Engineer)
+data/
+ejercicios/fase-1/f1.git-flujo/*/repo-practica/
+htmlcov/
+models/
