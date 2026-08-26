@@ -136,13 +136,15 @@ async def get_cost(
     client: Annotated[httpx.AsyncClient, Depends(get_client)],
 ) -> CostOut:
 
+    symbol = currency.upper()
+
     if model_id not in MODELS:
         raise HTTPException(status_code=404, detail="Model not found")
 
     try:
         response = await client.get(
             f"{FRANKFURTER_URL}",
-            params={"base": "USD", "symbols": currency.upper()},
+            params={"base": "USD", "symbols": symbol},
         )
         response.raise_for_status()
 
@@ -155,10 +157,9 @@ async def get_cost(
         ) from exc
 
     payload = response.json()
-    symbol = currency.upper()
 
     if "rates" not in payload:
-        raise HTTPException(status_code=502, detail="symbols not in upstream")
+        raise HTTPException(status_code=502, detail="rates not in upstream")
 
     if symbol not in payload["rates"]:
         raise HTTPException(status_code=502, detail="Currency not found in upstream")
