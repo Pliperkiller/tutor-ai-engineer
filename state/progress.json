@@ -20,12 +20,12 @@
   "_gate_cierre_f1": [
     "La FASE 1 NO esta cerrada. Antes de entrar a F2 faltan dos cosas:",
     "1. f1.git-flujo: criterio_dominio INCOMPLETO — lleva 1 branch via PR (necesita 2+) y ~9 commits en el repo asistente-config (necesita 10+), y falta un conflicto resuelto VIA PR. Se cierra con un 2do PR con conflicto, exigiendo switch -c + git status sin recordarselo.",
-    "2. criterio_dominio_fase de F1: 'API REST con FastAPI que CONSUMA una API publica externa'. Ejercicio ejercicios/fase-1/f1.apis-rest-fastapi/03-api-externa/. Tras S17: PASOS 1-4 COMPLETOS Y VERIFICADOS (endpoint GET /models/{id}/cost contra Frankfurter, 4 caminos correctos con red real, ruff y mypy limpios, y los 2 nits cerrados). FALTAN LOS PASOS 5-7.",
-    "S18 ARRANCA POR EL EJERCICIO, NO POR EL REPASO (correccion de ritmo): (1) P1 escrita en el hueco que ya existe en test_upstream.py — con la fixture 'return TestClient(app)', que linea de main.py revienta, con que excepcion y si pytest reporta ERROR o FAILED. (2) Fixture de conftest.py a context manager. (3) Los 5 tests con respx sobre el andamiaje ya escrito + P2. (4) pytest -v (10-12 verdes), ruff, mypy. EL REPASO DE f1.testing-pytest (vencido 2026-08-28) VA AL FINAL, no al principio: R1 (por que os.environ va arriba de los imports — se espera 'timing', no 'scope') y R2(b) (que pregunta de verdad un test).",
-    "3. PENDIENTE ADICIONAL antes de dar el criterio de fase por dominado: variante del ejercicio de GUARDAS sobre payload ajeno — en S16 el tutor tuvo que escribirle las dos guardas.",
-    "NOTA DE ENTORNO: el ejercicio corre en Mac/zsh. Desde ejercicios/fase-1/f1.apis-rest-fastapi/03-api-externa: 'uv run pytest -v', 'uv run ruff check .', 'uv run mypy main.py'. Los enunciados viejos traen sintaxis PowerShell ($env:, curl.exe) que ya NO aplica.",
-    "NOTA TECNICA para el paso 6: el TestClient de starlette emite StarletteDeprecationWarning. Es ruido del entorno, no del codigo del estudiante.",
-    "NOTA DE ANDAMIAJE: test_upstream.py ya tiene las 5 firmas con docstring de contrato y # TODO, los imports, UPSTREAM_OK y los huecos de P1/P2. El estudiante solo escribe el cuerpo de los tests. Si en S18 vuelve a pedir re-explicaciones en vez de escribir, exigir el test 1 aunque salga mal y corregir sobre lo escrito."
+    "2. criterio_dominio_fase de F1: 'API REST con FastAPI que CONSUMA una API publica externa'. Ejercicio ejercicios/fase-1/f1.apis-rest-fastapi/03-api-externa/. Pasos 1-4 COMPLETOS Y VERIFICADOS. Paso 5 (fixture con lifespan) DADO por el tutor. Test 1 de respx DADO como demo trabajada. FALTAN: tests 2, 3, 4 y 5, P2, y el paso 7 (verificacion).",
+    "3. S19 ARRANCA ESCRIBIENDO, sin teoria previa: test 2 (404 sin tocar la red, assert sobre route.called) y test 3 (502 con parametrize sobre 404/500/503) + P2. Si sobra tiempo, tests 4 y 5. El repaso de f1.testing-pytest (vencido 2026-08-28) va DESPUES.",
+    "4. PENDIENTE ADICIONAL antes de dar el criterio de fase por dominado: variante del ejercicio de GUARDAS sobre payload ajeno — en S16 el tutor tuvo que escribirle las dos guardas.",
+    "5. NOTA DE ENTORNO: Mac/zsh. Desde la carpeta del ejercicio: 'uv run pytest -v', 'uv run ruff check .', 'uv run mypy main.py conftest.py test_upstream.py'. Los enunciados viejos traen sintaxis PowerShell que ya NO aplica.",
+    "6. RUFF: F401 'pytest imported but unused' en test_upstream.py es ESPERADO — se resuelve solo al escribir el parametrize del test 3.",
+    "7. DEUDA DE REDISENO DEL TUTOR: este ejercicio ocupo S14-S18. Reune 10 piezas nuevas en un entregable. NO volver a disenar asi — ver las reglas nuevas en debilidades."
   ],
   "fortalezas": [
     "Sintaxis basica de Python (funciones, loops, guardas, continue) verificada sin ayuda.",
@@ -104,7 +104,11 @@
     "GAP CONFIRMADO Y POR FIN EXPLICADO (S17): 'from X import Y ejecuta X ENTERO'. Marcado desde la S12 como 'verificar en el review'; verificado hoy y NO lo tenia. Ademas confunde TIMING con SCOPE (creia que os.environ escrito dentro de una fixture queda encerrado ahi). Antidoto que funciono: el experimento A/B que deja el scope fijo y mueve solo el momento de la lectura. Reverificar en la review del 2026-08-28.",
     "PEDIR 'PALABRAS CRISTIANAS' COMO MODO POR DEFECTO (S17, nuevo): 6 peticiones de reformulacion/recordatorio en una sola sesion (R1, R2, que hace pytest.raises, que dice P1, que es un lifespan, un ejemplo de request a get_cost). Todas legitimas por separado y ninguna tonta, pero juntas consumieron la sesion entera sin escribir UNA linea de test. Distinto del patron de ritmo de S12-S15 (alli eran preguntas conceptuales nuevas; aqui son re-explicaciones de material ya dado). Del lado del tutor: la regla de S16 ('ir a la evaluacion literal con datos reales') funciona, pero se aplico a TODO en vez de reservarla para los atascos. Para S18: maximo 2 re-explicaciones antes de exigir que escriba algo, aunque este mal.",
     "RITMO — QUINTA SESION SEGUIDA sin producir dentro del tiempo (S13-S17). Hoy con una diferencia relevante: el tutor SI aviso del tiempo dos veces (~25 y ~30 min) y el estudiante paro por cansancio, no por el limite. La sesion no se paso de largo — se quedo corta en produccion. Es el fallo inverso y hay que corregirlo por el otro lado: empezar por el ejercicio y meter el repaso al final cuando haya deuda de produccion.",
-    "RETIRADA (S17): 'parchea sitio por sitio en vez de nombrar el valor' (S15+S16). Los dos nits de main.py los aplico solo, a la primera y completos. Dejar de vigilar salvo reaparicion."
+    "RETIRADA (S17): 'parchea sitio por sitio en vez de nombrar el valor' (S15+S16). Los dos nits de main.py los aplico solo, a la primera y completos. Dejar de vigilar salvo reaparicion.",
+    "LEER UN TRACEBACK: NOMBRE vs MENSAJE (S18, nuevo). Dos veces en la misma sesion respondio 'NoneType' como si fuera la excepcion. NoneType es un TIPO que aparece dentro del mensaje; la excepcion es lo que va ANTES de los dos puntos (AttributeError). Regla dada. Reverificar en el repaso del 2026-08-28.",
+    "CONCEPTO NUEVO ACLARADO EN S18 (a peticion suya): la cadena completa cliente compartido -> lifespan -> app.state -> Depends/inyeccion -> Annotated, cada pieza como respuesta al problema que deja abierta la anterior. Ademas: por que una fixture con yield se anota Iterator[T] y no T (una funcion con yield devuelve un GENERADOR; pytest hace de intermediario). Verificar que lo retiene, no darlo por sabido.",
+    "FALLO DE DISENO DEL TUTOR — RECONOCIDO EN S18 (el estudiante tenia razon): '03-api-externa' ocupo CINCO sesiones (S14-S18) porque reune 10 piezas nuevas (lifespan, asynccontextmanager, app.state, DI, Annotated, cliente httpx compartido, guardas sobre payload ajeno, respx, parametrize, fixtures generadoras) sin marcar que era andamiaje y que se evaluaba. REGLAS NUEVAS Y PERMANENTES: (1) una pieza nueva por ejercicio; (2) el andamiaje va MARCADO en el enunciado; (3) verificar en material/progress si algo se enseno de verdad ANTES de pedirlo — si no, se da con el concepto; (4) un ejercicio que cruza a una 2da sesion se parte, a una 3ra es error de diseno y se redisena.",
+    "FEEDBACK DEL ESTUDIANTE (S18): 'los conceptos se me quedan muy en el aire'. Pide explicar el PORQUE de cada mecanismo (que problema resuelve, que se hacia antes) por encima del codigo, conciso pero sin escatimar en concepto. Aplicar en todos los topicos siguientes."
   ],
   "topicos": {
     "f1.python-profesional": {
@@ -202,7 +206,8 @@
         "P1 de S11 documento honesto: primera version sin None-check dio 500 (TypeError None vs str en compare_digest); el mismo diagnostico la causa al preguntarle. Conexion hecha: mypy marca exactamente ese bug.",
         "P2 de S11 (reciclaje de ids): predicha correctamente — gap de S10 cerrado.",
         "Incidente didactico S11: la demo del concepto se perdio (texto de chat previo a tool calls no visible para el estudiante; 2da vez). Regla nueva permanente: demos SIEMPRE como archivo (demo_api_key.py funciono bien). Ademas: entorno Windows/PowerShell detectado — enunciados con comandos en ambas variantes (curl.exe, $env:).",
-        "Pregunta candidata para review 2026-08-08: por que auto_error=False en vez de True (quien decide el error y que status) y por que compare_digest en secretos."
+        "Pregunta candidata para review 2026-08-08: por que auto_error=False en vez de True (quien decide el error y que status) y por que compare_digest en secretos.",
+        "S18: fixture del lifespan y demo de respx DADAS por el tutor (andamiaje, no evaluadas). Tests 2-5 siguen pendientes. Sin cambio de estado."
       ]
     },
     "f1.testing-pytest": {
@@ -233,12 +238,13 @@
         "P1 FALLADA y valiosa: predijo 'fallaran los tests con dependencia de api key'. La realidad es que el KeyError ocurre en la COLECCION, al importar main desde conftest, y no llega a correr ni un test. Reescribio la prediccion tras verlo.",
         "STATUS visto (no aprendido) por tres razones: el bloque A necesito pista 3 (estructura con huecos), el paso 6 lo corrio el tutor y no el estudiante, y el criterio_dominio del topico exige mocks de una API externa — sin tocar todavia.",
         "PARTE 2 COMPLETADA en S13. Cabo de S12 cerrado a medias: los 3 casos de P2 los conteo bien, pero no vio que el tercero PASA por accidente (2 modelos, pero {2,3} en vez de {1,2}) y llamo 'fixture' a la propiedad — es AISLAMIENTO; la fixture es el mecanismo. Corregido en sesion.",
-        "Nit S12 sin cerrar (sigue): falta el comentario que justifica os.environ encima de los imports en el conftest de 01-registro-modelos, y ruff nunca se corrio ahi (E402 esperado + noqa justificado)."
+        "Nit S12 sin cerrar (sigue): falta el comentario que justifica os.environ encima de los imports en el conftest de 01-registro-modelos, y ruff nunca se corrio ahi (E402 esperado + noqa justificado).",
+        "S18: el repaso NO se corrio (la sesion se consumio en conceptos y en feedback de diseno). Sigue vencido el 2026-08-28 con R1 (timing, no scope) y R2(b)."
       ]
     }
   },
-  "sesiones_completadas": 17,
-  "ultima_sesion": "2026-08-26",
+  "sesiones_completadas": 18,
+  "ultima_sesion": "2026-08-27",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",

@@ -7,8 +7,10 @@ Every test here mocks Frankfurter with respx: no network is used.
 # If the `client` fixture stays as `return TestClient(app)`, and a test hits
 # /models/1/cost?currency=EUR — which line of main.py breaks first, with which
 # exception, and does pytest report ERROR or FAILED?
-# TODO: your answer here
 # is going to fail over request.app.state.http_client will report an exception and this will show a FAILED test
+# R/ correct on both counts. The missing name: AttributeError
+#    ('State' object has no attribute 'http_client'). Nothing is created and nothing is
+#    None -- the attribute simply does not exist, because only the lifespan sets it.
 
 # P2 (write it BEFORE test 3):
 # The upstream answers 404 because the currency does not exist. Which status does
@@ -41,9 +43,28 @@ def test_cost_happy_path(client):
       - the route as a spy: the upstream was called exactly once, and the params
         the app really sent were base=USD and symbols=EUR
     """
-    # TODO
-    response = client.post("/models/1/cost?currency=EUR")
-    assert response.json() == UPSTREAM_OK
+    # --- GIVEN BY THE TUTOR as the worked demo for respx. Not graded. ---
+    with respx.mock:
+        route = respx.get(FRANKFURTER_URL).mock(
+            return_value=httpx.Response(200, json=UPSTREAM_OK)
+        )
+        response = client.get("/models/1/cost?currency=EUR")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "id": 1,
+        "name": "claude-fable-5",
+        "currency": "EUR",
+        "rate": 0.5,
+        # 64000 / 1000 * 3.0 = 192.0 USD, times the 0.5 rate.
+        "cost": 96.0,
+    }
+
+    # The route doubles as a spy: what the app really sent upstream.
+    assert route.call_count == 1
+    sent = route.calls.last.request.url.params
+    assert sent["base"] == "USD"
+    assert sent["symbols"] == "EUR"
 
 
 def test_unknown_model_never_calls_upstream(client):
