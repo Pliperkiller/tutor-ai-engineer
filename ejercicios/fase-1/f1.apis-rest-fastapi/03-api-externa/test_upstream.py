@@ -15,7 +15,7 @@ Every test here mocks Frankfurter with respx: no network is used.
 # P2 (write it BEFORE test 3):
 # The upstream answers 404 because the currency does not exist. Which status does
 # YOUR client receive, and why is it not a 404?
-# TODO: your answer here.
+# is a 502 , not a 404 because is not an issue of the current aplication itself but an issue of the upstream source
 
 import httpx
 import pytest
@@ -73,15 +73,26 @@ def test_unknown_model_never_calls_upstream(client):
     The 404 is decided before touching the network, so the mocked route must
     report that it was never called.
     """
-    # TODO
+    with respx.mock:
+        route = respx.get(FRANKFURTER_URL).mock(return_value=httpx.Response(404))
+        response = client.get("/models/999/cost?currency=EUR")
+
+    assert response.status_code == 404
+    assert route.call_count == 0
+    assert response.json() == {"detail": "Model not found"}
 
 
-def test_upstream_error_status_becomes_502(client):
+@respx.mock
+@pytest.mark.parametrize("status", [404, 503, 500])
+def test_upstream_error_status_becomes_502(client, status: int):
     """The upstream answers with an error status -> the API answers 502.
 
     Parametrize this one over at least three upstream statuses (404, 500, 503).
     """
-    # TODO
+    respx.get(FRANKFURTER_URL).mock(return_value=httpx.Response(status))
+    response = client.get("/models/1/cost?currency=EUR")
+
+    assert response.status_code == 502
 
 
 def test_upstream_timeout_becomes_504(client):
