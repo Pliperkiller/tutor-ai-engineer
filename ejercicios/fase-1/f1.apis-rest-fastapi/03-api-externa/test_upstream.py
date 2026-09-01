@@ -95,18 +95,36 @@ def test_upstream_error_status_becomes_502(client, status: int):
     assert response.status_code == 502
 
 
+@respx.mock
 def test_upstream_timeout_becomes_504(client):
     """The upstream never answers in time -> the API answers 504.
 
     Use side_effect with an httpx timeout exception, not a Response.
     """
-    # TODO
+    symbol = "EUR"
+    respx.get(
+        f"{FRANKFURTER_URL}",
+        params={"base": "USD", "symbols": symbol},
+    ).mock(side_effect=httpx.ReadTimeout("too slow"))
+
+    response = client.get(f"/models/1/cost?currency={symbol}")
+
+    assert response.status_code == 504
 
 
+@respx.mock
 def test_currency_missing_from_rates_becomes_502(client):
     """Upstream answers 200, but the requested currency is not inside `rates`.
 
     The payload is well formed, just not useful: the API must not trust it and
     must answer 502 instead of blowing up with a KeyError.
     """
-    # TODO
+    respx.get(FRANKFURTER_URL).mock(
+        return_value=httpx.Response(
+            200,
+            json=UPSTREAM_OK,
+        )
+    )
+    response = client.get("/models/1/cost?currency=COP")
+
+    assert response.status_code == 502
