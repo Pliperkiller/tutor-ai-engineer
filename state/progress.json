@@ -21,7 +21,7 @@
     "La FASE 1 NO esta cerrada. Antes de entrar a F2 faltan dos cosas:",
     "1. f1.git-flujo: criterio_dominio INCOMPLETO — lleva 1 branch via PR (necesita 2+) y ~9 commits en el repo asistente-config (necesita 10+), y falta un conflicto resuelto VIA PR. Se cierra con un 2do PR con conflicto, exigiendo switch -c + git status sin recordarselo.",
     "2. criterio_dominio_fase de F1 — ENTREGABLE COMPLETO EN S20 (2026-09-01): ejercicios/fase-1/f1.apis-rest-fastapi/03-api-externa/ terminado y verificado ejecutando — 12/12 tests verdes en 0.10s, ruff limpio, mypy limpio (paso 7 cumplido). Tests 4 y 5 escritos por el estudiante con pista 1 en ambos. Nit abierto no bloqueante: test 5 sin assert espia (route.call_count == 1).",
-    "3. S21 ABRE CON REPASOS (max 3), todos vencidos el 2026-09-01: f1.git-flujo, f1.async-basico, f1.apis-rest-fastapi; el de f1.testing-pytest vence 2026-09-02 (experimento de invertir las 2 lineas del conftest corrido POR EL). Despues, bloque de produccion: el 2do PR con conflicto de git-flujo O la variante de guardas (punto 4). La formula 'arrancar escribiendo, repaso al final si hay bateria' funciono en S19 y S20: mantenerla, pero con 3 repasos vencidos toca abrir con ellos.",
+    "3. S22 ABRE CON REPASOS PENDIENTES de la S21 (/repaso del 2026-09-03 cerrado a peticion del estudiante a mitad): (a) f1.async-basico — retomar EXACTAMENTE en la pregunta-cuenta (handshake gratis -> secuencial 3.0s; el pool no explica 0.43s), su primera respuesta fue otra vez 'el pool' (3ra vez); (b) f1.apis-rest-fastapi — vencido 2026-09-01, NO corrido ni en S20 ni en S21; (c) f1.testing-pytest — vencido 2026-09-02, NO corrido: experimento de invertir las 2 lineas del conftest corrido POR EL ('env -u MODEL_REGISTRY_API_KEY uv run pytest') + R2b (asserts fuera del with pytest.raises, que lo produzca EL). En S21 SI se superaron python-profesional (+21) y git-flujo (+21). Despues de los repasos, bloque de produccion: el 2do PR con conflicto de git-flujo O la variante de guardas (punto 4).",
     "4. PENDIENTE ADICIONAL antes de dar el criterio de fase por dominado: variante del ejercicio de GUARDAS sobre payload ajeno — en S16 el tutor tuvo que escribirle las dos guardas.",
     "5. NOTA DE ENTORNO: Mac/zsh. Desde la carpeta del ejercicio: 'uv run pytest -v', 'uv run ruff check .', 'uv run mypy main.py conftest.py test_upstream.py'. Los enunciados viejos traen sintaxis PowerShell que ya NO aplica.",
     "6. RUFF: F401 'pytest imported but unused' en test_upstream.py es ESPERADO — se resuelve solo al escribir el parametrize del test 3.",
@@ -119,10 +119,11 @@
   "topicos": {
     "f1.python-profesional": {
       "status": "dominado",
-      "ultima_sesion": "2026-08-06",
-      "next_review": "2026-08-27",
-      "intentos": 4,
+      "ultima_sesion": "2026-09-03",
+      "next_review": "2026-09-24",
+      "intentos": 5,
       "notas": [
+        "S21 (2026-09-03, /repaso): review SUPERADA. (a) self-import circular en __init__.py explicado solo y bien ('el init esta dentro de aiconfig; importar aiconfig dentro es referencia ciclica'). (b) F401: dio la salida del re-export via __all__ solo; la salida trivial (borrar el import basura) necesito 2 empujones minimos. Nucleo intacto, titubeo solo en lo obvio. Intervalo extendido +21.",
         "S1: type hints + excepciones propias + control de flujo. Ejercicio 01-tags-tipados 4/4.",
         "S2: dataclasses (@dataclass, defaults/orden, __post_init__ fail-fast, __repr__/__eq__). Ejercicio 02-config-dataclass 5/5.",
         "S3: paquete aiconfig (tags.py + config.py + __init__.py con imports relativos y __all__) + ruff limpio + pytest 4/4. Ejercicio 03-paquete-config. Aprendio a distinguir F401 basura vs re-export.",
@@ -133,10 +134,11 @@
     },
     "f1.git-flujo": {
       "status": "aprendido",
-      "ultima_sesion": "2026-08-11",
-      "next_review": "2026-09-01",
-      "intentos": 3,
+      "ultima_sesion": "2026-09-03",
+      "next_review": "2026-09-24",
+      "intentos": 4,
       "notas": [
+        "S21 (2026-09-03, /repaso): review SUPERADA LIMPIA, de memoria y sin pistas. (a) git branch con el * para saber donde esta parado (la pieza que falto en S13: cobrada). (b) git switch -c fix-guardas Y el equivalente checkout -b — la causa raiz del incidente main-into-main de S5 la tiene de memoria. Intervalo extendido +21. OJO: el criterio_dominio sigue INCOMPLETO (2do PR con conflicto via PR + 10+ commits) — eso es bloque de produccion para una /sesion, no de repaso.",
         "S13 (2026-08-11): review SUPERADA de memoria — 'git branch feature-x' no mueve HEAD, el commit cae en la branch actual; dio el procedimiento correcto (branch + switch). El gap de S9 quedo cerrado. Faltó solo el comando de verificacion previa (git status / git branch --show-current), que si sabia en S9. Intervalo extendido a +21.",
         "S9 (2026-08-03): review SUPERADA en el nucleo — explico de memoria que el commit cae donde esta HEAD y como verificarlo (git branch, git status). Hueco: no conocia checkout -b / switch -c (nunca lo habia aprendido; causa raiz del PR main-into-main de S5). Se le dio el dato. next_review +7.",
         "S4 (2026-07-29): branches, merge, fast-forward vs merge commit, resolucion de conflicto. Ejercicio 01-branches-conflicto (debug+predecir) resuelto por su cuenta.",
@@ -150,10 +152,11 @@
     },
     "f1.async-basico": {
       "status": "aprendido",
-      "ultima_sesion": "2026-08-25",
-      "next_review": "2026-09-01",
-      "intentos": 6,
+      "ultima_sesion": "2026-09-03",
+      "next_review": "2026-09-04",
+      "intentos": 7,
       "notas": [
+        "S21 (2026-09-03, /repaso): review INTERRUMPIDA A MEDIA PREGUNTA — el estudiante pidio cerrar (regla S19 aplicada: se cierra sin forzar el repaso). NO se marca superada ni fallada. Dato relevante: su PRIMERA respuesta a 'que mecanismo baja 3.14s a 0.43s' fue 'el pool de handshake' — TERCERA aparicion del intercambio de mecanismos (S15, S16, S21), esta vez incluso reanclado a su medicion. Quedo planteada y SIN RESPONDER la pregunta-cuenta que lo delata: con handshake GRATIS, 10 requests secuenciales de 0.3s = 3.0s, no 0.43s — el pool no puede explicar la caida; solo el solapamiento de esperas (await devuelve el control al loop) puede. RETOMAR EXACTAMENTE AHI el 2026-09-04, en frio: primero la cuenta, luego que enuncie la regla gather->MAX vs pool->esperas mas cortas. Sin cambio de estado, intervalo NO extendido.",
         "S16 (2026-08-25): review SUPERADA PERO SIN EXTENDER INTERVALO (+7, no +21). Pregunta: que se pierde con un AsyncClient por request en vez del compartido del lifespan, ante 50 requests. Primera respuesta: 'concurrencia' — MECANISMO EQUIVOCADO. Tras una repregunta acotada ('¿dejan de solaparse, o se solapan igual pagando algo extra?') acerto: handshake TCP+TLS por request, sin keep-alive. PATRON A VIGILAR: lleva dos sesiones intercambiando los dos mecanismos — en S15 le atribuyo al pool el merito del gather, hoy le atribuyo a la concurrencia el merito del pool. Regla que se le dio: gather/await -> las esperas se SOLAPAN (total = la mas lenta); pool -> cada espera es MAS CORTA (ahorro de segundo orden).",
         "S15 (2026-08-16): review SUPERADA — REGRESION DE S14 CERRADA. Se le reanclo primero a su propia medicion de la S8 (10 requests de 0.3s: 3.14s secuencial vs 0.43s con gather) y luego se repitio la pregunta que fallo: 10 requests de 0.8s con AsyncClient(timeout=1.0) -> respondio ~0.8-1s, correcto. Ademas trajo por su cuenta que el timeout es POR REQUEST y por eso no falla ninguna. PRECISION DADA: su explicacion del porque se apoyaba en el handshake/pool; el motor real es que await sobre I/O devuelve el control al event loop y las diez esperas SE SOLAPAN, asi que el total = la mas lenta, no la suma (el pool es ahorro de segundo orden: aun con handshake gratis, secuencial serian 3.0s). Regla acordada: gather -> MAX, no SUM. VUELVE A APRENDIDO, next_review +7. TECNICA QUE FUNCIONO: reanclar a su propia medicion antes de preguntar en abstracto.",
         "S14 (2026-08-13): review FALLADA — REGRESION del nucleo del topico. Ante 'AsyncClient(timeout=1.0), 10 requests concurrentes de 0.8s': acerto que el timeout es por request y que no falla ninguna, pero dijo que el gather tarda ~8 SEGUNDOS. Sumo los tiempos como si fueran secuenciales, cuando el mismo midio 10 requests de 0.3s en 0.43s en la S8. Respuesta correcta: ~0.8s. BAJA A VISTO, next_review +2. En el proximo repaso preguntar primero por la medicion de S8 y que la explique.",
@@ -252,8 +255,8 @@
       ]
     }
   },
-  "sesiones_completadas": 20,
-  "ultima_sesion": "2026-09-01",
+  "sesiones_completadas": 21,
+  "ultima_sesion": "2026-09-03",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
