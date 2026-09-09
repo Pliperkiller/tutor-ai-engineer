@@ -4,7 +4,15 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-rm -rf repo-practica
+if [ -d repo-practica ]; then
+  echo "ATENCION: repo-practica ya existe. Recrearlo BORRA toda su historia (.git incluido)."
+  read -r -p "¿Borrar y recrear desde cero? Escribe 'si' para continuar: " answer
+  if [ "$answer" != "si" ]; then
+    echo "Abortado. repo-practica queda intacto."
+    exit 1
+  fi
+  rm -rf repo-practica
+fi
 git init -q -b main repo-practica
 cd repo-practica
 
