@@ -16,10 +16,10 @@ Dos PRs nuevos fusionados en `asistente-config`, el segundo con un conflicto rea
 
 ## Paso a paso
 
-0. **Preparación** (estás en máquina nueva; el repo vive en GitHub, no aquí):
-   ```powershell
+0. **Preparación** (el repo vive en GitHub, no aquí — clónalo en la máquina del día, FUERA de `tutor-ai-engineer`):
+   ```sh
    gh auth status
-   cd C:\Users\pipek\OneDrive\Documentos\dev
+   cd ~/code
    gh repo clone Pliperkiller/asistente-config
    cd asistente-config
    ```
@@ -33,7 +33,7 @@ Dos PRs nuevos fusionados en `asistente-config`, el segundo con un conflicto rea
 3. **P1 en `RESPUESTAS.md`, antes de fusionar nada**: cuando fusiones el PR A, ¿qué va a mostrar GitHub en la página del PR B y por qué? ¿El botón de merge del PR B va a estar disponible?
 
 4. Fusiona el PR A:
-   ```powershell
+   ```sh
    gh pr merge <numero-A> --merge
    ```
    Abre el PR B (`gh pr view <numero-B> --web`) y compara con tu P1.
@@ -43,16 +43,17 @@ Dos PRs nuevos fusionados en `asistente-config`, el segundo con un conflicto rea
 6. Resuelve el conflicto **en la branch B, localmente**:
    - Muévete a la branch B.
    - Trae el `main` del remoto y fusiónalo en tu branch:
-     ```powershell
-     git pull origin main
+     ```sh
+     git pull --no-rebase origin main
      ```
      (`pull` = `fetch` + `merge`: descarga el `main` remoto y lo fusiona en la branch donde estás parado. Aquí es donde salta el conflicto.)
+     Nota: `--no-rebase` declara que la reconciliación sea un **merge**. En una máquina sin `pull.rebase` configurado, git se niega a elegir por ti cuando las branches divergen y pide este flag (o su config equivalente).
    - Resuelve mezclando **ambos lados** (la redacción nueva del A + el rango del B), sin marcadores residuales. El commit de merge documenta cómo decidiste. Push.
 
 7. Vuelve a la página del PR B: debe estar fusionable ya. Fusiónalo con `gh pr merge <numero-B> --merge`.
 
 8. **Verifica**: en tu `main` local, actualízalo y corre:
-   ```powershell
+   ```sh
    git log --oneline --graph
    ```
    **P3 en `RESPUESTAS.md`**: ¿cuántos commits tiene ahora la historia completa? ¿Cuántos merge commits añadió todo este flujo y de dónde salió cada uno?

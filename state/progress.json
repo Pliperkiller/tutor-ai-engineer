@@ -16,16 +16,14 @@
       "Frontera: inicio de F1. Primer topico a trabajar: f1.python-profesional."
     ]
   },
-  "posicion_actual": "f1.git-flujo",
+  "posicion_actual": "f2.como-funciona-llm",
   "_gate_cierre_f1": [
-    "La FASE 1 NO esta cerrada. Antes de entrar a F2 faltan dos cosas:",
-    "1. f1.git-flujo: criterio_dominio INCOMPLETO — lleva 1 branch via PR (necesita 2+) y ~9 commits en el repo asistente-config (necesita 10+), y falta un conflicto resuelto VIA PR. Se cierra con un 2do PR con conflicto, exigiendo switch -c + git status sin recordarselo.",
-    "2. criterio_dominio_fase de F1 — ENTREGABLE COMPLETO EN S20 (2026-09-01): ejercicios/fase-1/f1.apis-rest-fastapi/03-api-externa/ terminado y verificado ejecutando — 12/12 tests verdes en 0.10s, ruff limpio, mypy limpio (paso 7 cumplido). Tests 4 y 5 escritos por el estudiante con pista 1 en ambos. Nit abierto no bloqueante: test 5 sin assert espia (route.call_count == 1).",
-    "3. S24 ABRE CON el bloque de produccion: ejercicios/fase-1/f1.git-flujo/03-pr-conflicto/ (enunciado + RESPUESTAS.md montados en S23, SIN EMPEZAR). Maquina Windows: el paso 0 clona asistente-config FUERA de tutor-ai-engineer. Evaluar SIN recordarselo: git status/branch antes de crear branches, y switch -c. Orden critico del ejercicio: abrir AMBOS PRs antes de fusionar el A; P1 escrita antes de fusionar nada. Repasos que caen: async 2026-09-14 (debe dar las DOS mitades solo para +21), pydantic 2026-09-15, testing-pytest y apis-rest-fastapi 2026-09-16.",
-    "4. PENDIENTE ADICIONAL antes de dar el criterio de fase por dominado: variante del ejercicio de GUARDAS sobre payload ajeno — en S16 el tutor tuvo que escribirle las dos guardas.",
-    "5. NOTA DE ENTORNO: alterna maquinas — S16-S22 Mac/zsh, S23 Windows/PowerShell (uv operativo, .venv de 01-registro-modelos funciona, 5 passed en 0.02s). Dar los comandos en la variante de la maquina del dia; detectarla al abrir la sesion.",
-    "6. RUFF: F401 'pytest imported but unused' en test_upstream.py es ESPERADO — se resuelve solo al escribir el parametrize del test 3.",
-    "7. DEUDA DE REDISENO DEL TUTOR: este ejercicio ocupo S14-S18. Reune 10 piezas nuevas en un entregable. NO volver a disenar asi — ver las reglas nuevas en debilidades."
+    "FASE 1 CASI CERRADA. f1.git-flujo criterio_dominio COMPLETO en S24 (2026-09-09): 3 PRs fusionados en asistente-config, 14 commits, conflicto real resuelto via PR. Topico DOMINADO.",
+    "PENDIENTE UNICO antes de dar el criterio_dominio_fase de F1 por cerrado: variante del ejercicio de GUARDAS sobre payload ajeno (en S16 el tutor escribio las dos guardas). Disenarla PEQUENA (regla S18: una pieza): payload nuevo de una API publica, 2 guardas, nada mas nuevo. Recordar sus reglas: la guarda ARRIBA del acceso, menciona EXACTAMENTE la clave de la linea de abajo, 'in' sobre dict = clave / sobre string = subcadena.",
+    "S25 PLAN: (a) repasos vencidos del dia — async 09-14 (debe dar las DOS mitades: gather->MAX y pool->esperas mas cortas, sin empujon -> +21), pydantic 09-15, testing-pytest y apis-rest-fastapi 09-16 (la cadena DI SIN darle la lista de piezas). (b) bloque de produccion: la variante de guardas. (c) con eso F1 queda cerrada y arranca F2 en f2.como-funciona-llm (posicion_actual ya apunta ahi, GATED por la variante de guardas).",
+    "NOTA DE ENTORNO: alterna Mac/zsh (tarde S24) y Windows/PowerShell (manana S23). Mac fresca: git exige estrategia en pull divergente (--no-rebase) — ya documentado en el enunciado 03. Dar los comandos en la sintaxis de la maquina del dia.",
+    "criterio_dominio_fase F1 — entregable 03-api-externa COMPLETO en S20 (12/12 tests, ruff y mypy limpios). Nit abierto no bloqueante: test 5 sin assert espia (route.call_count == 1).",
+    "DEUDA DE TOOLING DEL TUTOR (abierta desde S5): ejercicios/fase-1/f1.git-flujo/01-branches-conflicto/setup.sh hace 'rm -rf repo-practica' sin guarda. Arreglarlo."
   ],
   "fortalezas": [
     "Sintaxis basica de Python (funciones, loops, guardas, continue) verificada sin ayuda.",
@@ -66,7 +64,8 @@
     "Endpoint que consume una API externa FUNCIONANDO contra la red real (S15): 404 antes de tocar la red, try/except con 504/502 diferenciados, CostOut declarado, funcion renombrada de 'quote' (heredado de la demo) a 'get_cost'. Camino feliz verificado con curl: 200 con EUR y con eur, cost 165.99 exacto, 404 para modelo inexistente, mypy limpio.",
     "Repaso en frio SUPERADO con produccion propia (S23): corrio EL MISMO el experimento del conftest (lineas invertidas + shell sin la env var), leyo el output literal y produjo las piezas que llevaban 4 sesiones escapandose: el KeyError nace en main.py:42 y conftest.py:6 solo dispara el import; 'pytest se rompio en la coleccion, antes de correr cualquier test' (ERROR, 0 tests). Ademas se autocorrigio contra su prediccion ('corren 3 de 5') sin que se le senalara.",
     "pytest.raises completo de memoria (S23): dentro del with SOLO la linea que explota, asserts fuera interrogando exc_info; las 3 salidas (esperada->verde, ninguna->DID NOT RAISE, otra->rojo). R2b, que en S19 la dio el tutor, hoy la produjo EL con la reescritura correcta a la primera.",
-    "Cadena DI reproducida de memoria (S23): las 5 piezas con su papel (lifespan crea/cierra, app.state almacena lo compartido, get_client jala de app.state, Depends='ejecuta esto antes del endpoint', Annotated=tipo+metadata) y la pregunta de control bien: 50 requests -> UN AsyncClient con pool de CONEXIONES dentro. La review fallada de S22 queda superada."
+    "Cadena DI reproducida de memoria (S23): las 5 piezas con su papel (lifespan crea/cierra, app.state almacena lo compartido, get_client jala de app.state, Depends='ejecuta esto antes del endpoint', Annotated=tipo+metadata) y la pregunta de control bien: 50 requests -> UN AsyncClient con pool de CONEXIONES dentro. La review fallada de S22 queda superada.",
+    "Flujo completo de conflicto via PR por su cuenta (S24): branch B creada desde main y no desde A (la trampa del ejercicio), conflicto resuelto local mezclando ambos lados con decision de dedup propia, merge commit documentado, PR destrabado y fusionado. Ante errores de git no adivino: pego el output completo (hint de divergent branches, unmerged files) — el habito contrario a 'adivina en vez de leer' de S16."
   ],
   "debilidades": [
     "Error de frontera <= vs < y olvido de 'raise' (cometidos y corregidos en 02). Vigilar en validators futuros.",
@@ -122,7 +121,9 @@
     "RITMO — RESUELTO EN S19 con la formula acordada en S18 (arrancar escribiendo, repaso al final): produccion desde el minuto 1, dos tests portantes verificados dentro del tiempo, ruff corrido sin pedirselo, y el ESTUDIANTE corto a tiempo dejando los tests 4-5 para la S20. Primera sesion desde S12 que cierra en orden. MANTENER la formula.",
     "RETIRADAS (S23): (a) 'donde revienta' (S12/S13/S19 x2) — el experimento del conftest corrido POR EL en frio produjo la pieza coleccion/ERROR/0-tests y la lectura correcta del traceback (la excepcion nace en la linea de MAS ABAJO; las de arriba son la cadena); (b) asserts dentro del with pytest.raises (S7/S17/S19) — R2b producida por EL; (c) cadena DI no asentada (S18/S22) — reproducida de memoria con '1 cliente, pool de conexiones dentro'. VIGILANCIA PASIVA que sigue: la familia 'tests que pasan por la razon equivocada' (6 apariciones) — seguir preguntando 'de quien es este status' en toda suite nueva.",
     "MATIZ del repaso DI (S23): su primera respuesta fue una cadena de flechas pelada y con el orden torcido (app.state antes que lifespan); la explicacion buena salio al exigir una frase por pieza. Y la pregunta de control ('cuantos AsyncClient') la esquivo 3 mensajes hasta que se le puso como condicion de cierre. En el proximo repaso pedir la cadena SIN plantilla de piezas.",
-    "DURACION — S23 CERRO EN ORDEN y a peticion del estudiante: dos repasos superados + ejercicio montado, sin bucles. Segunda sesion consecutiva dentro del protocolo (S19 fue la primera; S20-S22 razonables). La formula 'producir primero' + regla S19 ('si pide cerrar, se cierra') estan funcionando: mantenerlas."
+    "DURACION — S23 CERRO EN ORDEN y a peticion del estudiante: dos repasos superados + ejercicio montado, sin bucles. Segunda sesion consecutiva dentro del protocolo (S19 fue la primera; S20-S22 razonables). La formula 'producir primero' + regla S19 ('si pide cerrar, se cierra') estan funcionando: mantenerlas.",
+    "RECLAMO INFUNDADO #2 (S24, 'nunca me ensenaste los marcadores de conflicto'): falso verificado — material f1.git-flujo.md:40 y dos conflictos resueltos por el (S4, S5). Como en S15: verificar el registro antes de conceder, conceder solo lo que en efecto falto (aqui: nada; solo el termino olvidado tras 6 semanas). Patron emergente: ante material olvidado reclama en vez de consultar sus apuntes. Antidoto acordado con el tutor: primero material/, luego re-explicacion.",
+    "Mensajes de commit con prefijo 'Carlos C :' (S24, nuevo nit): duplica lo que git ya registra como autor y ensucia el --oneline. Titulos de PR 'merge X on Y': describen el acto, no el cambio. Preguntar en la review de git-flujo del 2026-09-24 que aporta el prefijo; exigir titulos que describan el cambio en los proximos PRs."
   ],
   "topicos": {
     "f1.python-profesional": {
@@ -141,11 +142,13 @@
       ]
     },
     "f1.git-flujo": {
-      "status": "aprendido",
-      "ultima_sesion": "2026-09-03",
+      "status": "dominado",
+      "ultima_sesion": "2026-09-09",
       "next_review": "2026-09-24",
-      "intentos": 4,
+      "intentos": 5,
       "notas": [
+        "S24 (2026-09-09, tarde, Mac): EJERCICIO 03-pr-conflicto COMPLETO — CRITERIO_DOMINIO CERRADO, PASA A DOMINADO (recuperacion activa ya superada limpia en S21; hoy cayo el unico bloqueo, el criterio). 2 PRs nuevos fusionados en asistente-config (#2 clarify-temperature-docs, #3 document-temperature-range), conflicto real en README provocado y resuelto EN LOCAL (git pull --no-rebase origin main + merge commit 61d8a3d documentando la decision), push y PR B fusionado. Verificado por el tutor ejecutando: 3 PRs merged, 14 commits (necesitaba 10+), cero marcadores residuales, y la linea final MEZCLA ambos lados (redaccion del A + frase de rango del B) con dedup correcto del rango que el lado A traia entre parentesis. P1 primero con mecanismo equivocado ('main un commit adelante'); con la pregunta discriminante ('¿y si A hubiera tocado OTRA linea?') la corrigio EL: lo que bloquea es misma linea tocada en ambos lados. P2 completa tras releer sus apuntes (lados de los marcadores bien asignados). P3 correcta y completa: 5 commits nuevos desde a866366 y los 3 merges identificados con su origen (PR A en GitHub, merge local de resolucion, PR B en GitHub). Pistas nivel 1-2: sintaxis de push -u y gh pr create dadas como tooling; --no-rebase era hueco del ENUNCIADO (Mac fresca sin pull.rebase — corregido en el enunciado), no fallo suyo. Aprendizajes nuevos en sesion: -u/--set-upstream (branch local rastrea remota), merge vs rebase como estrategias de reconciliacion (rebase solo presentado, es topico futuro), estado (MERGING) del prompt y pull rechazado con merge abierto.",
+        "S24 vigilancia para la review 2026-09-24: (a) RECLAMO INFUNDADO #2 ('nunca me ensenaste que es un marcador') — verificado FALSO: material/fase-1/f1.git-flujo.md:40 + conflictos resueltos por el en S4 y S5; se le mostro el registro y se concedio solo el olvido del termino. Mismo patron de S15: ante material olvidado, el primer impulso es 'no me lo ensenaste' en vez de abrir SUS apuntes. Antidoto: mandarlo a material/ antes de re-explicar. (b) Nits de mensajes: prefijo 'Carlos C :' en los commits (git ya registra el autor — preguntarle en la review que informacion aporta) y titulos de PR que empiezan con 'merge...' (el titulo describe el CAMBIO, no el acto de fusionar). (c) En la review: mecanica del pull divergente (por que git exige --no-rebase) y los dos padres del merge commit.",
         "S23 (2026-09-09): ejercicio 03-pr-conflicto MONTADO (enunciado + RESPUESTAS.md en ejercicios/fase-1/f1.git-flujo/03-pr-conflicto/) y SIN EMPEZAR — es el que cierra el criterio_dominio: 2 branches sobre la misma linea del README de asistente-config, el PR A se fusiona primero, el PR B queda en conflicto y se resuelve via PR; con eso llega a 3+ branches via PR y 10+ commits. Maquina Windows: el paso 0 clona el repo FUERA de tutor-ai-engineer. Evaluar SIN recordarselo: git status/branch antes de crear branches, y switch -c. Sin cambio de estado.",
         "S21 (2026-09-03, /repaso): review SUPERADA LIMPIA, de memoria y sin pistas. (a) git branch con el * para saber donde esta parado (la pieza que falto en S13: cobrada). (b) git switch -c fix-guardas Y el equivalente checkout -b — la causa raiz del incidente main-into-main de S5 la tiene de memoria. Intervalo extendido +21. OJO: el criterio_dominio sigue INCOMPLETO (2do PR con conflicto via PR + 10+ commits) — eso es bloque de produccion para una /sesion, no de repaso.",
         "S13 (2026-08-11): review SUPERADA de memoria — 'git branch feature-x' no mueve HEAD, el commit cae en la branch actual; dio el procedimiento correcto (branch + switch). El gap de S9 quedo cerrado. Faltó solo el comando de verificacion previa (git status / git branch --show-current), que si sabia en S9. Intervalo extendido a +21.",
@@ -269,7 +272,7 @@
       ]
     }
   },
-  "sesiones_completadas": 23,
+  "sesiones_completadas": 24,
   "ultima_sesion": "2026-09-09",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
