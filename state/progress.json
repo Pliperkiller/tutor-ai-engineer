@@ -14,7 +14,9 @@
       "Calibracion de ritmo: 'programo algo, Python basico' — sabe funciones/loops basicos, pero sin type hints, sin entornos (uv), sin estructura de paquetes.",
       "No se corrio ningun ejercicio de codigo: el estudiante se declaro principiante y no habia ninguna afirmacion que verificar hacia arriba. Estado conservador: todo no_visto.",
       "Frontera: inicio de F1. Primer topico a trabajar: f1.python-profesional."
-    ]
+    ],
+    "nivel_global": null,
+    "niveles_por_fase": {}
   },
   "posicion_actual": "f2.como-funciona-llm",
   "_gate_cierre_f1": [
@@ -277,7 +279,16 @@
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
-    "Solo el tutor escribe este archivo, al cierre de cada sesion (ver CLAUDE.md)",
-    "setup.estado lo escribe /setup tras el primer push exitoso; sin 'completado' no operan /sesion ni /diagnostico"
-  ]
+    "Niveles validos: nulo, bajo, medio, alto, experto. Los asigna el tutor en /diagnostico a partir de preguntas puntuales y ejercicios, nunca por autoevaluacion del estudiante",
+    "Cada entrada de 'topicos' lleva status y nivel; ejemplo: \"f1.git-basico\": {\"status\": \"visto\", \"nivel\": \"medio\"}",
+    "Solo el tutor escribe este archivo, en /end-sesion y en los cierres de /diagnostico y /repaso (ver CLAUDE.md)",
+    "setup.estado lo escribe /setup tras el primer push exitoso; sin 'completado' no operan /start-sesion ni /diagnostico",
+    "pendiente: null, o {topic_id, ejercicio, paso, siguiente} cuando /end-sesion deja un ejercicio a medias; /start-sesion lo retoma y lo limpia el siguiente /end-sesion"
+  ],
+  "pendiente": {
+    "topic_id": "f1.apis-rest-fastapi",
+    "ejercicio": "ejercicios/fase-1/f1.apis-rest-fastapi/04-guardas-payload/",
+    "paso": "S25 pausada 2026-09-09 (ex /break, migrada por el upgrade a v3.0). Paso 0 de 6 del enunciado: no corrió uv init, no escribió P1 en RESPUESTAS.md, no tocó extract.py; nada compila aún (sin venv). Ejercicio montado por el tutor (extract.py con 2 TODOs, test_extract.py con 5 tests dados, main.py contra Open-Meteo real, RESPUESTAS.md con P1). El estudiante preguntó qué son las guardas del payload y se le mandó a SUS apuntes (material/fase-1/f1.apis-rest-fastapi.md, secciones ~191 y ~252) con un recordatorio de 3 líneas; no consta si llegó a leerlas. Es el ÚNICO pendiente para cerrar el criterio de fase de F1 (ver _gate_cierre_f1). Repasos del día: ninguno vencido; próximos: async 09-14, pydantic 09-15, testing-pytest y apis-rest-fastapi 09-16.",
+    "siguiente": "Confirmar si leyó la sección de guardas de sus apuntes; luego paso a) del enunciado: cd ejercicios/fase-1/f1.apis-rest-fastapi/04-guardas-payload && uv init --bare && uv add httpx && uv add --dev pytest ruff; P1 escrita en RESPUESTAS.md ANTES del primer pytest; pytest; las 2 guardas en extract.py (una pieza, nada más nuevo). Al completarlo: F1 CERRADA (actualizar _gate_cierre_f1) y la siguiente sesión arranca F2 en f2.como-funciona-llm."
+  }
 }

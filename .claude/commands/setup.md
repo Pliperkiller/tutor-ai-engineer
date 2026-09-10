@@ -1,7 +1,7 @@
 ---
 description: Configuración inicial del repo de progreso (correr una sola vez)
 ---
-Configura el repositorio remoto donde vivirá el progreso. Sin esto, `/diagnostico` y `/sesion` no operan.
+Configura el repositorio remoto donde vivirá el progreso. Sin esto, `/diagnostico` y `/start-sesion` no operan.
 
 Protocolo:
 1. Si `setup.estado == "completado"` en `state/progress.json` Y `git remote get-url origin` responde: informa que ya está configurado (muestra el remoto) y solo reconfigura si el estudiante lo pide explícitamente.

@@ -1,0 +1,39 @@
+{
+  "skill": "create-learning-agent",
+  "version": "3.0",
+  "generado_en": "2026-07-27",
+  "actualizado_en": "2026-09-09",
+  "placeholders": {
+    "TEMA": "AI Engineer",
+    "SLUG": "ai-engineer",
+    "HERRAMIENTAS_EVAL": "pytest, ejecución de scripts, docker compose y lectura de reportes de evals (RAGAS/Langfuse)",
+    "EJEMPLO_TEST": "pytest",
+    "LABS_EJEMPLOS": "PostgreSQL con pgvector, Langfuse self-hosted u Ollama vía docker-compose",
+    "REQUISITOS_EXTRA": "Python 3.12+ y Docker Desktop. Desde la Fase 2: una API key de Anthropic u OpenAI (pago por consumo; el tutor la pide cuando toca y te ayuda a acotar el gasto)",
+    "STACK_GITIGNORE": "__pycache__/\n*.py[cod]\n.venv/\n.pytest_cache/\n.ruff_cache/\n.mypy_cache/\n.ipynb_checkpoints/\n.coverage\nhtmlcov/\n*.egg-info/\n# artefactos pesados de modelos y vectores\nmodels/\n*.gguf\n*.safetensors"
+  },
+  "personalizaciones": [
+    {
+      "fecha": "2026-07-30",
+      "descripcion": "Ignorar los repos de práctica de git anidados en los ejercicios",
+      "archivos": [
+        ".gitignore"
+      ],
+      "detalle": "Línea `ejercicios/fase-1/f1.git-flujo/*/repo-practica/` bajo `# Personalizado` al final de .gitignore (los repo-practica los crea setup.sh del ejercicio 01-branches-conflicto y no se trackean desde este repo). Detectada por diff en el upgrade a 3.0."
+    }
+  ],
+  "upgrades": [
+    {
+      "fecha": "2026-09-09",
+      "de": "2.0",
+      "a": "3.0",
+      "plan": "docs/upgrades/2026-09-09-v2.0-a-v3.0.md"
+    }
+  ],
+  "_reglas": [
+    "Manifest del motor del tutor. Lo crea la skill al generar el repo; /config añade entradas a 'personalizaciones'; /upgrade-agent actualiza 'version' y 'actualizado_en' y añade entradas a 'upgrades'. Ningún otro command ni el estudiante lo edita",
+    "placeholders: valores con los que se instanciaron CLAUDE.md, README.md, .gitignore y labs/README.md. /upgrade-agent los reutiliza para regenerar esos archivos con la versión nueva de la skill (N_FASES y N_TOPICOS no se guardan: se recalculan de roadmap/roadmap.yaml)",
+    "personalizaciones: [{fecha, descripcion, archivos, detalle}] — 'detalle' describe el cambio con precisión suficiente para volver a aplicarlo sobre una versión nueva del archivo",
+    "upgrades: [{fecha, de, a, plan}] — 'plan' es la ruta del archivo en docs/upgrades/ que documenta ese upgrade"
+  ]
+}

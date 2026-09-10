@@ -12,9 +12,12 @@
 <especificación clara de lo que vas a construir: entrada, salida, restricciones>
 
 ## Paso a paso
-<Pasos numerados y autocontenidos. Cada paso indica el archivo sobre el que se
-trabaja (ruta exacta) y, si hay que ejecutar algo, el comando literal. Los pasos
-guían el proceso, no la solución. Estructura de referencia:>
+<Pasos numerados y autocontenidos, escritos para alguien que no ha hecho esto
+nunca. Cada paso indica el archivo sobre el que se trabaja (ruta exacta) y, si
+hay que ejecutar algo, el comando literal seguido de qué hace ese comando y qué
+salida debe verse. No se omite ningún paso por parecer obvio (abrir la terminal
+en la carpeta correcta, activar el entorno, etc.). Los pasos guían el proceso,
+no la solución. Estructura de referencia:>
 
 0. **Preparación** — qué archivos ya existen aquí y su rol (`starter.py`:
    esqueleto a completar; `test_starter.py`: tests que deben pasar; datos si
@@ -24,13 +27,16 @@ guían el proceso, no la solución. Estructura de referencia:>
    ```bash
    <comando de setup>
    ```
-1. <Primer paso concreto: qué lograr y en qué archivo>
+   <qué hace este comando y qué deberías ver al ejecutarlo>
+1. <Primer paso concreto: qué lograr y en qué archivo; si aparece un término o
+   concepto nuevo, defínelo aquí mismo>
 2. <Siguiente paso...>
 3. **Verifica**: corre
    ```bash
    <comando de verificación>
    ```
-   y confirma que <salida esperada>.
+   y confirma que <salida esperada>. <qué significa esa salida y qué hacer si
+   sale otra cosa>
 
 ## Convención de código
 Variables, funciones, docstrings y comentarios en inglés (estándar del repo).

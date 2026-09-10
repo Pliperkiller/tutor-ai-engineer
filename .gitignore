@@ -1,25 +1,33 @@
-
-__pycache__/
-.claude/settings.local.json
-.coverage
-.DS_Store
+# Secretos y datos locales
 .env
-.ipynb_checkpoints/
-.mypy_cache/
+data/
+
+# Claude Code (config local de esta máquina)
+.claude/settings.local.json
+
+# Obsidian: se versiona material/.obsidian/ (config compartida entre PCs),
+# pero no el estado volátil de ventanas/paneles de cada máquina
+material/.obsidian/workspace.json
+material/.obsidian/workspace-mobile.json
+
+# SO / editor
+.DS_Store
+
+# Stack del tema (AI Engineer)
+__pycache__/
+*.py[cod]
+.venv/
 .pytest_cache/
 .ruff_cache/
-.venv/
-*.egg-info/
-*.gguf
-*.py[cod]
-*.safetensors
-# artefactos pesados de modelos y vectores
-# Claude Code (config local de esta máquina)
-# Repos de práctica de git (anidados, no se trackean desde este repo)
-# Secretos y datos locales
-# SO / editor
-# Stack del tema (AI Engineer)
-data/
-ejercicios/fase-1/f1.git-flujo/*/repo-practica/
+.mypy_cache/
+.ipynb_checkpoints/
+.coverage
 htmlcov/
+*.egg-info/
+# artefactos pesados de modelos y vectores
 models/
+*.gguf
+*.safetensors
+
+# Personalizado
+ejercicios/fase-1/f1.git-flujo/*/repo-practica/
