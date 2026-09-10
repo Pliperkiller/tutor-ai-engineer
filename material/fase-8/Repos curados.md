@@ -1,5 +1,6 @@
 ---
 topic_id: f8.repos-curados
+aliases: ["f8.repos-curados"]
 fase: 8
 tipo: codigo
 estado: no_visto

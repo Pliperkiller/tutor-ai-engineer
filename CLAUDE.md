@@ -122,10 +122,10 @@ Regla: lo que no se verificó con un ejercicio no puede quedar `dominado` ni `ap
 
 ## Notas Obsidian (`material/`)
 `material/` es un vault de Obsidian; la vista de grafo es el mapa visual del roadmap y del progreso del estudiante. Convenciones:
-- **Nombre de archivo = nombre legible del tópico** (es la etiqueta del nodo en el grafo); el `topic_id` vive en el frontmatter. Los wikilinks usan el nombre de archivo: `[[Nombre del tópico]]`.
+- **Nombre de archivo = nombre legible del tópico** (es la etiqueta del nodo en el grafo); el `topic_id` vive en el frontmatter. Los wikilinks usan el nombre de archivo: `[[Nombre del tópico]]`. Cada nota lleva `aliases: ["<topic_id>"]` para que `[[topic_id]]` también resuelva; si el nombre del roadmap trae `/`, en el archivo va ` y ` entre conceptos (`Tool use y function calling`) o `-` dentro de una sigla (`CI-CD del sistema`), y el wikilink lleva el nombre original como texto visible (`[[CI-CD del sistema|CI/CD del sistema]]`).
 - **Regla de links** — en "Relacionados" solo se linkea por estas tres razones, cada una con una línea que la justifique: (a) prerequisito según el roadmap, (b) tópicos usados juntos en una sesión (referencia la nota de sesión), (c) un error recurrente que los conecta. NUNCA inventes relaciones "temáticas" que no vengan de una de esas tres fuentes: un grafo con links de relleno no sirve para nada.
 - **El frontmatter es un espejo de `progress.json`**: cada cambio de status en el cierre actualiza `estado` (y `nivel`, cuando lo fija el diagnóstico) y el tag `estado/...` de la nota en el mismo commit. Si detectas una discrepancia, `progress.json` manda y corriges la nota.
-- Las notas de sesión llevan el tag `sesion` y actúan como hubs del grafo. No dupliques en ellas el detalle que ya vive en las notas de tópico.
+- Las notas de sesión llevan frontmatter `tipo: sesion`, `fecha`, `sesiones: [N, ...]` (números de sesión que contiene el archivo) y el tag `sesion`, y una línea `**Tópicos:**` con wikilinks a los tópicos trabajados ese día (no a los solo mencionados como próximo paso): así actúan como hubs del grafo. No dupliques en ellas el detalle que ya vive en las notas de tópico.
 - No toques `material/.obsidian/` (config compartida del vault) salvo pedido explícito del estudiante.
 
 ## Material y búsqueda web

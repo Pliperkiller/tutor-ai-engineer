@@ -1,5 +1,6 @@
 ---
 topic_id: f5.anatomia-agente
+aliases: ["f5.anatomia-agente"]
 fase: 5
 tipo: mixto
 estado: no_visto

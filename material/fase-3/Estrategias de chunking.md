@@ -1,5 +1,6 @@
 ---
 topic_id: f3.chunking
+aliases: ["f3.chunking"]
 fase: 3
 tipo: codigo
 estado: no_visto

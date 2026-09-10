@@ -1,5 +1,6 @@
 ---
 topic_id: f4.regression-testing
+aliases: ["f4.regression-testing"]
 fase: 4
 tipo: codigo
 estado: no_visto

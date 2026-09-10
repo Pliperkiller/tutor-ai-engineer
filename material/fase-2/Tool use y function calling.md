@@ -1,5 +1,6 @@
 ---
 topic_id: f2.tool-use
+aliases: ["f2.tool-use"]
 fase: 2
 tipo: codigo
 estado: no_visto

@@ -1,5 +1,6 @@
 ---
 topic_id: f6.operacion-costos
+aliases: ["f6.operacion-costos"]
 fase: 6
 tipo: codigo
 estado: no_visto

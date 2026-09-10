@@ -1,5 +1,6 @@
 ---
 topic_id: f8.system-design-llm
+aliases: ["f8.system-design-llm"]
 fase: 8
 tipo: conceptual
 estado: no_visto

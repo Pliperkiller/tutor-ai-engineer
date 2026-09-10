@@ -1,5 +1,6 @@
 ---
 topic_id: f7.arbol-decision
+aliases: ["f7.arbol-decision"]
 fase: 7
 tipo: conceptual
 estado: no_visto

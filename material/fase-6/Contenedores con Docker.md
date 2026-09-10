@@ -1,5 +1,6 @@
 ---
 topic_id: f6.docker
+aliases: ["f6.docker"]
 fase: 6
 tipo: codigo
 estado: no_visto

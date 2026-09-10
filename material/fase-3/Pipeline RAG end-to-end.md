@@ -1,5 +1,6 @@
 ---
 topic_id: f3.pipeline-rag
+aliases: ["f3.pipeline-rag"]
 fase: 3
 tipo: codigo
 estado: no_visto

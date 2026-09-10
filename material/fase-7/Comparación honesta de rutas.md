@@ -1,5 +1,6 @@
 ---
 topic_id: f7.comparacion-honesta
+aliases: ["f7.comparacion-honesta"]
 fase: 7
 tipo: codigo
 estado: no_visto

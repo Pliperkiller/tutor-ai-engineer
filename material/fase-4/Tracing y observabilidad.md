@@ -1,5 +1,6 @@
 ---
 topic_id: f4.tracing-langfuse
+aliases: ["f4.tracing-langfuse"]
 fase: 4
 tipo: codigo
 estado: no_visto

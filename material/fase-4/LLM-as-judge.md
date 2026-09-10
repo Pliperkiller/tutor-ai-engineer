@@ -1,5 +1,6 @@
 ---
 topic_id: f4.llm-as-judge
+aliases: ["f4.llm-as-judge"]
 fase: 4
 tipo: codigo
 estado: no_visto

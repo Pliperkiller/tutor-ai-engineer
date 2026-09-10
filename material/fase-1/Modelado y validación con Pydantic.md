@@ -1,11 +1,12 @@
 ---
 topic_id: f1.pydantic-validacion
+aliases: ["f1.pydantic-validacion"]
 fase: 1
 tipo: codigo
 estado: aprendido
+repaso_proximo: 2026-09-15
 nivel: sin_evaluar
 tags: [fase/1, estado/aprendido]
-aliases: ["Modelado y validación con Pydantic"]
 ---
 # f1.pydantic-validacion — apuntes
 
@@ -131,3 +132,8 @@ con 8 tests (válidos, inválidos, loc anidado, roundtrip, errores en lote).
 Fuentes: https://docs.pydantic.dev/latest/concepts/fields/ ·
 https://docs.pydantic.dev/latest/concepts/validators/ ·
 https://docs.pydantic.dev/latest/concepts/serialization/
+
+## Relacionados
+- [[Git y flujo de trabajo]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).
+- [[Testing con pytest]] — usados juntos en la S7 ([[2026-07-30]]): la mecánica básica de pytest (`assert`, `pytest.raises`, `match`) se enseñó sobre el ejercicio de validators de Pydantic.
+- [[Testing con pytest]] — error recurrente que los conecta: la familia "tests que pasan por la razón equivocada" nació aquí en la S7 (asserts DENTRO del `with pytest.raises`, que nunca se ejecutan) y reapareció en las suites de FastAPI (6 apariciones registradas en `progress.json`).

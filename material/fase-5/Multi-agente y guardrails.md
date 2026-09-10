@@ -1,5 +1,6 @@
 ---
 topic_id: f5.multiagente-guardrails
+aliases: ["f5.multiagente-guardrails"]
 fase: 5
 tipo: mixto
 estado: no_visto

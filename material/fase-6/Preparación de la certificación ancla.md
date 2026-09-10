@@ -1,5 +1,6 @@
 ---
 topic_id: f6.cert-ai-practitioner
+aliases: ["f6.cert-ai-practitioner"]
 fase: 6
 tipo: conceptual
 estado: no_visto

@@ -1,5 +1,6 @@
 ---
 topic_id: f5.langgraph-grafos
+aliases: ["f5.langgraph-grafos"]
 fase: 5
 tipo: codigo
 estado: no_visto

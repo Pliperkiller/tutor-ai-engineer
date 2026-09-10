@@ -20,6 +20,21 @@
         ".gitignore"
       ],
       "detalle": "Línea `ejercicios/fase-1/f1.git-flujo/*/repo-practica/` bajo `# Personalizado` al final de .gitignore (los repo-practica los crea setup.sh del ejercicio 01-branches-conflicto y no se trackean desde este repo). Detectada por diff en el upgrade a 3.0."
+    },
+    {
+      "fecha": "2026-09-09",
+      "descripcion": "Reestructurar el vault de Obsidian: nombres legibles en fase-1, aliases por topic_id, sesiones con frontmatter y wikilinks, grafo sin nodos basura",
+      "archivos": [
+        "CLAUDE.md",
+        "material/fase-1/*.md",
+        "material/fase-2/Tool use y function calling.md",
+        "material/fase-6/CI-CD del sistema.md",
+        "material/fase-*/*.md (aliases)",
+        "material/sesiones/*.md",
+        "material/sesiones/_plantilla.md",
+        "material/.obsidian/graph.json"
+      ],
+      "detalle": "(1) Renombrados con git mv: material/fase-1/f1.<slug>.md -> <nombre del roadmap>.md (6 notas); 'Tool use  function calling.md' -> 'Tool use y function calling.md'; 'CICD del sistema.md' -> 'CI-CD del sistema.md'. Regla: '/' del roadmap -> ' y ' entre conceptos, '-' dentro de sigla; el wikilink lleva el nombre original como display ([[CI-CD del sistema|CI/CD del sistema]]). (2) Frontmatter de las 44 notas de topico: aliases: [\"<topic_id>\"] justo debajo de topic_id (en fase-1 reemplaza el alias antiguo, que era el nombre legible). (3) Notas de sesion (18): frontmatter tipo: sesion / fecha / sesiones: [N, ...] / tags: [sesion], y una linea '**Topicos:** [[Nombre]] (rol)' bajo el primer H1 con SOLO los topicos trabajados ese dia. _plantilla.md: campo sesiones: [N] y placeholders [[...]] entre backticks. (4) CLAUDE.md seccion 'Notas Obsidian': linea 'Nombre de archivo = nombre legible' ampliada con la regla de aliases y la de '/'; linea de notas de sesion ampliada con el frontmatter completo y la linea **Topicos:**. (5) material/.obsidian/graph.json: search = '-path:_plantilla -file:README', hideUnresolved = true; colorGroups por estado sin cambios. (6) Wikilinks por topic_id reescritos a nombre de archivo en material/ (grep '\\[\\[f[1-8]\\.' debe dar 0). Al re-aplicar sobre una version nueva del motor: conservar la regla de aliases y el frontmatter de sesion en CLAUDE.md y en material/sesiones/_plantilla.md; no regenerar notas de fase-1 con nombre por topic_id."
     }
   ],
   "upgrades": [

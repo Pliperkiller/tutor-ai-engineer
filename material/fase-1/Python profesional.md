@@ -1,11 +1,11 @@
 ---
 topic_id: f1.python-profesional
+aliases: ["f1.python-profesional"]
 fase: 1
 tipo: codigo
 estado: dominado
 nivel: sin_evaluar
 tags: [fase/1, estado/dominado]
-aliases: ["Python profesional"]
 ---
 # f1.python-profesional — apuntes
 
@@ -135,3 +135,6 @@ aiconfig/
 ### Ejercicio
 - `03-paquete-config/`: refactor a paquete `aiconfig` → `ruff check` limpio +
   pytest 4/4. Resuelto por su cuenta (pistas 1-2). **Tópico → `aprendido`.**
+
+## Relacionados
+- Sin prerequisitos: es el primer tópico del roadmap.

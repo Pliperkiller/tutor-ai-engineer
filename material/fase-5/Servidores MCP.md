@@ -1,5 +1,6 @@
 ---
 topic_id: f5.mcp-servidor
+aliases: ["f5.mcp-servidor"]
 fase: 5
 tipo: codigo
 estado: no_visto

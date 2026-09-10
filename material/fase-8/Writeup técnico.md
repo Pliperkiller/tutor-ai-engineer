@@ -1,5 +1,6 @@
 ---
 topic_id: f8.writeup
+aliases: ["f8.writeup"]
 fase: 8
 tipo: mixto
 estado: no_visto

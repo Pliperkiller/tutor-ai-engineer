@@ -1,5 +1,6 @@
 ---
 topic_id: f4.datasets-evaluacion
+aliases: ["f4.datasets-evaluacion"]
 fase: 4
 tipo: mixto
 estado: no_visto

@@ -1,11 +1,12 @@
 ---
 topic_id: f1.testing-pytest
+aliases: ["f1.testing-pytest"]
 fase: 1
 tipo: codigo
 estado: aprendido
+repaso_proximo: 2026-09-16
 nivel: sin_evaluar
 tags: [fase/1, estado/aprendido]
-aliases: ["Testing con pytest"]
 ---
 # f1.testing-pytest — apuntes
 
@@ -465,3 +466,9 @@ Dentro del `with pytest.raises(...)` va **solo la línea que debe explotar**:
 cualquier assert debajo de ella nunca se ejecuta (el control salta fuera del
 bloque al lanzarse la excepción). Los asserts van **fuera**, interrogando a
 `exc_info.value`.
+
+## Relacionados
+- [[APIs REST con FastAPI]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).
+- [[Modelado y validación con Pydantic]] — usados juntos en la S7 ([[2026-07-30]]): pytest se introdujo probando validators de Pydantic; ahí apareció por primera vez el assert muerto dentro de `pytest.raises`.
+- [[APIs REST con FastAPI]] — usados juntos de la S17 a la S20 ([[2026-08-26]], [[2026-08-27]], [[2026-08-31]], [[2026-09-01]]): `test_upstream.py` con respx, fixtures generadoras y parametrize sobre el endpoint externo; y en la S25 ([[2026-09-09]]) `exc_info.value` destrabó las guardas.
+- [[APIs REST con FastAPI]] — error recurrente que los conecta: "tests que pasan por la razón equivocada" (URL con el verbo dentro en S19, mock de respx sin activar en S20). Pregunta fija en toda suite nueva: ¿de quién es este status?

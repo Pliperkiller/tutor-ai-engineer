@@ -1,11 +1,11 @@
 ---
 topic_id: f1.git-flujo
+aliases: ["f1.git-flujo"]
 fase: 1
 tipo: codigo
 estado: dominado
 nivel: sin_evaluar
 tags: [fase/1, estado/dominado]
-aliases: ["Git y flujo de trabajo"]
 ---
 # f1.git-flujo — apuntes
 
@@ -147,3 +147,6 @@ git push                                   # el PR se actualiza y vuelve a ser f
   dos conflictos resueltos (S4, S5). **Regla: antes de reclamar, releer material/.**
 - Mensajes de commit con prefijo `Carlos C :` (git ya registra el autor) y
   títulos de PR que dicen "merge..." en vez de describir el cambio.
+
+## Relacionados
+- [[Python profesional]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).

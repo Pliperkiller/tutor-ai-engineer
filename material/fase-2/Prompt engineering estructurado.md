@@ -1,5 +1,6 @@
 ---
 topic_id: f2.prompting-estructurado
+aliases: ["f2.prompting-estructurado"]
 fase: 2
 tipo: mixto
 estado: no_visto

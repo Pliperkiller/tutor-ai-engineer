@@ -1,5 +1,6 @@
 ---
 topic_id: f6.despliegue-aws
+aliases: ["f6.despliegue-aws"]
 fase: 6
 tipo: codigo
 estado: no_visto

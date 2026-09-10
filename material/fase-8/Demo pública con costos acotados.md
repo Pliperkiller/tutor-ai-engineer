@@ -1,5 +1,6 @@
 ---
 topic_id: f8.demo-publica
+aliases: ["f8.demo-publica"]
 fase: 8
 tipo: codigo
 estado: no_visto

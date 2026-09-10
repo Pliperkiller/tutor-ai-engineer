@@ -1,5 +1,6 @@
 ---
 topic_id: f2.multi-proveedor
+aliases: ["f2.multi-proveedor"]
 fase: 2
 tipo: mixto
 estado: no_visto

@@ -1,5 +1,6 @@
 ---
 topic_id: f3.pgvector
+aliases: ["f3.pgvector"]
 fase: 3
 tipo: codigo
 estado: no_visto

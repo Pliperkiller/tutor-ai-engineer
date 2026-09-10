@@ -1,5 +1,6 @@
 ---
 topic_id: f2.llamadas-api
+aliases: ["f2.llamadas-api"]
 fase: 2
 tipo: codigo
 estado: no_visto

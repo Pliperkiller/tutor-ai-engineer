@@ -1,12 +1,12 @@
 ---
 topic_id: f1.apis-rest-fastapi
+aliases: ["f1.apis-rest-fastapi"]
 fase: 1
 tipo: codigo
 estado: aprendido
 repaso_proximo: 2026-09-16
 nivel: sin_evaluar
 tags: [fase/1, estado/aprendido]
-aliases: ["APIs REST con FastAPI"]
 ---
 # FastAPI — parte 1: primera API real (S10, 2026-08-05)
 
@@ -610,6 +610,8 @@ como miembro: las dependencias viven en `~/code/.venv`, el ejercicio no tiene
 `.venv` ni `uv.lock` propios. Funciona; no es autocontenido. Pendiente no urgente.
 
 ## Relacionados
-- [[f1.testing-pytest]] — usados juntos en la S25: `pytest.raises` /
+- [[Async y concurrencia básica]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).
+- [[Async y concurrencia básica]] — usados juntos en la S14 ([[2026-08-13]]): el `AsyncClient` compartido en `lifespan` + `app.state` es async aplicado dentro de FastAPI.
+- [[Testing con pytest]] — usados juntos en la S25: `pytest.raises` /
   `exc_info.value` fue la pieza que destrabó el ejercicio (ver
   [[2026-09-09]]).

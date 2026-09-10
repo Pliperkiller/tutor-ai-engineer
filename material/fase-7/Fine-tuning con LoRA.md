@@ -1,5 +1,6 @@
 ---
 topic_id: f7.lora-finetuning
+aliases: ["f7.lora-finetuning"]
 fase: 7
 tipo: codigo
 estado: no_visto

@@ -1,5 +1,6 @@
 ---
 topic_id: f6.cicd
+aliases: ["f6.cicd"]
 fase: 6
 tipo: codigo
 estado: no_visto

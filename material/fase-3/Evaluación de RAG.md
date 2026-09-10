@@ -1,5 +1,6 @@
 ---
 topic_id: f3.evaluacion-rag
+aliases: ["f3.evaluacion-rag"]
 fase: 3
 tipo: codigo
 estado: no_visto

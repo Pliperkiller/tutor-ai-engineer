@@ -1,5 +1,6 @@
 ---
 topic_id: f7.ecosistema-abierto
+aliases: ["f7.ecosistema-abierto"]
 fase: 7
 tipo: conceptual
 estado: no_visto

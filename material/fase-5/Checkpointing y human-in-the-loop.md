@@ -1,5 +1,6 @@
 ---
 topic_id: f5.checkpointing-hitl
+aliases: ["f5.checkpointing-hitl"]
 fase: 5
 tipo: codigo
 estado: no_visto

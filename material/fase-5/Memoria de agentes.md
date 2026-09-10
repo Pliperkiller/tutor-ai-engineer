@@ -1,5 +1,6 @@
 ---
 topic_id: f5.memoria
+aliases: ["f5.memoria"]
 fase: 5
 tipo: codigo
 estado: no_visto

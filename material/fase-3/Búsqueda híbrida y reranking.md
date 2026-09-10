@@ -1,5 +1,6 @@
 ---
 topic_id: f3.busqueda-hibrida
+aliases: ["f3.busqueda-hibrida"]
 fase: 3
 tipo: codigo
 estado: no_visto

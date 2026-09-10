@@ -1,5 +1,6 @@
 ---
 topic_id: f7.inferencia-local
+aliases: ["f7.inferencia-local"]
 fase: 7
 tipo: codigo
 estado: no_visto

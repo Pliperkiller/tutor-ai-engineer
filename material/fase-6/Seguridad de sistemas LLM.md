@@ -1,5 +1,6 @@
 ---
 topic_id: f6.seguridad-llm
+aliases: ["f6.seguridad-llm"]
 fase: 6
 tipo: mixto
 estado: no_visto
@@ -9,7 +10,7 @@ tags: [fase/6, estado/no_visto]
 
 # Seguridad de sistemas LLM
 
-**Prerequisitos:** [[CICD del sistema|CI/CD del sistema]]
+**Prerequisitos:** [[CI-CD del sistema|CI/CD del sistema]]
 
 **Criterio de dominio:** Demuestra un ataque de prompt injection exitoso contra el sistema sin defensa y luego la defensa que lo bloquea, documentando ambos.
 

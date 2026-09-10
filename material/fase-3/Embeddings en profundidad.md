@@ -1,5 +1,6 @@
 ---
 topic_id: f3.embeddings
+aliases: ["f3.embeddings"]
 fase: 3
 tipo: codigo
 estado: no_visto

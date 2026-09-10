@@ -1,11 +1,12 @@
 ---
 topic_id: f1.async-basico
+aliases: ["f1.async-basico"]
 fase: 1
 tipo: codigo
 estado: aprendido
+repaso_proximo: 2026-09-14
 nivel: sin_evaluar
 tags: [fase/1, estado/aprendido]
-aliases: ["Async y concurrencia básica"]
 ---
 # f1.async-basico — Async y concurrencia básica
 
@@ -118,3 +119,7 @@ Tres sesiones intercambiando gather y pool. Lo que lo cerró fue la cuenta:
 
 La cuenta y gather→MAX salieron del estudiante; la mitad del pool la precisó
 el tutor. Próximo repaso: las dos mitades sin empujón.
+
+## Relacionados
+- [[Modelado y validación con Pydantic]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).
+- [[APIs REST con FastAPI]] — usados juntos en la S14 ([[2026-08-13]]): el `AsyncClient` compartido vive en el `lifespan` de FastAPI; ese mismo día el repaso de async (gather → MAX, no suma) falló y hubo que reanclarlo a la medición de la S8.
