@@ -14,6 +14,12 @@ def extract_temperature(payload: dict[str, Any]) -> float:
     piece must raise UpstreamFormatError with a message that names the
     missing key, instead of letting a KeyError escape.
     """
-    # TODO(student): guard 1
-    # TODO(student): guard 2
+    if "current_weather" not in payload:
+        raise UpstreamFormatError("Missing upstream value: current_weather")
+
+    if "temperature" not in payload["current_weather"]:
+        raise UpstreamFormatError(
+            "Missing upstream value: temperature in current_weather"
+        )
+
     return payload["current_weather"]["temperature"]
