@@ -18,7 +18,7 @@
     "nivel_global": null,
     "niveles_por_fase": {}
   },
-  "posicion_actual": "f2.como-funciona-llm",
+  "posicion_actual": "f2.llamadas-api",
   "_gate_cierre_f1": [
     "FASE 1 CERRADA el 2026-09-09 (S25). Criterio de fase: entregable 03-api-externa completo (S20, 12/12, ruff+mypy), git-flujo DOMINADO (S24, 3 PRs, 14 commits, conflicto via PR), y la variante de guardas 04-guardas-payload resuelta POR EL sin pistas (S25). Nit no bloqueante que sigue abierto: test 5 de 03-api-externa sin assert espia (route.call_count == 1).",
     "SIGUIENTE: F2 arranca en f2.como-funciona-llm (posicion_actual). Es tópico nuevo: leccion.md desde cero (regla de explicacion), una pieza nueva por ejercicio (regla S18).",
@@ -66,7 +66,8 @@
     "pytest.raises completo de memoria (S23): dentro del with SOLO la linea que explota, asserts fuera interrogando exc_info; las 3 salidas (esperada->verde, ninguna->DID NOT RAISE, otra->rojo). R2b, que en S19 la dio el tutor, hoy la produjo EL con la reescritura correcta a la primera.",
     "Cadena DI reproducida de memoria (S23): las 5 piezas con su papel (lifespan crea/cierra, app.state almacena lo compartido, get_client jala de app.state, Depends='ejecuta esto antes del endpoint', Annotated=tipo+metadata) y la pregunta de control bien: 50 requests -> UN AsyncClient con pool de CONEXIONES dentro. La review fallada de S22 queda superada.",
     "Flujo completo de conflicto via PR por su cuenta (S24): branch B creada desde main y no desde A (la trampa del ejercicio), conflicto resuelto local mezclando ambos lados con decision de dedup propia, merge commit documentado, PR destrabado y fusionado. Ante errores de git no adivino: pego el output completo (hint de divergent branches, unmerged files) — el habito contrario a 'adivina en vez de leer' de S16.",
-    "S25: cierra la deuda mas larga de F1 (guardas de S16) por su cuenta y en ~15 min: P1 correcta, dos guardas a la primera, experimento corrido y leido, ruff sin pedirselo. Tercera sesion seguida (S23, S24, S25) cerrada en orden y dentro del tiempo."
+    "S25: cierra la deuda mas larga de F1 (guardas de S16) por su cuenta y en ~15 min: P1 correcta, dos guardas a la primera, experimento corrido y leido, ruff sin pedirselo. Tercera sesion seguida (S23, S24, S25) cerrada en orden y dentro del tiempo.",
+    "Criterio propio frente al tutor (S26): rebatio con razon dos afirmaciones del tutor sobre sampling ('no tenemos la tabla real del prompt'; 'con top al 1-2%, top_p=0.1 deja 5-10 candidatos'). Es la conducta del nivel experto del diagnostico ('corrige el enunciado con criterio'). Fomentarla: cuando el tutor afirme sin datos, que lo diga."
   ],
   "debilidades": [
     "Error de frontera <= vs < y olvido de 'raise' (cometidos y corregidos en 02). Vigilar en validators futuros.",
@@ -126,7 +127,12 @@
     "RECLAMO INFUNDADO #2 (S24, 'nunca me ensenaste los marcadores de conflicto'): falso verificado — material f1.git-flujo.md:40 y dos conflictos resueltos por el (S4, S5). Como en S15: verificar el registro antes de conceder, conceder solo lo que en efecto falto (aqui: nada; solo el termino olvidado tras 6 semanas). Patron emergente: ante material olvidado reclama en vez de consultar sus apuntes. Antidoto acordado con el tutor: primero material/, luego re-explicacion.",
     "Mensajes de commit con prefijo 'Carlos C :' (S24, nuevo nit): duplica lo que git ya registra como autor y ensucia el --oneline. Titulos de PR 'merge X on Y': describen el acto, no el cambio. Preguntar en la review de git-flujo del 2026-09-24 que aporta el prefijo; exigir titulos que describan el cambio en los proximos PRs.",
     "RETIRADAS (S25): la familia GUARDAS completa — 'guarda invertida' (S7/S11/S15), 'guarda debajo del acceso' (S15), 'clave adivinada en vez de leida' (S16), \"'in' segun el tipo\" (S16). En la variante 04-guardas-payload escribio las dos guardas solo, a la primera, con orden, clave y tipo correctos, y releyo el dato real (el payload del test) antes de tocar codigo. Vigilancia pasiva: en F2, cuando toque leer respuestas JSON de un LLM, comprobar que las reglas siguen sin recordarselas.",
-    "EXCEPCION SIN MENSAJE (S25, menor): 'raise UpstreamFormatError' a secas -> str(exc) vacio y los tests que inspeccionan el mensaje fallan aunque la guarda detecte bien. Lo resolvio el con el experimento (atrapar y printear repr(e) | repr(str(e))). Regla dada: una excepcion es una clase; lo que va entre parentesis es lo que str() devuelve despues. Ademas, RESPONDE PEGANDO EL DATO en vez de la frase (pego el payload del test 4 cuando se le pidio explicar por que la guarda 2 lo atrapa); salio bien al darle la forma de la frase con huecos. Vigilar: exigir la frase, no el dato."
+    "EXCEPCION SIN MENSAJE (S25, menor): 'raise UpstreamFormatError' a secas -> str(exc) vacio y los tests que inspeccionan el mensaje fallan aunque la guarda detecte bien. Lo resolvio el con el experimento (atrapar y printear repr(e) | repr(str(e))). Regla dada: una excepcion es una clase; lo que va entre parentesis es lo que str() devuelve despues. Ademas, RESPONDE PEGANDO EL DATO en vez de la frase (pego el payload del test 4 cuando se le pidio explicar por que la guarda 2 lo atrapa); salio bien al darle la forma de la frase con huecos. Vigilar: exigir la frase, no el dato.",
+    "RAZONA UNA COSA Y MARCA OTRA (S26, nuevo): en A.2 escribio el razonamiento correcto para casa/' casa' (forma frecuente = la que lleva espacio) y marco 'mismo numero de tokens: si', 30 min despues de VER el caso gato (2 vs 1). Se le pregunto 3 veces que paso entre el razonamiento y la casilla y no respondio; se dejo de insistir por fatiga (regla S16). Repreguntar en frio en la review del 09-13.",
+    "PEGA EL DATO EN VEZ DE LA FRASE — SEGUNDA APARICION (S25, S26): en la parte B pego la salida de los pares y marco bien/mal sin UNA causa; las causas salieron solo con la frase con huecos. Mantener: exigir la frase, no el dato.",
+    "TOP_P LEIDO AL REVES (S26, conceptual): entendio top_p=0.1 como 'reparto el 10% entre muchos candidatos' (mas variedad) cuando es 'me quedo con los de arriba hasta acumular 10%' (menos variedad). Corregido en discusion; NO verificado que lo retiene. Item 2 de la review del 09-13.",
+    "FIBONACCI vs CUADRATICO (S26, menor): los numeros del costo acumulado los calculo bien (500/1500/3000) pero les puso el nombre de otra serie. Nombrar bien el orden de crecimiento importa para decidir que herramienta lo controla (caching/compactacion vs nada).",
+    "DEL LADO DEL TUTOR (S26): (a) count_tokens.py imprimia ids sin piezas en los pares y el tutor razono con piezas que el estudiante no podia ver — reclamo fundado, arreglado en sesion; (b) el tutor afirmo 'top_p=0.1 -> solo 1 nombre' asumiendo una tabla que no tiene — reclamo fundado, concedido; (c) DURACION: leccion de ~4000 palabras + 4 preguntas + ejercicio en una sesion — el estudiante lo senalo y se cambio el protocolo via /config (cada topico nuevo = sesion de leccion + sesion de ejercicio)."
   ],
   "topicos": {
     "f1.python-profesional": {
@@ -274,10 +280,23 @@
         "Nit S12 sin cerrar (sigue): falta el comentario que justifica os.environ encima de los imports en el conftest de 01-registro-modelos, y ruff nunca se corrio ahi (E402 esperado + noqa justificado).",
         "S18: el repaso NO se corrio (la sesion se consumio en conceptos y en feedback de diseno). Sigue vencido el 2026-08-28 con R1 (timing, no scope) y R2(b)."
       ]
+    },
+    "f2.como-funciona-llm": {
+      "status": "visto",
+      "ultima_sesion": "2026-09-11",
+      "next_review": "2026-09-13",
+      "intentos": 1,
+      "notas": [
+        "S26 (2026-09-10/11, Windows/PowerShell + nvim): primer topico de F2. leccion.md exhaustiva (tokens/BPE, ventana de contexto, temperatura/top_p con tabla calculada, embeddings) + demo_tokens.py con tiktoken (sin API key en la maquina). Las 4 preguntas discutidas: Q1 (ids distintos: bien; 'gato' 1 token: mal, corregido con el corpus: la forma frecuente es la que lleva espacio y se gana la pieza; lo dijo el al final con sus palabras). Q2 bien (40 veces, sin memoria); nombro la serie 500/1500/3000 como 'fibonacci' cuando es cuadratica (corregido con N(N+1)/2). Q3 perfecta (99/47, GPU). Q4 primera mitad bien; propuso 'diccionario de letras por token' -> redirigido a 'lo determinista lo hace el codigo' (tool use, f2.tool-use).",
+        "Ejercicio 01-predecir-tokens (tipo predecir) COMPLETO en RESPUESTAS.md. A.1: 3/6 conteos exactos, explicaciones honestas (uso la regla de dedo 4/3 chars). A.2: predijo 'mismo conteo' para casa/' casa' PESE a haber razonado y VISTO el caso gato 30 min antes; las causas de los 3 pares salieron solo tras (a) arreglar el andamiaje (count_tokens.py no imprimia piezas de los pares; concedido) y (b) frase con huecos para el par 1. Par 3 causa correcta al 2do intento. Parte C: T=0 y factura bien; T=1 'no coherente' (corregido); top_p=0.1 leido al reves ('reparto el 10%' en vez de 'recorto hasta el 10%') -> corregido el POR QUE con la desigualdad (top_p solo quita candidatos); el numero (5 distintas) queda como prediccion suya.",
+        "PUSHBACK CON CRITERIO (a favor): rebatio dos veces al tutor: (1) 'no tenemos la tabla real del prompt, asumes que se parece a la de los colores' -> cierto; (2) 'si el top esta al 1-2%, top_p=0.1 deja 5-10 candidatos' -> cierto, el tutor se paso de seguro con 'solo 1 nombre'. Ambas concedidas.",
+        "Status VISTO (no aprendido): las causas de A.2 necesitaron pista 3 y arreglo del andamiaje; top_p fue error conceptual corregido en discusion. Criterio de dominio a medias: falta verificar las 3 predicciones de la parte C contra la API real (5 corridas por config) y el diseno de 1 pagina -> se hace en f2.llamadas-api cuando exista la API key. Al superar esa verificacion -> aprendido.",
+        "REVIEW 2026-09-13 (recuperacion activa, sin material): (1) por que ' gato' es 1 token y 'gato' son 2; (2) que hace top_p=0.1 sobre una tabla (recorta desde arriba hasta acumular 10%: menos candidatos, nunca mas); (3) por que el costo acumulado de una conversacion es cuadratico y no lineal; (4) por que T=0 no es determinista."
+      ]
     }
   },
-  "sesiones_completadas": 25,
-  "ultima_sesion": "2026-09-09",
+  "sesiones_completadas": 26,
+  "ultima_sesion": "2026-09-11",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
