@@ -9,6 +9,8 @@ Argumentos: $ARGUMENTS
 
 Si hay cambios sin commit de una sesión anterior, ejecuta primero el protocolo /end-sesion sobre ellos.
 
+Cada tópico nuevo se enseña en DOS sesiones (personalización del 2026-09-11): si `pendiente` es `null` y toca tópico nuevo, hoy es SESIÓN DE LECCIÓN (repasos + lección + preguntas discutidas en el chat; el ejercicio NO se monta hoy y se cierra con `pendiente` = "lección leída, ejercicio no empezado"). Si `pendiente` dice "lección leída, ejercicio no empezado", hoy es SESIÓN DE EJERCICIO (recap + repasos + ejercicio el resto del tiempo). Excepción única: el estudiante ya leyó la lección por su cuenta y responde las preguntas en los primeros minutos → el ejercicio va el mismo día.
+
 La teoría del tópico del día no va en el chat: escríbela en `ejercicios/fase-N/<topic_id>/leccion.md` (formato en `ejercicios/_plantilla/leccion.md`) asumiendo cero conocimiento previo — sin saltar pasos, definiendo cada término y explicando cada línea de la demo — y en el chat solo pide leerla y responder las preguntas ahí mismo.
 
 Cuando el ejercicio esté resuelto, pasen ~30 min, o el estudiante deba irse, indícale: "Corre `/end-sesion` para cerrar y guardar el progreso."
