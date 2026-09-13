@@ -67,7 +67,8 @@
     "Cadena DI reproducida de memoria (S23): las 5 piezas con su papel (lifespan crea/cierra, app.state almacena lo compartido, get_client jala de app.state, Depends='ejecuta esto antes del endpoint', Annotated=tipo+metadata) y la pregunta de control bien: 50 requests -> UN AsyncClient con pool de CONEXIONES dentro. La review fallada de S22 queda superada.",
     "Flujo completo de conflicto via PR por su cuenta (S24): branch B creada desde main y no desde A (la trampa del ejercicio), conflicto resuelto local mezclando ambos lados con decision de dedup propia, merge commit documentado, PR destrabado y fusionado. Ante errores de git no adivino: pego el output completo (hint de divergent branches, unmerged files) — el habito contrario a 'adivina en vez de leer' de S16.",
     "S25: cierra la deuda mas larga de F1 (guardas de S16) por su cuenta y en ~15 min: P1 correcta, dos guardas a la primera, experimento corrido y leido, ruff sin pedirselo. Tercera sesion seguida (S23, S24, S25) cerrada en orden y dentro del tiempo.",
-    "Criterio propio frente al tutor (S26): rebatio con razon dos afirmaciones del tutor sobre sampling ('no tenemos la tabla real del prompt'; 'con top al 1-2%, top_p=0.1 deja 5-10 candidatos'). Es la conducta del nivel experto del diagnostico ('corrige el enunciado con criterio'). Fomentarla: cuando el tutor afirme sin datos, que lo diga."
+    "Criterio propio frente al tutor (S26): rebatio con razon dos afirmaciones del tutor sobre sampling ('no tenemos la tabla real del prompt'; 'con top al 1-2%, top_p=0.1 deja 5-10 candidatos'). Es la conducta del nivel experto del diagnostico ('corrige el enunciado con criterio'). Fomentarla: cuando el tutor afirme sin datos, que lo diga.",
+    "Transferencia espontanea (S27): aplico 'stateless' a su propia conversacion con el tutor antes de leer la leccion, y propuso por iniciativa propia construir un mini-SDK con httpx contra su Ollama remoto (RTX 5080) para ver lo que el SDK esconde — acordado como ejercicio extra del topico. Conecta lo aprendido con su infraestructura real."
   ],
   "debilidades": [
     "Error de frontera <= vs < y olvido de 'raise' (cometidos y corregidos en 02). Vigilar en validators futuros.",
@@ -291,12 +292,30 @@
         "Ejercicio 01-predecir-tokens (tipo predecir) COMPLETO en RESPUESTAS.md. A.1: 3/6 conteos exactos, explicaciones honestas (uso la regla de dedo 4/3 chars). A.2: predijo 'mismo conteo' para casa/' casa' PESE a haber razonado y VISTO el caso gato 30 min antes; las causas de los 3 pares salieron solo tras (a) arreglar el andamiaje (count_tokens.py no imprimia piezas de los pares; concedido) y (b) frase con huecos para el par 1. Par 3 causa correcta al 2do intento. Parte C: T=0 y factura bien; T=1 'no coherente' (corregido); top_p=0.1 leido al reves ('reparto el 10%' en vez de 'recorto hasta el 10%') -> corregido el POR QUE con la desigualdad (top_p solo quita candidatos); el numero (5 distintas) queda como prediccion suya.",
         "PUSHBACK CON CRITERIO (a favor): rebatio dos veces al tutor: (1) 'no tenemos la tabla real del prompt, asumes que se parece a la de los colores' -> cierto; (2) 'si el top esta al 1-2%, top_p=0.1 deja 5-10 candidatos' -> cierto, el tutor se paso de seguro con 'solo 1 nombre'. Ambas concedidas.",
         "Status VISTO (no aprendido): las causas de A.2 necesitaron pista 3 y arreglo del andamiaje; top_p fue error conceptual corregido en discusion. Criterio de dominio a medias: falta verificar las 3 predicciones de la parte C contra la API real (5 corridas por config) y el diseno de 1 pagina -> se hace en f2.llamadas-api cuando exista la API key. Al superar esa verificacion -> aprendido.",
-        "REVIEW 2026-09-13 (recuperacion activa, sin material): (1) por que ' gato' es 1 token y 'gato' son 2; (2) que hace top_p=0.1 sobre una tabla (recorta desde arriba hasta acumular 10%: menos candidatos, nunca mas); (3) por que el costo acumulado de una conversacion es cuadratico y no lineal; (4) por que T=0 no es determinista."
+        "REVIEW 2026-09-13 (recuperacion activa, sin material): (1) por que ' gato' es 1 token y 'gato' son 2; (2) que hace top_p=0.1 sobre una tabla (recorta desde arriba hasta acumular 10%: menos candidatos, nunca mas); (3) por que el costo acumulado de una conversacion es cuadratico y no lineal; (4) por que T=0 no es determinista.",
+        "S27 (2026-09-13): la review VENCIO DURANTE la sesion (cambio de fecha a medianoche); ofrecida al cierre con la opcion de moverla, el estudiante eligio moverla (regla S19). ABRE LA S28. Dato a favor: el item 3 (costo cuadratico) lo produjo bien en frio en la discusion de la leccion de f2.llamadas-api (mecanismo stateless + re-envio de la lista messages) — en la S28 verificar sobre todo los items 1, 2 y 4."
+      ]
+    },
+    "f2.llamadas-api": {
+      "status": "visto",
+      "ultima_sesion": "2026-09-13",
+      "next_review": "2026-09-15",
+      "intentos": 1,
+      "notas": [
+        "S27 (2026-09-12/13, Mac/zsh): SESION DE LECCION — primera bajo el protocolo de dos sesiones y CIERRA DENTRO DEL FORMATO: leccion + 4 preguntas discutidas, ejercicio no montado (como debe ser). leccion.md escrita (Messages API como API REST — puente con su httpx de F1 —, estructura de mensajes y roles, stateless, usage/costos con tabla de precios real, streaming/SSE, reintentos con backoff exponencial y jitter, seccion OpenAI conceptual) + demo_basic_call.py y demo_streaming.py como archivos (regla S11), LEIDAS pero NO corridas: no hay API key aun.",
+        "Q1 (stateless -> cuadratico): mecanismo correcto ('cada request re-manda todo'). Omitio el 10mo mensaje de user (la request nueva) en su inventario del turno 10 — se le senalo. Precision dada: el input crece ~lineal por turno y es la SUMA lo que da cuadratico. En la pregunta extra (por que prompt caching y no memoria en el servidor) dio la mitad del computo; la mitad arquitectonica (stateful rompe el escalado horizontal) la dio el tutor conectando con su store de FastAPI.",
+        "Q2 (max_tokens=10): 3/3 y conecto SOLO con la familia 'verde por la razon equivocada' (200 sin excepcion + texto truncado + stop_reason como unica alarma). Precision dada: output_tokens = exactamente 10, el techo es duro.",
+        "Q3 (reintentos): criterio permanente-vs-transitorio correcto y paso a paso del 401 con backoff exacto (1+2+4+8+16 = ~31s para morir con el error del segundo 0). FALLO DE VOCABULARIO corregido en sesion: dijo '429 es un timeout' — se le dio la distincion (429 = response real con status y retry-after; timeout = NO hubo respuesta, excepcion del lado cliente) y en la repregunta reformulada la produjo el bien ('si hay status code, hubo respuesta'). Matiz dado: el SDK promueve el 429 a RateLimitError a proposito (una response se puede ignorar; una excepcion obliga a decidir).",
+        "Q4 (streaming): las dos mitades solas (timeouts + latencia percibida) y la trampa de usage con la frase clave suya: 'no podemos predecir la cantidad de tokens, toca generarlos' — conectado con el predictor token-a-token de S26.",
+        "TRANSFERENCIA ESPONTANEA (lo mejor de la sesion): antes de leer la leccion pregunto si ESTA conversacion del tutor funciona igual ('recibes tooodo el chat cada vez?') y respondio bien la pregunta de control (sin progress.json y sin chat, el tutor solo sabria lo que hay en archivos). Aplico stateless a su propia realidad sin que se le pidiera.",
+        "LOGISTICA RESUELTA EN SESION: gestion de la API key (env var por maquina en ~/.zshrc / perfil de PowerShell, NUNCA en el repo; export suelto vs perfil del shell explicado), que es I/O (definido reanclando a su medicion de S8: gather ahorra porque las esperas son I/O).",
+        "ACORDADO CON EL ESTUDIANTE: ejercicio EXTRA del topico, despues del principal — mini-SDK con httpx a pelo contra Ollama en su PC remoto (RTX 5080, accesible por IP): armar el POST, parsear SSE a mano, backoff propio. Regla 'una pieza nueva por ejercicio': va como ejercicio aparte, no colado en el principal.",
+        "PARA LA SESION DE EJERCICIO (S28): (1) el estudiante crea la API key ANTES (console.anthropic.com, ~$5 de credito; instrucciones al final de leccion.md) — verificarla al abrir; (2) correr las dos demos; (3) ejercicio principal con SDK Anthropic (llamada basica + streaming + backoff a mano + registro de costo); (4) incluye verificar las 3 predicciones de la parte C de 01-predecir-tokens contra la API real (deuda de S26)."
       ]
     }
   },
-  "sesiones_completadas": 26,
-  "ultima_sesion": "2026-09-11",
+  "sesiones_completadas": 27,
+  "ultima_sesion": "2026-09-13",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
@@ -306,5 +325,10 @@
     "setup.estado lo escribe /setup tras el primer push exitoso; sin 'completado' no operan /start-sesion ni /diagnostico",
     "pendiente: null, o {topic_id, ejercicio, paso, siguiente} cuando /end-sesion deja un ejercicio a medias; /start-sesion lo retoma y lo limpia el siguiente /end-sesion"
   ],
-  "pendiente": null
+  "pendiente": {
+    "topic_id": "f2.llamadas-api",
+    "ejercicio": null,
+    "paso": "leccion leida y 4 preguntas discutidas; ejercicio no empezado. Falta la API key de Anthropic (el estudiante la crea antes de la proxima sesion; pasos al final de leccion.md)",
+    "siguiente": "S28: primero el repaso vencido de f2.como-funciona-llm (items 1, 2 y 4 sobre todo), luego montar y resolver el ejercicio de f2.llamadas-api (SDK Anthropic: demos + llamada basica, streaming, backoff a mano, costo; incluye verificar la parte C de 01-predecir-tokens contra la API real)"
+  }
 }
