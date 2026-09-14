@@ -11,7 +11,7 @@ client = anthropic.Anthropic()
 # Context manager: there is an open connection that must be closed
 # no matter what — same reason as `async with httpx.AsyncClient()`.
 with client.messages.stream(
-    model="claude-opus-5",
+    model="claude-haiku-4-5",
     max_tokens=500,
     messages=[
         {"role": "user", "content": "Write a 4-line poem about the ocean."},

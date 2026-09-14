@@ -261,7 +261,9 @@ El ejercicio llama a la API real, así que necesitas una **API key de Anthropic*
 1. Crea una cuenta en `console.anthropic.com` (la consola de desarrolladores — distinta de claude.ai).
 2. En **API Keys**, genera una clave (empieza con `sk-ant-`). Cópiala al crearla: no se vuelve a mostrar.
 3. Hará falta un método de pago o crédito inicial; con $5 USD sobra para TODA la fase 2 (las demos cuestan décimas de centavo).
-4. Guárdala como variable de entorno en tu máquina (en el Mac, zsh): `export ANTHROPIC_API_KEY="sk-ant-..."` — en la sesión de ejercicio la dejaremos persistente y verificaremos que funciona.
+4. Guárdala en un archivo `.env` **dentro de la carpeta del ejercicio**, con la línea `ANTHROPIC_API_KEY=sk-ant-...`, y ejecuta los scripts con `uv run --env-file .env python <archivo>.py`.
+
+   **No la exportes en `~/.zshrc`** (corrección del 2026-09-13, aprendida a golpes en la S28): una variable en el perfil del shell la ve TODO programa que corras en esa terminal. Herramientas que hablan con esta misma API — Claude Code, entre otras — al encontrar `ANTHROPIC_API_KEY` en el entorno la usan y facturan contra los créditos de tu API en lugar de tu suscripción, sin que tú lo pidas. El `.env` del proyecto solo lo carga el comando que se lo pasa, y va en `.gitignore` para que nunca llegue a un commit.
 
 ---
 

@@ -5,7 +5,7 @@ fase: 2
 tipo: conceptual
 estado: visto
 nivel: sin_evaluar
-repaso_proximo: 2026-09-13
+repaso_proximo: 2026-09-20
 tags: [fase/2, estado/visto]
 ---
 
@@ -25,6 +25,11 @@ tags: [fase/2, estado/visto]
 - **Embeddings**: significado → vector; cercanía (coseno) = similitud. Base de RAG (F3). Vectores de modelos distintos no se comparan.
 - Tokenizador de Claude ≠ tiktoken: para Claude, la cuenta oficial es `count_tokens` (se usa en [[Llamadas a APIs de LLM]]).
 
+**S28 (2026-09-13) — repaso en frío superado** (sin material a la vista), intervalo a +7.
+- ` gato` 1 pieza vs `gato` 2: dado con mecanismo propio ("la forma frecuente en el corpus es la que lleva espacio"). Precisión: sabemos que son **2** piezas porque lo midió; *cuáles* son depende del vocabulario.
+- `T=0` no determinista: "fluctuaciones en los cálculos de la GPU". Completado: la fluctuación solo cambia el resultado cuando dos candidatos están casi empatados, y como la generación es token a token, uno distinto cambia todo lo que sigue.
+- `top_p=0.1`: formulación correcta al segundo intento — *ordena de mayor a menor y acumula desde arriba hasta el 10 %*. Con tabla plana (top al 2 %) sobreviven 5-10 candidatos; con tabla concentrada (top al 92 %), uno solo.
+
 ## Errores cometidos
 - **2026-09-11** — Predijo `gato`/`Gato` como 1 token "porque es una palabra simple": simple ≠ frecuente en el corpus (y el corpus tiene más inglés). Corregido con la tabla real.
 - **2026-09-11** — Razonó bien casa/` casa` (forma frecuente = con espacio) y aun así marcó "mismo número de tokens: sí", media hora después de ver el caso gato. No explicó la contradicción (3 preguntas sin respuesta; se dejó por fatiga). Repreguntar el 09-13.
@@ -32,8 +37,10 @@ tags: [fase/2, estado/visto]
 - **2026-09-11** — `top_p = 0.1` leído al revés: "reparto el 10 % entre muchos nombres" (más variedad) en vez de "me quedo con los de arriba hasta acumular 10 %" (menos). Corregido el porqué en RESPUESTAS.md; retención sin verificar.
 - **2026-09-11** — Parte B: pegó la salida de los pares y marcó bien/mal sin una causa (patrón "dato en vez de frase", 2.ª vez). Las causas salieron con frase con huecos.
 - **2026-09-11** — Q4: propuso "un diccionario de frecuencias de letras por token" para que el modelo cuente letras: nadie por dentro del modelo puede leerlo; el conteo lo hace el código.
+- **2026-09-13 (S28)** — `top_p`, **variante nueva del error**: ya no lo lee al revés, pero su primera respuesta fue *"escoge los tokens que tienen 10 % o más de probabilidad cada uno"* — umbral **por token** en vez de acumulación desde arriba. Se autocorrigió solo al devolverle su propio caso de la S26 (tabla plana con el top al 2 %, donde él mismo defendió que quedan 5-10 candidatos). En el repaso del 09-20, preguntarlo **sin** darle ese ejemplo.
 
 ## Relacionados
 - [[Testing con pytest]] — prerequisito según el roadmap.
 - [[2026-09-11]] — sesión 26: lección, 4 preguntas y ejercicio 01-predecir-tokens (a).
+- [[2026-09-13]] — sesión 28: repaso en frío superado (ítems ` gato`, `top_p`, `T=0`).
 - [[Llamadas a APIs de LLM]] — ahí se verifican las 3 predicciones de sampling de la parte C contra la API real y se usa `count_tokens` (segunda mitad del criterio de dominio de este tópico).

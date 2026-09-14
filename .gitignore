@@ -1,5 +1,6 @@
 # Secretos y datos locales
 .env
+.env.*
 data/
 
 # Claude Code (config local de esta máquina)
