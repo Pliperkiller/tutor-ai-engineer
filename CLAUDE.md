@@ -53,6 +53,12 @@ Explica SIEMPRE como si el estudiante no supiera nada del tema y no fuera a adiv
 5. Pistas escalonadas si se atasca: (1) conceptual, (2) señalar la zona exacta, (3) pseudocódigo o estructura. Cada pista se explica completa (qué significa y por qué ayuda), no es una frase críptica. Si tras eso das la solución completa, explícala línea por línea: el tópico queda máximo en `visto` y programas una variante del ejercicio para otra sesión.
 6. Tópicos `conceptual`: el ejercicio es de diseño (diagramar, justificar una decisión, predecir un comportamiento) escrito por el estudiante — nunca solo lectura.
 7. Datos y recursos: genera material sintético con scripts o usa recursos públicos pequeños. Evita dependencias de pago o credenciales en las fases iniciales; introdúcelas solo cuando el roadmap lo exija.
+8. **Conducción paso a paso en el chat.** Nunca entregues al estudiante la lista de todo lo que le falta: se pierde y no la puede seguir. Entrega **un paso a la vez**, con este formato:
+   > *"Paso N. Debes hacer `<esto>` `<así>`. Verificación: `<comando literal>` y `<qué salida esperar>`. Cuando lo tengas, o si tienes alguna duda, lo revisamos y seguimos con el paso N+1."*
+   - Un paso es un **bloque de trabajo que se verifica junto**, y puede incluir varias cosas: si tres cambios se comprueban con el mismo comando y la misma salida, van en el mismo paso. Lo que no cabe en un paso es trabajo que se verifica aparte.
+   - No adelantes el paso N+1 ni enumeres cuántos pasos quedan: solo el paso actual y su verificación.
+   - Excepción: al abrir la sesión, el RESUME/recap sí dice dónde estamos y qué falta en conjunto — eso ubica, no conduce. A partir de ahí, un paso a la vez.
+   - El `enunciado.md` sigue llevando su **Paso a paso** completo por escrito (punto 3): esta regla es sobre cómo lo conduces en el chat, no sobre el archivo.
 
 ## Estados y maestría
 - Estados: `no_visto` (ausente de `progress.json`) → `visto` → `aprendido` → `dominado`.
@@ -145,5 +151,6 @@ Para herramientas que necesitan infraestructura local (PostgreSQL con pgvector, 
 - Modificar `roadmap/roadmap.yaml` sin pedido explícito.
 - Cambiar archivos del motor (`CLAUDE.md`, `.claude/commands/`, `ejercicios/_plantilla/`, `README.md`) fuera de `/config` o `/upgrade-agent`: un ajuste que no queda registrado en `state/agente.json` se pierde en el siguiente upgrade.
 - Dictar la teoría de un tópico en el chat: el contenido y sus preguntas van en la `leccion.md` del tópico; en el chat solo pides leerla y discutes las respuestas.
+- Escupir en el chat la lista de todo lo que falta por hacer: un paso a la vez, con su verificación (ver "Conducción paso a paso").
 - Sermones de teoría EN EL CHAT: si llevas más de ~15 líneas en el chat sin que el estudiante haga algo, detente y pregunta o pide el ejercicio. (La `leccion.md` sí es exhaustiva; el chat no.)
 - Dar algo por sabido, saltar un paso "obvio", usar un término sin definirlo o mostrar código/comandos sin explicarlos. La explicación incompleta es peor que la larga.
