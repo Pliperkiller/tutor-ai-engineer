@@ -80,6 +80,15 @@ Un módulo `llm_client.py` con tres funciones: `cost_usd` (cuánto costó una re
    ```
    Mismo programa, otro archivo de entorno: tu key real ni se toca. Córrelo, y anota qué pasó de verdad y si coincide con lo que predijiste.
 
+   **Ojo — descubierto en la S30:** `--env-file` **no sobrescribe** una variable que ya exista en el entorno del shell; el archivo solo *rellena huecos*. Si en esa terminal tienes `ANTHROPIC_API_KEY` exportada, tu key real gana, la llamada funciona y este paso no prueba nada (te sale el camino feliz disfrazado). Compruébalo antes, sin imprimir el valor:
+   ```bash
+   echo "${ANTHROPIC_API_KEY:+ESTA PUESTA — este paso no va a funcionar}"
+   ```
+   La forma `:+` imprime ese texto fijo solo si la variable existe, y nada si no existe; **nunca** uses `${VAR:-...}` con un secreto, porque esa imprime el valor. Salida esperada: una línea vacía. Si sale el aviso, la forma a prueba de balas es poner la key falsa delante del comando, que sí pisa el entorno para esa única ejecución:
+   ```bash
+   ANTHROPIC_API_KEY=sk-ant-api03-esto-no-es-una-key uv run python llm_client.py
+   ```
+
 8. **Verifica tus predicciones de la S26:**
    ```bash
    uv run --env-file .env python sampling_check.py

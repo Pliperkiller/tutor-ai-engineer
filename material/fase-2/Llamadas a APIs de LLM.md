@@ -3,9 +3,10 @@ topic_id: f2.llamadas-api
 aliases: ["f2.llamadas-api"]
 fase: 2
 tipo: codigo
-estado: visto
+estado: aprendido
 nivel: sin_evaluar
-tags: [fase/2, estado/visto]
+repaso_proximo: 2026-09-18
+tags: [fase/2, estado/aprendido]
 ---
 
 # Llamadas a APIs de LLM
@@ -47,6 +48,21 @@ tags: [fase/2, estado/visto]
 - **Cómo forzar un error transitorio sin red ni key** (`retry_check.py`, andamiaje): apuntar el cliente a `http://127.0.0.1:9` (puerto *discard*, nadie escucha) → conexión rechazada → `anthropic.APIConnectionError`, que está en `TRANSIENT_ERRORS`. Se cambia reasignando el nombre a nivel de módulo (`llm_client.client = ...`) sin tocar `llm_client.py`, porque `ask()` resuelve `client` en el módulo cada vez que se ejecuta.
 - **Hueco de diseño del propio enunciado, encontrado hoy:** ni el paso 5 (camino feliz) ni el paso 7 (key rota, error permanente) hacen correr el bucle de reintentos. Una verificación que no ejercita lo que dice verificar — la misma familia que lleva seis apariciones en su historial.
 
+**S30 (2026-09-16) — sesión de ejercicio.** `01-cliente-anthropic` **COMPLETO y verificado**. Los tres cabos de la S29 cerrados por él.
+
+- **La espera pertenece al hueco ENTRE intentos, no al intento que falló.** Con `max_retries=3` hay 3 intentos y **2** esperas: dormir después del último es tiempo muerto, porque ya no queda nada que reintentar. Analogía: con 3 postes de cerca hay 2 huecos. Consecuencia en el código: lo primero que decide el `except` es *"¿era este el último intento?"* → si sí, lanza; si no, entonces calcula, imprime y duerme. La guarda correcta es `if retry_no == max_retries - 1:` porque `max_retries - 1` es el **índice** del último intento (con 3 intentos: 0, 1, **2**).
+- **El `as` de `except E as exc` no es un context manager**, es solo el nombre donde se guarda el objeto. Pero Python hace un **`del exc` implícito** al salir del bloque `except` — para no mantener viva una referencia al traceback, que referencia el frame, que referencia las locales (fuga de memoria). Así que la variable **no existe después del `except`**. De ahí los dos caminos para el fallo final: (A) lanzar *dentro* del `except`, o (B) copiar el objeto a otra variable que viva fuera del bucle.
+- **`raise` a secas relanza la excepción activa.** Dentro de un `except`, Python ya sabe cuál se está manejando. `raise exc` funciona pero repite un dato que Python ya tiene; `raise` a secas comunica *"esto pasa de largo intacto"* y es inmune a que el nombre `exc` se reasigne más adelante. Es la regla `TRY201` de ruff.
+- **Por qué re-lanzar el original y no fabricar uno nuevo:** el traceback del error relanzado trae la cadena completa hasta la causa raíz — `anthropic.APIConnectionError: Connection error.` → `httpx2.ConnectError` → `httpcore2.ConnectError: [Errno 61] Connection refused`. Ese `Errno 61` es lo único que dice *por qué* falló la red. Un error fabricado tira esa cadena a la basura. (Y `raise anthropic.APIConnectionError` sin paréntesis ni siquiera construye: `TypeError: missing 1 required keyword-only argument: 'request'` — una **clase** no es una **instancia**.)
+- **Estado acumulado vs cálculo directo.** El backoff se puede llevar acumulando (`delay = 1`, luego `delay * 2`, guardando el valor entre vueltas) o calculando (`2**retry_no`). Producen la misma secuencia (1, 2, 4, 8), pero la segunda no tiene estado que sobreviva entre iteraciones — y el estado entre iteraciones es justo lo que se rompe cuando alguien mueve una línea.
+- **Cómo se lee la salida de ruff**: código de regla (el prefijo dice la familia: `TRY` = `try/except`, `F` = pyflakes, `E` = estilo), `archivo:línea:columna`, el subrayado `^^^` sobre el trozo exacto que sobra, y el `help:` con el arreglo.
+- **`uv run --env-file X` NO sobrescribe una variable que ya exista en el entorno**: el shell gana y el archivo solo rellena huecos. Comprobado en aislado: `PROBE_VAR=from_shell uv run --env-file probe.env python -c "print(os.environ['PROBE_VAR'])"` → `from_shell`. Consecuencia práctica: el paso 7 (key rota vía `.env.broken`) **solo funciona en una terminal donde `ANTHROPIC_API_KEY` no esté exportada**.
+- **Comprobar si un secreto está puesto sin imprimirlo**: `echo "${VAR:+ESTA PUESTA}"` imprime un texto fijo si la variable existe y nada si no. La forma `${VAR:-NO}` **imprime el valor** — nunca usarla con secretos.
+
+**Resultados de la verificación (tutor, ejecutando):** `retry_check.py` → 2 bloques (intentos 0 y 1), esperas ~1.8 / ~2.2, traceback real con `Errno 61`. `.env.broken` → `AuthenticationError` 401 con cero reintentos. `ruff check .` → `All checks passed!`. `RESULTADOS.md` → pasos 7 y 8 completos con causa por fila.
+
+**Falta para `dominado`:** el `criterio_dominio` pide **ambos proveedores** (falta OpenAI) y **streaming** dentro del cliente propio. Sigue acordado el ejercicio extra del mini-SDK con `httpx` a pelo contra su Ollama remoto.
+
 ## Errores cometidos
 
 - **2026-09-13**: "429 es un timeout" — confundió una response de rate limit con la ausencia de respuesta. Corregido en sesión y reproducido bien en la repregunta ("si hay status code, hubo respuesta"). Vigilar el vocabulario al clasificar fallos en el ejercicio.
@@ -59,9 +75,11 @@ tags: [fase/2, estado/visto]
 - **2026-09-15 (S29)**: la cláusula del `raise` se señaló como el punto grave y en la versión siguiente seguía sin una sola línea de `raise`, pese a haber razonado bien el mecanismo al preguntárselo. Familia "manejo de lo inesperado" (S9): la función promete `-> tuple[str, float]` y devuelve `None`.
 - **2026-09-15 (S29)**: la última espera del bucle es tiempo muerto — duerme y sale sin reintentar. Con 3 intentos hay 3 sleeps y solo 2 útiles.
 - **2026-09-15 (S29)**: corrió el paso 7 (tipo `predecir`) sin escribir antes la predicción; `RESULTADOS.md` quedó vacío. Un ejercicio de predecir del que se salta la predicción no mide nada.
+- **2026-09-16 (S30) — media corrección, tercera y cuarta aparición, las dos el mismo día.** (1) Al mover el `raise` arrastró consigo el `print`, dejándolo **debajo** del `time.sleep`: la línea que anuncia la espera se imprimía cuando la espera ya había pasado — exactamente el punto corregido en la S29. (2) Se le pidió borrar las líneas 131 y 132 (`delay = 0` y `sleep_time = delay`) y borró solo la 131, dejando la lectora sin la creadora → `NameError: name 'delay' is not defined`, en la 132, **antes** de entrar al bucle. Antídoto a exigir: al mover o borrar una línea, decir en voz alta qué *más* cambia de sitio con ella.
+- **2026-09-16 (S30) — dijo "listos" sin correr la verificación.** El archivo ni importaba (`NameError` garantizado en la primera llamada) y el comando de verificación se le había dado literal en la misma instrucción. Regla acordada: "listo" significa *"lo corrí y vi la salida esperada"*; si no se corrió, se dice "lo escribí, no lo he corrido".
 
 ## Relacionados
 
 - [[Cómo funciona un LLM]] — prerequisito según el roadmap; además, las 3 predicciones de sampling de su ejercicio 01 (parte C) se verifican contra la API real en el ejercicio de ESTE tópico (sesiones [[2026-09-13]]).
 - [[APIs REST con FastAPI]] — usados juntos en la sesión [[2026-09-13]]: la separación cliente/request del SDK se explicó reanclando al `AsyncClient` compartido del `lifespan` de su ejercicio `03-api-externa`. Y en la sesión [[2026-09-15]] la forma del `try` / `except X as exc` del backoff se reancló a la que él mismo escribió en `03-api-externa/main.py:151-157`.
-- [[Async y concurrencia básica]] — error recurrente que los conecta: "manejo de lo inesperado", abierto desde la S9 (dejar caer errores en silencio). Reapareció en la sesión [[2026-09-15]] con `ask_with_retries` devolviendo `None` al agotar los reintentos en vez de re-lanzar.
+- [[Async y concurrencia básica]] — error recurrente que los conecta: "manejo de lo inesperado", abierto desde la S9 (dejar caer errores en silencio). Reapareció en la sesión [[2026-09-15]] con `ask_with_retries` devolviendo `None` al agotar los reintentos en vez de re-lanzar; **cerrado en la sesión [[2026-09-16]]** con el re-raise del error original dentro del `except`.

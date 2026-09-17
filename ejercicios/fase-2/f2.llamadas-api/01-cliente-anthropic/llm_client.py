@@ -127,30 +127,25 @@ def ask_with_retries(
       name (type(exc).__name__) and the wait in seconds — an invisible
       retry is undebuggable.
     """
+
     retry_no = 0
-    delay = 0
-    sleep_time = delay
+    sleep_time = 0
     while retry_no < max_retries:
         try:
             out, cost = ask(prompt, **ask_kwargs)
             return (out, cost)
         except TRANSIENT_ERRORS as exc:
-            if retry_no == 0:
-                delay = 1
-            else:
-                delay = delay * 2
-            sleep_time = delay + random.uniform(0, 1)
-
+            if retry_no == max_retries - 1:
+                raise
+            sleep_time = 2**retry_no + random.uniform(0, 1)
             print(
                 f"Attemp no: {retry_no}",
                 f"Error type : {type(exc).__name__}",
                 f"Wait time: {sleep_time}",
                 sep="\n",
             )
-
             time.sleep(sleep_time)
             retry_no += 1
-    raise anthropic.APIConnectionError
 
 
 if __name__ == "__main__":

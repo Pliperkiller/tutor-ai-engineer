@@ -3,10 +3,10 @@ topic_id: f2.como-funciona-llm
 aliases: ["f2.como-funciona-llm"]
 fase: 2
 tipo: conceptual
-estado: visto
+estado: aprendido
 nivel: sin_evaluar
 repaso_proximo: 2026-09-20
-tags: [fase/2, estado/visto]
+tags: [fase/2, estado/aprendido]
 ---
 
 # Cómo funciona un LLM
@@ -30,6 +30,21 @@ tags: [fase/2, estado/visto]
 - `T=0` no determinista: "fluctuaciones en los cálculos de la GPU". Completado: la fluctuación solo cambia el resultado cuando dos candidatos están casi empatados, y como la generación es token a token, uno distinto cambia todo lo que sigue.
 - `top_p=0.1`: formulación correcta al segundo intento — *ordena de mayor a menor y acumula desde arriba hasta el 10 %*. Con tabla plana (top al 2 %) sobreviven 5-10 candidatos; con tabla concentrada (top al 92 %), uno solo.
 
+**S30 (2026-09-16) — deuda de la S26 cerrada: las predicciones de sampling, medidas contra la API real.** `sampling_check.py`, 15 requests (3 configuraciones × 5) a través de su propio `ask()`.
+
+| configuración | predijo (S26) | salió | lectura |
+|---|---|---|---|
+| `temperature = 0` | 1 distinta | **1** | acertó — siempre el token más probable, misma respuesta siempre |
+| `temperature = 1` | 5 distintas | **3** | parcial — y su lectura es la correcta |
+| `top_p = 0.1` | 5 distintas | **1** | falló la predicción, **acertó la causa** |
+
+- **Que salgan 3 distintas de 5 muestras no significa que el modelo tenga 3 candidatos.** Con 5 muestras de una distribución amplia puedes repetir por puro azar. Lo dijo él: *"a veces sí son 5, otras veces 3"*. Para ver el abanico real hacen falta muchas más muestras que 5.
+- **`top_p = 0.1` da MENOS variedad, no más** — el error de la S26, ahora cerrado con el caso concreto y medido. Su causa, textual: *"a pesar de tener una curva más plana, 'PlantAlert' ya cubre un 10% de probabilidad"*. Eso es **acumulación desde arriba**: se ordenan los candidatos de mayor a menor y se corta al llegar al 10% acumulado; si el primero ya llega solo al 10%, la lista se queda con **un único candidato** → una sola respuesta posible. No es un umbral por token ni un reparto del 10%.
+- **Pregunta de control respondida sin andamiaje:** `top_p = 0.9` → más respuestas distintas, porque acumula candidatos hasta el 90% y la lista de la que muestrea es mucho más larga.
+- **`temperature` y `top_p` ya no viajan en la firma de la Messages API** (SDK `anthropic` 1.5.0): llegan a Haiku 4.5 por `extra_body`. El dial existe en el modelo, no en la superficie de la API.
+
+**Falta para `dominado`:** la única pieza del `criterio_dominio` sin producir es el **diseño de 1 página** que explique tokens / ventana de contexto / temperatura. La parte de "predecir 3 configuraciones de sampling y verificarlas contra la API real" está hecha y verificada.
+
 ## Errores cometidos
 - **2026-09-11** — Predijo `gato`/`Gato` como 1 token "porque es una palabra simple": simple ≠ frecuente en el corpus (y el corpus tiene más inglés). Corregido con la tabla real.
 - **2026-09-11** — Razonó bien casa/` casa` (forma frecuente = con espacio) y aun así marcó "mismo número de tokens: sí", media hora después de ver el caso gato. No explicó la contradicción (3 preguntas sin respuesta; se dejó por fatiga). Repreguntar el 09-13.
@@ -38,9 +53,11 @@ tags: [fase/2, estado/visto]
 - **2026-09-11** — Parte B: pegó la salida de los pares y marcó bien/mal sin una causa (patrón "dato en vez de frase", 2.ª vez). Las causas salieron con frase con huecos.
 - **2026-09-11** — Q4: propuso "un diccionario de frecuencias de letras por token" para que el modelo cuente letras: nadie por dentro del modelo puede leerlo; el conteo lo hace el código.
 - **2026-09-13 (S28)** — `top_p`, **variante nueva del error**: ya no lo lee al revés, pero su primera respuesta fue *"escoge los tokens que tienen 10 % o más de probabilidad cada uno"* — umbral **por token** en vez de acumulación desde arriba. Se autocorrigió solo al devolverle su propio caso de la S26 (tabla plana con el top al 2 %, donde él mismo defendió que quedan 5-10 candidatos). En el repaso del 09-20, preguntarlo **sin** darle ese ejemplo.
+- **2026-09-16 (S30) — `top_p` leído al revés: CERRADO.** Abierto en la S26 (lo entendió como "reparto el 10% entre muchos candidatos" = más variedad), corregido en discusión en la S28 pero sin el ancla del caso concreto que la nota de entonces pedía. Hoy la API le contradijo la predicción (predijo 5 respuestas distintas, salió 1) y **escribió la causa correcta por su cuenta**. Aprendió del número que lo refutaba en vez de defender la predicción.
 
 ## Relacionados
 - [[Testing con pytest]] — prerequisito según el roadmap.
 - [[2026-09-11]] — sesión 26: lección, 4 preguntas y ejercicio 01-predecir-tokens (a).
 - [[2026-09-13]] — sesión 28: repaso en frío superado (ítems ` gato`, `top_p`, `T=0`).
-- [[Llamadas a APIs de LLM]] — ahí se verifican las 3 predicciones de sampling de la parte C contra la API real y se usa `count_tokens` (segunda mitad del criterio de dominio de este tópico).
+- [[Llamadas a APIs de LLM]] — ahí se verificaron las 3 predicciones de sampling de la parte C contra la API real (hecho en la sesión [[2026-09-16]], con `sampling_check.py` corriendo sobre el `ask()` que él escribió) y se usa `count_tokens`.
+- [[2026-09-16]] — sesión 30: la verificación de la parte C cierra el `top_p` leído al revés y sube este tópico a `aprendido`.
