@@ -4,7 +4,7 @@ aliases: ["f1.apis-rest-fastapi"]
 fase: 1
 tipo: codigo
 estado: aprendido
-repaso_proximo: 2026-09-16
+repaso_proximo: 2026-10-08
 nivel: sin_evaluar
 tags: [fase/1, estado/aprendido]
 ---
@@ -608,6 +608,14 @@ Tercera máquina (Linux/zsh). `~/code/pyproject.toml` es un *workspace* de uv
 (un proyecto padre que agrupa subproyectos) y `uv init` metió este ejercicio
 como miembro: las dependencias viven en `~/code/.venv`, el ejercicio no tiene
 `.venv` ni `uv.lock` propios. Funciona; no es autocontenido. Pendiente no urgente.
+
+## Repaso S31 (2026-09-17) — la cadena DI, sin plantilla y limpia
+
+La condición que quedó puesta en la S23 (pedir la cadena SIN lista de piezas) se cumplió: la reproduje de memoria, en orden y con el porqué de cada pieza — el cliente nace en el **lifespan** (se inicializa al arrancar la app y muere al detenerla gracias al `yield`, sin dejar conexiones abiertas), se registra en **`app.state.http`**, **`get_client`** lo saca de ahí, **`Depends`** hace la inyección y **`Annotated`** va en la firma del endpoint. Y ante la pregunta de precisión: `Annotated` empaqueta **dos** cosas — el tipo `httpx.AsyncClient` y el `Depends(get_client)`.
+
+Precisiones del tutor (menores): quien llama a `get_client` es FastAPI, **antes** de entrar al endpoint — el endpoint recibe el cliente ya resuelto, no lo pide él; y del par de `Annotated`, el tipo es para mypy/editor y el `Depends` es metadata para FastAPI.
+
+Intervalo +21 → 2026-10-08. Para dominado: una review limpia sin ninguna precisión del tutor.
 
 ## Relacionados
 - [[Async y concurrencia básica]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).

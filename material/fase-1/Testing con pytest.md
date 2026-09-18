@@ -4,7 +4,7 @@ aliases: ["f1.testing-pytest"]
 fase: 1
 tipo: codigo
 estado: aprendido
-repaso_proximo: 2026-09-16
+repaso_proximo: 2026-09-24
 nivel: sin_evaluar
 tags: [fase/1, estado/aprendido]
 ---
@@ -466,6 +466,16 @@ Dentro del `with pytest.raises(...)` va **solo la línea que debe explotar**:
 cualquier assert debajo de ella nunca se ejecuta (el control salta fuera del
 bloque al lanzarse la excepción). Los asserts van **fuera**, interrogando a
 `exc_info.value`.
+
+## Repaso S31 (2026-09-17) — la trampa del 404 del router, desarmada (con el marco dado)
+
+Trampa: test **verde** con `client.get("/api/models/999")` sobre una API cuya ruta real es `/models/{model_id}`, assert `== 404`. Mi primera reacción fue no entender qué se me preguntaba; con el marco "hay DOS 404 posibles: la guarda del endpoint y el **router** de FastAPI cuando ninguna URL matchea", lo resolví entero a la primera:
+
+- El 404 es **del router**: `/api/models/999` no hace match con ninguna ruta, así que la guarda nunca se ejecutó.
+- El verde es un **falso positivo**: el test seguiría verde aunque se borrara la guarda.
+- Arreglo: assert sobre el `detail` exacto (`"Model not found"`), que **solo** produce la guarda — el router dice `"Not Found"`. Con ese assert, la URL mala pone el test en rojo y obliga a corregirla también.
+
+Séptima aparición de la familia "tests que pasan por la razón equivocada" — y la primera que desarmo en frío sobre código ajeno. Es el mismo bug que cacé en mi suite en la S19. Intervalo +7; para +21, detectar la trampa sin que me den el marco de los dos 404.
 
 ## Relacionados
 - [[APIs REST con FastAPI]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).

@@ -4,7 +4,7 @@ aliases: ["f1.async-basico"]
 fase: 1
 tipo: codigo
 estado: aprendido
-repaso_proximo: 2026-09-14
+repaso_proximo: 2026-09-24
 nivel: sin_evaluar
 tags: [fase/1, estado/aprendido]
 ---
@@ -119,6 +119,17 @@ Tres sesiones intercambiando gather y pool. Lo que lo cerró fue la cuenta:
 
 La cuenta y gather→MAX salieron del estudiante; la mitad del pool la precisó
 el tutor. Próximo repaso: las dos mitades sin empujón.
+
+## Repaso S31 (2026-09-17) — superado, con la quinta aparición fugaz del intercambio
+
+Mi primera respuesta volvió a colgarle el solapamiento al `AsyncClient` ("lanza una y mientras espera lanza la siguiente"). Bastó una pregunta —mismo cliente compartido, sin `gather`, `await` en un `for`: ¿0.43s o 3s?— para autocorregirme: **3 segundos**, porque `await` uno a uno espera cada request completa. De ahí salieron las dos mitades, cada una en su sitio:
+
+- **`gather` → solapamiento**: recoge las corutinas y el event loop las avanza a la vez; total ≈ el máximo (~0.43s), no la suma (~3s).
+- **Pool del `AsyncClient` → esperas más cortas**: cliente nuevo por request = 10 handshakes TCP/TLS; compartido = se paga una vez y las conexiones se reutilizan. (Matiz: con 10 requests simultáneas el pool puede abrir más de una conexión — la clave es la reutilización, no que sea una sola.)
+
+Corrección de imagen: `gather` no es "bandeja de conexiones" — recoge **corutinas** y devuelve sus resultados; de conexiones se ocupa el cliente.
+
+Intervalo +7 (la mitad del pool salió tras pregunta directa, no espontánea). Para +21: las dos mitades sin empujón a la primera.
 
 ## Relacionados
 - [[Modelado y validación con Pydantic]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).

@@ -3,10 +3,10 @@ topic_id: f1.pydantic-validacion
 aliases: ["f1.pydantic-validacion"]
 fase: 1
 tipo: codigo
-estado: aprendido
-repaso_proximo: 2026-09-15
+estado: dominado
+repaso_proximo: 2026-10-08
 nivel: sin_evaluar
-tags: [fase/1, estado/aprendido]
+tags: [fase/1, estado/dominado]
 ---
 # f1.pydantic-validacion — apuntes
 
@@ -132,6 +132,18 @@ con 8 tests (válidos, inválidos, loc anidado, roundtrip, errores en lote).
 Fuentes: https://docs.pydantic.dev/latest/concepts/fields/ ·
 https://docs.pydantic.dev/latest/concepts/validators/ ·
 https://docs.pydantic.dev/latest/concepts/serialization/
+
+## Repaso S31 (2026-09-17) — superado limpio 3/3 → DOMINADO
+
+En frío y sin material, ante `POST /models` con `{"name": 123, "price": "gratis"}`:
+
+1. **Quién y cuándo valida**: Pydantic, al parsear el body — antes de que el código del endpoint se ejecute. Mi código no se entera.
+2. **Qué recibe el cliente**: 422, y lo decide FastAPI (atrapa el error de Pydantic vía `RequestValidationError` y lo convierte en la respuesta con el detalle del campo).
+3. **Sin FastAPI**: `ModelIn(...)` a mano lanza `ValidationError` de Pydantic a secas — la misma excepción, solo que en la API alguien la atrapa por mí.
+
+Precisión de nombre (del tutor): dije "el model validator" refiriéndome a la validación de tipos que Pydantic hace siempre; `@model_validator` es un decorador concreto que el modelo puede ni tener.
+
+Segunda review limpia consecutiva (S16, S31) → **dominado**. Próximo contacto de mantenimiento: 2026-10-08.
 
 ## Relacionados
 - [[Git y flujo de trabajo]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).

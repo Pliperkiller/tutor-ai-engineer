@@ -3,56 +3,20 @@
   "search": "-path:_plantilla -file:README",
   "showTags": false,
   "showAttachments": false,
-  "hideUnresolved": true,
+  "hideUnresolved": false,
   "showOrphans": true,
   "collapse-color-groups": false,
-  "colorGroups": [
-    {
-      "query": "tag:#estado/no_visto",
-      "color": {
-        "a": 1,
-        "rgb": 8947584
-      }
-    },
-    {
-      "query": "tag:#estado/visto",
-      "color": {
-        "a": 1,
-        "rgb": 15703847
-      }
-    },
-    {
-      "query": "tag:#estado/aprendido",
-      "color": {
-        "a": 1,
-        "rgb": 1941109
-      }
-    },
-    {
-      "query": "tag:#estado/dominado",
-      "color": {
-        "a": 1,
-        "rgb": 8353757
-      }
-    },
-    {
-      "query": "tag:#sesion",
-      "color": {
-        "a": 1,
-        "rgb": 14178864
-      }
-    }
-  ],
+  "colorGroups": [],
   "collapse-display": false,
   "showArrow": false,
   "textFadeMultiplier": 0,
   "nodeSizeMultiplier": 1,
   "lineSizeMultiplier": 1,
   "collapse-forces": false,
-  "centerStrength": 0.5,
+  "centerStrength": 0.518713248970312,
   "repelStrength": 10,
   "linkStrength": 1,
   "linkDistance": 250,
-  "scale": 1.027399659063716,
+  "scale": 1.406728036105124,
   "close": false
 }
