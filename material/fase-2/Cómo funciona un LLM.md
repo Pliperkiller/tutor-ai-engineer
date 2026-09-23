@@ -5,7 +5,7 @@ fase: 2
 tipo: conceptual
 estado: aprendido
 nivel: sin_evaluar
-repaso_proximo: 2026-09-20
+repaso_proximo: 2026-10-13
 tags: [fase/2, estado/aprendido]
 ---
 
@@ -42,6 +42,8 @@ tags: [fase/2, estado/aprendido]
 - **`top_p = 0.1` da MENOS variedad, no más** — el error de la S26, ahora cerrado con el caso concreto y medido. Su causa, textual: *"a pesar de tener una curva más plana, 'PlantAlert' ya cubre un 10% de probabilidad"*. Eso es **acumulación desde arriba**: se ordenan los candidatos de mayor a menor y se corta al llegar al 10% acumulado; si el primero ya llega solo al 10%, la lista se queda con **un único candidato** → una sola respuesta posible. No es un umbral por token ni un reparto del 10%.
 - **Pregunta de control respondida sin andamiaje:** `top_p = 0.9` → más respuestas distintas, porque acumula candidatos hasta el 90% y la lista de la que muestrea es mucho más larga.
 - **`temperature` y `top_p` ya no viajan en la firma de la Messages API** (SDK `anthropic` 1.5.0): llegan a Haiku 4.5 por `extra_body`. El dial existe en el modelo, no en la superficie de la API.
+
+**S32 (2026-09-22) — repaso en frío superado** (intervalo +21). `top_p=0.1` preguntado **sin** el ejemplo de la tabla plana: *"ordena de mayor a menor y toma tokens hasta acumular 10 %"*, a la primera. Paso que le faltó nombrar: después se **sortea entre los sobrevivientes**, con sus probabilidades reescaladas para que sumen 100 %.
 
 **Falta para `dominado`:** la única pieza del `criterio_dominio` sin producir es el **diseño de 1 página** que explique tokens / ventana de contexto / temperatura. La parte de "predecir 3 configuraciones de sampling y verificarlas contra la API real" está hecha y verificada.
 

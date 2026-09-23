@@ -5,7 +5,7 @@ fase: 2
 tipo: codigo
 estado: aprendido
 nivel: sin_evaluar
-repaso_proximo: 2026-09-18
+repaso_proximo: 2026-09-29
 tags: [fase/2, estado/aprendido]
 ---
 
@@ -63,6 +63,12 @@ tags: [fase/2, estado/aprendido]
 
 **Falta para `dominado`:** el `criterio_dominio` pide **ambos proveedores** (falta OpenAI) y **streaming** dentro del cliente propio. Sigue acordado el ejercicio extra del mini-SDK con `httpx` a pelo contra su Ollama remoto.
 
+**S32 (2026-09-22) — repaso en frío, superado con reserva** (intervalo +7).
+- **Número de esperas con `max_retries=3`: 2**, dicho sin andamiaje. La espera pertenece al *hueco entre* intentos; tras el último no hay otro intento, así que dormir ahí es tiempo muerto.
+- **`raise` a secas vs `raise exc`:** `raise` a secas **re-lanza la excepción activa**, el mismo objeto con su traceback intacto (no "genera" un error nuevo); `raise exc` además añade al traceback la línea del propio `raise exc`.
+- **Qué le pasa a `exc` al terminar el `except`:** Python hace un **`del exc` implícito** (la documentación: *"cleared at the end of the except clause"*). Motivo: la excepción guarda su traceback → los frames → las variables locales, entre ellas `exc` → ciclo de referencias. Se borra el **nombre**, no el objeto: si otro nombre lo apunta (`saved = exc`), sigue vivo.
+- **No es scope:** en Python solo crean scope las funciones, las clases y el módulo; `for`/`if`/`try`/`except` no (una variable asignada dentro de un `for` existe después). La prueba: `saved` y `exc` tienen el mismo scope y solo `exc` desaparece. El término técnico es *unbinding* (desvincular el nombre de su objeto).
+
 ## Errores cometidos
 
 - **2026-09-13**: "429 es un timeout" — confundió una response de rate limit con la ausencia de respuesta. Corregido en sesión y reproducido bien en la repregunta ("si hay status code, hubo respuesta"). Vigilar el vocabulario al clasificar fallos en el ejercicio.
@@ -77,6 +83,8 @@ tags: [fase/2, estado/aprendido]
 - **2026-09-15 (S29)**: corrió el paso 7 (tipo `predecir`) sin escribir antes la predicción; `RESULTADOS.md` quedó vacío. Un ejercicio de predecir del que se salta la predicción no mide nada.
 - **2026-09-16 (S30) — media corrección, tercera y cuarta aparición, las dos el mismo día.** (1) Al mover el `raise` arrastró consigo el `print`, dejándolo **debajo** del `time.sleep`: la línea que anuncia la espera se imprimía cuando la espera ya había pasado — exactamente el punto corregido en la S29. (2) Se le pidió borrar las líneas 131 y 132 (`delay = 0` y `sleep_time = delay`) y borró solo la 131, dejando la lectora sin la creadora → `NameError: name 'delay' is not defined`, en la 132, **antes** de entrar al bucle. Antídoto a exigir: al mover o borrar una línea, decir en voz alta qué *más* cambia de sitio con ella.
 - **2026-09-16 (S30) — dijo "listos" sin correr la verificación.** El archivo ni importaba (`NameError` garantizado en la primera llamada) y el comando de verificación se le había dado literal en la misma instrucción. Regla acordada: "listo" significa *"lo corrí y vi la salida esperada"*; si no se corrió, se dice "lo escribí, no lo he corrido".
+
+- **2026-09-22 (S32)** — el `del exc` implícito no salió en frío: primero "queda fuera del scope", luego "es como un context manager" (**segunda aparición**: ya se corrigió en la S30). Predijo bien el experimento `saved = exc` una vez planteado. Repreguntar sin ejemplo en la review del 2026-09-29.
 
 ## Relacionados
 
