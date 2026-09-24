@@ -166,7 +166,9 @@
     "INTERCAMBIO GATHER/POOL — QUINTA APARICION, FUGAZ (S31): la primera respuesta del repaso volvio a atribuir el solapamiento al AsyncClient, pese al cierre de S22. Diferencia real: se autocorrigio con UNA pregunta (quitar el gather → '3 segundos') y produjo las dos mitades de la regla el mismo. Sigue en vigilancia: la respuesta ESPONTANEA aun sale con la pieza equivocada; async se extiende solo +7 y para +21 debe dar las dos mitades sin empujon a la primera.",
     "REPASOS VENCIDOS — SALDADOS EN S31: los 4 de F1 corridos y superados en sesion dedicada antes de abrir f2.prompting-estructurado, tal como se acordo en S30. La agenda de repasos queda a cero deuda; los proximos vencimientos son 2026-09-18 (f2.llamadas-api) y 2026-09-20 (f2.como-funciona-llm).",
     "EXCEPT ... AS EXC (S32): la desvinculacion implicita (del exc al terminar el except) no sale en frio; dos modelos erroneos en la misma respuesta: 'fuera del scope' y 'como un context manager' (este ultimo ya corregido en S30 -> segunda aparicion). Pregunta de review sin ejemplo en f2.llamadas-api (2026-09-29).",
-    "RESPUESTAS CUALITATIVAS CUANDO SE PIDE UN NUMERO O UN MECANISMO (S32): en las 4 preguntas de la leccion la primera respuesta fue la conclusion correcta pero sin el numero (Q1), sin el mecanismo (Q3 'un seguro') o sin justificacion (Q4 solo nombres). Con una repregunta produce la pieza faltante. Antidoto: releer QUE PIDE la pregunta (cuantas partes) antes de contestar."
+    "RESPUESTAS CUALITATIVAS CUANDO SE PIDE UN NUMERO O UN MECANISMO (S32): en las 4 preguntas de la leccion la primera respuesta fue la conclusion correcta pero sin el numero (Q1), sin el mecanismo (Q3 'un seguro') o sin justificacion (Q4 solo nombres). Con una repregunta produce la pieza faltante. Antidoto: releer QUE PIDE la pregunta (cuantas partes) antes de contestar.",
+    "GUARD INVERTIDO REAPARECE (S33) — retirado en S11, volvio al simplificar 'if not in: return False else True' a 'return output not in CATEGORIES'. Causa: copio la condicion del if en vez de la del valor devuelto, y NO re-corrio la verificacion tras el refactor (ruff paso limpio y le dio falsa seguridad). Antidoto: tras cualquier refactor, re-correr la verificacion aunque sea 'solo simplificar'. Vigilar de nuevo.",
+    "ALIASING DE DICT MUTABLE (S33): asigno el mismo dict plantilla a varias claves (todas las familias compartian contador). Corregido con .copy() tras predecir. Reforzar: '=' no copia objetos mutables."
   ],
   "topicos": {
     "f1.python-profesional": {
@@ -368,16 +370,17 @@
     },
     "f2.prompting-estructurado": {
       "status": "visto",
-      "ultima_sesion": "2026-09-22",
+      "ultima_sesion": "2026-09-23",
       "next_review": null,
-      "intentos": 1,
+      "intentos": 2,
       "notas": [
-        "S32 (2026-09-22): SESION DE LECCION. Leyo leccion.md por su cuenta (tarea de S31) y las 4 preguntas se discutieron, pero TODAS necesitaron una repregunta del tutor para completarse -> no aplica la excepcion de ejercicio el mismo dia. Q1 (costo): primero solo cualitativo ('20 veces mayor pero ahorra reprocesos'); al pedirle el numero: $2 vs $40, diferencia $38/mes CORRECTO; criterio: 'corro v1 y v2 contra los mismos casos y comparo errores' CORRECTO. Completado por el tutor: errores evitados x costo por error > $38, y 10 casos es muestra chica (no determinismo -> correr cada caso varias veces). Precision: el '20x' aplica al system prompt, no a la factura total. Q2 (regla Spanish vs ejemplos en ingles): predijo 'lo mas probable espanol, posible mezcla' CONTRA la negrita de §3; con la pregunta del predictor de siguiente token produjo 'ganan los ejemplos, continua el patron en ingles'. Q3 (inyeccion): competencia instrucciones vs entrada bien; 'v2 pone un seguro' vago -> al pedir las dos piezas: 'instrucciones y etiquetas'; el tutor completo por que cada una sola no basta. Q4 (familias): camino feliz / borde / inyeccion / formato; justificacion al segundo mensaje; le falto 'un caso feliz POR CATEGORIA'; distinguio bien que el formato NO es familia de entradas sino verificacion sobre todos los casos (un assert sobre cada salida)."
+        "S32 (2026-09-22): SESION DE LECCION. Leyo leccion.md por su cuenta (tarea de S31) y las 4 preguntas se discutieron, pero TODAS necesitaron una repregunta del tutor para completarse -> no aplica la excepcion de ejercicio el mismo dia. Q1 (costo): primero solo cualitativo ('20 veces mayor pero ahorra reprocesos'); al pedirle el numero: $2 vs $40, diferencia $38/mes CORRECTO; criterio: 'corro v1 y v2 contra los mismos casos y comparo errores' CORRECTO. Completado por el tutor: errores evitados x costo por error > $38, y 10 casos es muestra chica (no determinismo -> correr cada caso varias veces). Precision: el '20x' aplica al system prompt, no a la factura total. Q2 (regla Spanish vs ejemplos en ingles): predijo 'lo mas probable espanol, posible mezcla' CONTRA la negrita de §3; con la pregunta del predictor de siguiente token produjo 'ganan los ejemplos, continua el patron en ingles'. Q3 (inyeccion): competencia instrucciones vs entrada bien; 'v2 pone un seguro' vago -> al pedir las dos piezas: 'instrucciones y etiquetas'; el tutor completo por que cada una sola no basta. Q4 (familias): camino feliz / borde / inyeccion / formato; justificacion al segundo mensaje; le falto 'un caso feliz POR CATEGORIA'; distinguio bien que el formato NO es familia de entradas sino verificacion sobre todos los casos (un assert sobre cada salida).",
+        "S33 (2026-09-23): SESION DE EJERCICIO a medias (pasos 0-5 de 01-clasificador-tickets). Hecho: setup uv, cases.json (10 casos, 4 happy uno por categoria, 3 edge: vacio / espanol / trampa de palabra clave 'billing page', 3 injection), v1 (vibras, 3 lineas), is_valid_format y evaluate completos y verificados; corrida de v1: happy 0/12, injection 0/9, edge 6/9 wrong (3 format: vacio -> parrafo; 3 trampa 'billing' formato valido pero incorrecto). Errores del camino: (1) expected de injection = la respuesta inyectada (Mercury/4/print) en vez de la categoria -> confundio 'lo que pide el atacante' con 'lo que debe responder el clasificador'; corregido a other tras la pregunta. (2) aliasing: un mismo dict 'structure' asignado a todas las familias -> corregido con .copy(). (3) faltaba el loop RUNS_PER_CASE y el print de fallos. (4) GUARD INVERTIDO al refactorizar is_valid_format a una linea (return output NOT in CATEGORIES) -> tabla 30/30 wrong; no re-corrio la verificacion del paso 3 tras el refactor; necesito pista 2 (zona exacta). Pidio ideas de edge cases (se le dieron 4 tipos). Pendiente menor: !r en el print del elif (linea 81)."
       ]
     }
   },
-  "sesiones_completadas": 32,
-  "ultima_sesion": "2026-09-22",
+  "sesiones_completadas": 33,
+  "ultima_sesion": "2026-09-23",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
@@ -389,8 +392,8 @@
   ],
   "pendiente": {
     "topic_id": "f2.prompting-estructurado",
-    "ejercicio": null,
-    "paso": "leccion leida y preguntas discutidas; ejercicio no empezado",
-    "siguiente": "montar y resolver el ejercicio de f2.prompting-estructurado (clasificador de tickets: prompt v1 vibras vs v2 contrato XML + few-shot, 10 casos en 3 familias -camino feliz con 1 por categoria, bordes, inyeccion- + assert de formato sobre todas las salidas, cada caso corrido varias veces; decidir con el numero de errores)"
+    "ejercicio": "ejercicios/fase-2/f2.prompting-estructurado/01-clasificador-tickets",
+    "paso": "pasos 0-5 hechos y verificados: cases.json (10 casos, injection -> other), is_valid_format y evaluate OK, v1 corrido (edge 6/9 wrong: vacio da parrafo, trampa 'billing page' da billing; happy e injection 0). prompts/classifier_v2.txt vacio; RESULTADOS.md solo con prediccion; falta !r en el print del elif (linea 81); opcional: cambiar un injection por un caso mixto (pedido real + inyeccion).",
+    "siguiente": "paso 6: escribir classifier_v2.txt (rol, reglas con formato y bordes, frontera de datos, 1 ejemplo por categoria sin copiar casos) atacando los 2 fallos de v1; luego paso 7 (correr ambas), 8 (RESULTADOS con causas) y 9 (ruff)."
   }
 }
