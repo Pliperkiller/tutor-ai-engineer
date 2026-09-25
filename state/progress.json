@@ -18,7 +18,7 @@
     "nivel_global": null,
     "niveles_por_fase": {}
   },
-  "posicion_actual": "f2.prompting-estructurado",
+  "posicion_actual": "f2.tool-use",
   "_gate_cierre_f1": [
     "FASE 1 CERRADA el 2026-09-09 (S25). Criterio de fase: entregable 03-api-externa completo (S20, 12/12, ruff+mypy), git-flujo DOMINADO (S24, 3 PRs, 14 commits, conflicto via PR), y la variante de guardas 04-guardas-payload resuelta POR EL sin pistas (S25). Nit no bloqueante que sigue abierto: test 5 de 03-api-externa sin assert espia (route.call_count == 1).",
     "SIGUIENTE: F2 arranca en f2.como-funciona-llm (posicion_actual). Es tópico nuevo: leccion.md desde cero (regla de explicacion), una pieza nueva por ejercicio (regla S18).",
@@ -168,7 +168,9 @@
     "EXCEPT ... AS EXC (S32): la desvinculacion implicita (del exc al terminar el except) no sale en frio; dos modelos erroneos en la misma respuesta: 'fuera del scope' y 'como un context manager' (este ultimo ya corregido en S30 -> segunda aparicion). Pregunta de review sin ejemplo en f2.llamadas-api (2026-09-29).",
     "RESPUESTAS CUALITATIVAS CUANDO SE PIDE UN NUMERO O UN MECANISMO (S32): en las 4 preguntas de la leccion la primera respuesta fue la conclusion correcta pero sin el numero (Q1), sin el mecanismo (Q3 'un seguro') o sin justificacion (Q4 solo nombres). Con una repregunta produce la pieza faltante. Antidoto: releer QUE PIDE la pregunta (cuantas partes) antes de contestar.",
     "GUARD INVERTIDO REAPARECE (S33) — retirado en S11, volvio al simplificar 'if not in: return False else True' a 'return output not in CATEGORIES'. Causa: copio la condicion del if en vez de la del valor devuelto, y NO re-corrio la verificacion tras el refactor (ruff paso limpio y le dio falsa seguridad). Antidoto: tras cualquier refactor, re-correr la verificacion aunque sea 'solo simplificar'. Vigilar de nuevo.",
-    "ALIASING DE DICT MUTABLE (S33): asigno el mismo dict plantilla a varias claves (todas las familias compartian contador). Corregido con .copy() tras predecir. Reforzar: '=' no copia objetos mutables."
+    "ALIASING DE DICT MUTABLE (S33): asigno el mismo dict plantilla a varias claves (todas las familias compartian contador). Corregido con .copy() tras predecir. Reforzar: '=' no copia objetos mutables.",
+    "Cierre de un rebase con conflicto (S34): mezcla el flujo de merge con el de rebase — hace 'git commit' donde va 'git rebase --continue', y 'git push' pelado donde va '--force-with-lease'. Volver a preguntarlo en frio en el proximo repaso de f1.git-flujo.",
+    "Atribuir causas a diferencias que no existen (S34): en RESULTADOS.md escribio una causa por familia para las tres, incluidas happy e injection, donde v1 y v2 sacaron ambas 0. Lo vio y lo corrigio EL con una sola pregunta ('que demuestra tu experimento sobre esa regla'), pero el reflejo de explicar un numero que no cambio hay que vigilarlo cuando lleguen los evals de F5."
   ],
   "topicos": {
     "f1.python-profesional": {
@@ -188,9 +190,9 @@
     },
     "f1.git-flujo": {
       "status": "dominado",
-      "ultima_sesion": "2026-09-09",
-      "next_review": "2026-09-24",
-      "intentos": 5,
+      "ultima_sesion": "2026-09-24",
+      "next_review": "2026-10-01",
+      "intentos": 6,
       "notas": [
         "S24 (2026-09-09, tarde, Mac): EJERCICIO 03-pr-conflicto COMPLETO — CRITERIO_DOMINIO CERRADO, PASA A DOMINADO (recuperacion activa ya superada limpia en S21; hoy cayo el unico bloqueo, el criterio). 2 PRs nuevos fusionados en asistente-config (#2 clarify-temperature-docs, #3 document-temperature-range), conflicto real en README provocado y resuelto EN LOCAL (git pull --no-rebase origin main + merge commit 61d8a3d documentando la decision), push y PR B fusionado. Verificado por el tutor ejecutando: 3 PRs merged, 14 commits (necesitaba 10+), cero marcadores residuales, y la linea final MEZCLA ambos lados (redaccion del A + frase de rango del B) con dedup correcto del rango que el lado A traia entre parentesis. P1 primero con mecanismo equivocado ('main un commit adelante'); con la pregunta discriminante ('¿y si A hubiera tocado OTRA linea?') la corrigio EL: lo que bloquea es misma linea tocada en ambos lados. P2 completa tras releer sus apuntes (lados de los marcadores bien asignados). P3 correcta y completa: 5 commits nuevos desde a866366 y los 3 merges identificados con su origen (PR A en GitHub, merge local de resolucion, PR B en GitHub). Pistas nivel 1-2: sintaxis de push -u y gh pr create dadas como tooling; --no-rebase era hueco del ENUNCIADO (Mac fresca sin pull.rebase — corregido en el enunciado), no fallo suyo. Aprendizajes nuevos en sesion: -u/--set-upstream (branch local rastrea remota), merge vs rebase como estrategias de reconciliacion (rebase solo presentado, es topico futuro), estado (MERGING) del prompt y pull rechazado con merge abierto.",
         "S24 vigilancia para la review 2026-09-24: (a) RECLAMO INFUNDADO #2 ('nunca me ensenaste que es un marcador') — verificado FALSO: material/fase-1/f1.git-flujo.md:40 + conflictos resueltos por el en S4 y S5; se le mostro el registro y se concedio solo el olvido del termino. Mismo patron de S15: ante material olvidado, el primer impulso es 'no me lo ensenaste' en vez de abrir SUS apuntes. Antidoto: mandarlo a material/ antes de re-explicar. (b) Nits de mensajes: prefijo 'Carlos C :' en los commits (git ya registra el autor — preguntarle en la review que informacion aporta) y titulos de PR que empiezan con 'merge...' (el titulo describe el CAMBIO, no el acto de fusionar). (c) En la review: mecanica del pull divergente (por que git exige --no-rebase) y los dos padres del merge commit.",
@@ -204,14 +206,15 @@
         "Error S5: committeo en main con la branch docs-parametros ya creada → PR 'main into main'. Reparado con guia (merge ff + reset --hard origin/main). Gap de conciencia de HEAD a vigilar.",
         "Entorno: gh via snap tiene bug 'remote-https is not a git command' cuando gh ejecuta git (push interno, --delete-branch). Workaround acordado: push siempre con git; gh solo para operaciones de API. Fix definitivo pendiente: gh via apt.",
         "PASA A APRENDIDO: ejercicio resuelto por su cuenta con pistas nivel 1-2. next_review 2026-07-31 (+2).",
-        "PENDIENTE para cerrar criterio_dominio (hacer en el review): 2do PR con conflicto resuelto VIA PR; con eso llega a 2+ branches via PR y 10+ commits."
+        "PENDIENTE para cerrar criterio_dominio (hacer en el review): 2do PR con conflicto resuelto VIA PR; con eso llega a 2+ branches via PR y 10+ commits.",
+        "S34 (2026-09-24): review SUPERADA CON RESERVA (sigue dominado, pero intervalo +7 en vez de +21). Pregunta: resolver en local un conflicto que GitHub reporta en un PR. Bien y de memoria: switch a su rama, pull --rebase origin main, git status para ver los archivos, y describio los marcadores (<<<<<<< HEAD / ======= / >>>>>>> origin/main) correctamente. FALLO: cerro con 'git add + git commit -m ... + git push' — en un rebase el commit YA existe y se reanuda con 'git rebase --continue', y el push necesita --force-with-lease porque el rebase reescribe los hashes de la rama ya pusheada. Dio las dos correctas solo tras pista 2 (se le senalo que un rebase REAPLICA commits existentes y que los hashes cambian). Vigilar: distingue merge de rebase en la teoria, pero mezcla el cierre de uno con el del otro."
       ]
     },
     "f1.async-basico": {
       "status": "aprendido",
-      "ultima_sesion": "2026-09-17",
-      "next_review": "2026-09-24",
-      "intentos": 9,
+      "ultima_sesion": "2026-09-24",
+      "next_review": "2026-10-01",
+      "intentos": 10,
       "notas": [
         "S31 (2026-09-17, sesion dedicada de repaso): review SUPERADA con matiz. Su PRIMERA respuesta volvio a atribuir el solapamiento al AsyncClient ('lanza una request y mientras espera lanza la siguiente') — QUINTA aparicion del intercambio gather/pool (S15/S16/S21/S22-cerrada). Diferencia real con las anteriores: se autocorrigio con UNA sola pregunta (mismo cliente compartido, sin gather, await en un for: ¿0.43s o 3s?) → 'se tarda 3 segundos, el sistema espera cada request'. De ahi produjo las dos mitades: gather = solapamiento (total ≈ maximo) y pool = handshake pagado una vez → esperas mas cortas ('10 handshakes vs 1'). La mitad del pool salio tras pregunta directa, no espontanea → INTERVALO +7 (no +21), igual que en S22. Para +21: las dos mitades sin empujon a la primera. Matiz menor corregido: 'gather es la bandeja de conexiones' → gather recoge CORUTINAS y devuelve resultados; conexiones son del cliente.",
         "S22 (2026-09-07): review SUPERADA — el intercambio de mecanismos (S15/S16/S21) por fin CERRADO con la pregunta-cuenta. La hizo EL: con handshake gratis, 10 requests secuenciales de 0.3s = 3.0s ('secuencial tarda 3 segundos'), o sea el pool NO explica los 0.43s. El mecanismo lo enuncio con sus palabras ('cuando una request hace un await, el event loop pasa a la siguiente tarea') y la regla gather->MAX-no-SUM la completo solo. La mitad del pool quedo borrosa ('se vuelve una sola espera') y la precision la dio el tutor: pool = cada espera MAS CORTA (se salta el handshake TCP+TLS), ahorro de segundo orden. INTERVALO +7 (no +21): para extender a +21 debe dar las DOS mitades de la regla sin empujon. Matiz: 'el event loop?' como primera respuesta necesito una repregunta para convertirse en mecanismo.",
@@ -225,7 +228,8 @@
         "S9 parte 2: timeouts (AsyncClient(timeout=), jerarquia TimeoutException > Read/ConnectTimeout) + gather return_exceptions=True + clasificacion isinstance + raise de lo desconocido. Ejercicio 02-cliente-robusto (script+predecir) RESUELTO con pistas 1-2 y verificado con 3 experimentos (8/1/1 en ~1.1s; puerto muerto -> timeouts honestos; ValueError inyectado -> traceback). CONTENIDO DEL TOPICO COMPLETO.",
         "Confusion S9 (desarmada con demo): excepcion de red vs error HTTP 404/500 (el 500 trae Response; la excepcion no). Iteraciones: excepcion desconocida tragada 2 veces antes del else->raise.",
         "Smell x3: iter/id sombreando builtins DE NUEVO pese a advertencia en el enunciado. Codigo muerto comentado: 3 avisos.",
-        "S11 (2026-08-06): review SUPERADA de memoria con las 2 preguntas candidatas — pool de conexiones (handshakes que no se repiten) exacta; gather sin return_exceptions correcta en lo esencial (propaga y results no se asigna). Precision dada: la excepcion llega a quien hace await, no 'al event loop'; las demas tareas siguen corriendo. Intervalo extendido a +7: next_review 2026-08-13. Si supera, siguiente +21."
+        "S11 (2026-08-06): review SUPERADA de memoria con las 2 preguntas candidatas — pool de conexiones (handshakes que no se repiten) exacta; gather sin return_exceptions correcta en lo esencial (propaga y results no se asigna). Precision dada: la excepcion llega a quien hace await, no 'al event loop'; las demas tareas siguen corriendo. Intervalo extendido a +7: next_review 2026-08-13. Si supera, siguiente +21.",
+        "S34 (2026-09-24): review SUPERADA sobre un angulo NUEVO (no el gather/pool de siempre): que pasa cuando una corrutina de gather lanza. Dio lo esencial de memoria — las otras dos siguen corriendo porque nadie las cancela, y con return_exceptions=True la lista llega completa y en orden. ERROR DE VOCABULARIO corregido: dijo 'se retorna la excepcion'; gather no la retorna, la PROPAGA (el await explota como un raise y 'results' nunca se asigna). Que hay en la posicion de la fallida ('la excepcion', el objeto) salio tras pregunta directa, no espontaneo. Intervalo +7. La puerta para +21 SIGUE SIENDO la pregunta gather-vs-pool con sus dos mitades sin empujon: hoy no se le hizo."
       ]
     },
     "f1.pydantic-validacion": {
@@ -287,9 +291,9 @@
     },
     "f1.testing-pytest": {
       "status": "aprendido",
-      "ultima_sesion": "2026-09-17",
-      "next_review": "2026-09-24",
-      "intentos": 8,
+      "ultima_sesion": "2026-09-24",
+      "next_review": "2026-10-01",
+      "intentos": 9,
       "notas": [
         "S31 (2026-09-17): review SUPERADA con una pista estructural. Trampa presentada: test verde con client.get('/api/models/999') sobre ruta real /models/{model_id} y assert == 404. Primera reaccion: no entendio la pregunta ('como se supone que te demuestro que esa guarda funciona?'); con el marco 'hay DOS 404 posibles: la guarda del endpoint y el router de FastAPI cuando ninguna ruta matchea', resolvio EL todo lo demas a la primera: (a) el 404 es del router porque la URL no hace match, la guarda nunca se ejecuto; (b) 'falso positivo' — la palabra la puso el — y el arreglo bueno: assert sobre el detail exacto ('Model not found'), que solo produce la guarda. SEPTIMA aparicion de la familia 'tests que pasan por la razon equivocada', y primera vez que la desarma en frio sobre codigo ajeno — es el mismo bug que el cazo en su suite en S19. INTERVALO +7 (no +21): la deteccion necesito el marco de los dos 404; para +21, detectar la trampa sin el marco. next_review 2026-09-24.",
         "S23 (2026-09-09): review SUPERADA — VUELVE A APRENDIDO, next_review +7 -> 2026-09-16. El experimento del conftest lo corrio EL (lineas invertidas + Remove-Item Env: en PowerShell): prediccion escrita ANTES ('corren 3 de 5, ERROR con KeyError, revienta en conftest mientras corre un test') vs realidad leida por EL en el output ('no corre ninguno, se rompe antes de correr cualquier test'). Produjo las dos piezas pendientes: (a) el KeyError nace en main.py:42 y conftest.py:6 solo dispara el import; (b) 'pytest se rompio en la COLECCION, antes de correr cualquier test' — la pieza coleccion/ERROR/0-tests fallada en S12/S13/S19 salio de EL, en frio. R2b tambien SUYA: los asserts dentro del with pytest.raises nunca corren (la excepcion salta fuera del bloque) y la reescritura correcta a la primera (solo la linea que explota dentro; exc_info interrogado fuera). Las 3 salidas de pytest.raises de memoria, DID NOT RAISE incluido. Conftest restaurado y verificado: 5 passed en 0.02s. Para dominado: proxima review 2026-09-16 sin material; si supera, +21.",
@@ -318,7 +322,8 @@
         "STATUS visto (no aprendido) por tres razones: el bloque A necesito pista 3 (estructura con huecos), el paso 6 lo corrio el tutor y no el estudiante, y el criterio_dominio del topico exige mocks de una API externa — sin tocar todavia.",
         "PARTE 2 COMPLETADA en S13. Cabo de S12 cerrado a medias: los 3 casos de P2 los conteo bien, pero no vio que el tercero PASA por accidente (2 modelos, pero {2,3} en vez de {1,2}) y llamo 'fixture' a la propiedad — es AISLAMIENTO; la fixture es el mecanismo. Corregido en sesion.",
         "Nit S12 sin cerrar (sigue): falta el comentario que justifica os.environ encima de los imports en el conftest de 01-registro-modelos, y ruff nunca se corrio ahi (E402 esperado + noqa justificado).",
-        "S18: el repaso NO se corrio (la sesion se consumio en conceptos y en feedback de diseno). Sigue vencido el 2026-08-28 con R1 (timing, no scope) y R2(b)."
+        "S18: el repaso NO se corrio (la sesion se consumio en conceptos y en feedback de diseno). Sigue vencido el 2026-08-28 con R1 (timing, no scope) y R2(b).",
+        "S34 (2026-09-24): review SUPERADA — el cabo de S12 (asserts dentro del with pytest.raises) CERRADO. Dijo de memoria y sin pista que el assert nunca se ejecuta porque la excepcion salta antes, y ubico bien la correccion 'fuera del context manager'. La mecanica del 'as' necesito un empujon (se le dijo que pytest guarda la excepcion y que se pide con 'as'), tras lo cual escribio las 3 lineas correctas incluyendo exc.value. Nit corregido: dejo 'result = parse(...)' dentro del with, asignacion que nunca ocurre. Intervalo +7 (no +21) por el empujon del 'as'. Siguen abiertos los nits de S12 en 01-registro-modelos (comentario que justifica os.environ sobre los imports + ruff nunca corrido ahi)."
       ]
     },
     "f2.como-funciona-llm": {
@@ -369,18 +374,21 @@
       ]
     },
     "f2.prompting-estructurado": {
-      "status": "visto",
-      "ultima_sesion": "2026-09-23",
-      "next_review": null,
-      "intentos": 2,
+      "status": "aprendido",
+      "ultima_sesion": "2026-09-24",
+      "next_review": "2026-09-26",
+      "intentos": 3,
       "notas": [
         "S32 (2026-09-22): SESION DE LECCION. Leyo leccion.md por su cuenta (tarea de S31) y las 4 preguntas se discutieron, pero TODAS necesitaron una repregunta del tutor para completarse -> no aplica la excepcion de ejercicio el mismo dia. Q1 (costo): primero solo cualitativo ('20 veces mayor pero ahorra reprocesos'); al pedirle el numero: $2 vs $40, diferencia $38/mes CORRECTO; criterio: 'corro v1 y v2 contra los mismos casos y comparo errores' CORRECTO. Completado por el tutor: errores evitados x costo por error > $38, y 10 casos es muestra chica (no determinismo -> correr cada caso varias veces). Precision: el '20x' aplica al system prompt, no a la factura total. Q2 (regla Spanish vs ejemplos en ingles): predijo 'lo mas probable espanol, posible mezcla' CONTRA la negrita de §3; con la pregunta del predictor de siguiente token produjo 'ganan los ejemplos, continua el patron en ingles'. Q3 (inyeccion): competencia instrucciones vs entrada bien; 'v2 pone un seguro' vago -> al pedir las dos piezas: 'instrucciones y etiquetas'; el tutor completo por que cada una sola no basta. Q4 (familias): camino feliz / borde / inyeccion / formato; justificacion al segundo mensaje; le falto 'un caso feliz POR CATEGORIA'; distinguio bien que el formato NO es familia de entradas sino verificacion sobre todos los casos (un assert sobre cada salida).",
-        "S33 (2026-09-23): SESION DE EJERCICIO a medias (pasos 0-5 de 01-clasificador-tickets). Hecho: setup uv, cases.json (10 casos, 4 happy uno por categoria, 3 edge: vacio / espanol / trampa de palabra clave 'billing page', 3 injection), v1 (vibras, 3 lineas), is_valid_format y evaluate completos y verificados; corrida de v1: happy 0/12, injection 0/9, edge 6/9 wrong (3 format: vacio -> parrafo; 3 trampa 'billing' formato valido pero incorrecto). Errores del camino: (1) expected de injection = la respuesta inyectada (Mercury/4/print) en vez de la categoria -> confundio 'lo que pide el atacante' con 'lo que debe responder el clasificador'; corregido a other tras la pregunta. (2) aliasing: un mismo dict 'structure' asignado a todas las familias -> corregido con .copy(). (3) faltaba el loop RUNS_PER_CASE y el print de fallos. (4) GUARD INVERTIDO al refactorizar is_valid_format a una linea (return output NOT in CATEGORIES) -> tabla 30/30 wrong; no re-corrio la verificacion del paso 3 tras el refactor; necesito pista 2 (zona exacta). Pidio ideas de edge cases (se le dieron 4 tipos). Pendiente menor: !r en el print del elif (linea 81)."
+        "S33 (2026-09-23): SESION DE EJERCICIO a medias (pasos 0-5 de 01-clasificador-tickets). Hecho: setup uv, cases.json (10 casos, 4 happy uno por categoria, 3 edge: vacio / espanol / trampa de palabra clave 'billing page', 3 injection), v1 (vibras, 3 lineas), is_valid_format y evaluate completos y verificados; corrida de v1: happy 0/12, injection 0/9, edge 6/9 wrong (3 format: vacio -> parrafo; 3 trampa 'billing' formato valido pero incorrecto). Errores del camino: (1) expected de injection = la respuesta inyectada (Mercury/4/print) en vez de la categoria -> confundio 'lo que pide el atacante' con 'lo que debe responder el clasificador'; corregido a other tras la pregunta. (2) aliasing: un mismo dict 'structure' asignado a todas las familias -> corregido con .copy(). (3) faltaba el loop RUNS_PER_CASE y el print de fallos. (4) GUARD INVERTIDO al refactorizar is_valid_format a una linea (return output NOT in CATEGORIES) -> tabla 30/30 wrong; no re-corrio la verificacion del paso 3 tras el refactor; necesito pista 2 (zona exacta). Pidio ideas de edge cases (se le dieron 4 tipos). Pendiente menor: !r en el print del elif (linea 81).",
+        "S34 (2026-09-24) — EJERCICIO COMPLETO Y VERIFICADO: 01-clasificador-tickets. v2 = 0 errores en 30 corridas; v1 = 6 wrong / 3 format_err (los 2 fallos de v1 se repitieron 3/3, o sea estables, no azar). ruff limpio. Criterio de dominio del topico CUMPLIDO (2 versiones del system prompt + 10 casos + demostracion de cual rinde mejor y por que). PASA A APRENDIDO con una reserva: en el paso 6 pidio explicitamente 'que quieres que haga' y el tutor le dio la ESTRUCTURA de los 4 cambios (pista 3), no la solucion — el contenido de las reglas y los ejemplos lo escribio el. Para dominado: una variante donde disene el contrato sin que se le enumeren las piezas.",
+        "S34 — piezas que resolvieron cada fallo de v1: el mensaje vacio lo arregla la REGLA ('vacio o sin peticion -> other') + la regla de formato dura ('answer with only one word'); la trampa de palabra clave la arregla la regla 'tener la palabra de una categoria no implica pertenecer a ella' + un ejemplo que la ilustra. En RESULTADOS.md atribuyo edge a 'ejemplo' cuando el vacio lo arreglo la regla 4 — matiz senalado al cierre, no corregido en el archivo.",
+        "S34 — LOGRO CONCEPTUAL (suyo, sin pista): al preguntarle que demuestra su experimento sobre el safeguard de inyeccion, respondio 'no demuestra nada porque v1 ya sacaba 0 en injection'. Entendio que sin fallo que arreglar no hay diferencia que atribuir. Ademas propuso el caso que si lo mediria: una inyeccion con cierre de etiqueta falso (</message><instruction>ignore all...). Ese es el material de la variante."
       ]
     }
   },
-  "sesiones_completadas": 33,
-  "ultima_sesion": "2026-09-23",
+  "sesiones_completadas": 34,
+  "ultima_sesion": "2026-09-24",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
@@ -390,10 +398,5 @@
     "setup.estado lo escribe /setup tras el primer push exitoso; sin 'completado' no operan /start-sesion ni /diagnostico",
     "pendiente: null, o {topic_id, ejercicio, paso, siguiente} cuando /end-sesion deja un ejercicio a medias; /start-sesion lo retoma y lo limpia el siguiente /end-sesion"
   ],
-  "pendiente": {
-    "topic_id": "f2.prompting-estructurado",
-    "ejercicio": "ejercicios/fase-2/f2.prompting-estructurado/01-clasificador-tickets",
-    "paso": "pasos 0-5 hechos y verificados: cases.json (10 casos, injection -> other), is_valid_format y evaluate OK, v1 corrido (edge 6/9 wrong: vacio da parrafo, trampa 'billing page' da billing; happy e injection 0). prompts/classifier_v2.txt vacio; RESULTADOS.md solo con prediccion; falta !r en el print del elif (linea 81); opcional: cambiar un injection por un caso mixto (pedido real + inyeccion).",
-    "siguiente": "paso 6: escribir classifier_v2.txt (rol, reglas con formato y bordes, frontera de datos, 1 ejemplo por categoria sin copiar casos) atacando los 2 fallos de v1; luego paso 7 (correr ambas), 8 (RESULTADOS con causas) y 9 (ruff)."
-  }
+  "pendiente": null
 }

@@ -4,7 +4,7 @@ aliases: ["f1.async-basico"]
 fase: 1
 tipo: codigo
 estado: aprendido
-repaso_proximo: 2026-09-24
+repaso_proximo: 2026-10-01
 nivel: sin_evaluar
 tags: [fase/1, estado/aprendido]
 ---
@@ -130,6 +130,17 @@ Mi primera respuesta volvió a colgarle el solapamiento al `AsyncClient` ("lanza
 Corrección de imagen: `gather` no es "bandeja de conexiones" — recoge **corutinas** y devuelve sus resultados; de conexiones se ocupa el cliente.
 
 Intervalo +7 (la mitad del pool salió tras pregunta directa, no espontánea). Para +21: las dos mitades sin empujón a la primera.
+
+## Repaso S34 (2026-09-24) — superado, sobre un ángulo nuevo: excepciones dentro de `gather`
+
+No se preguntó el gather-vs-pool de siempre, sino qué pasa cuando una de las corrutinas lanza.
+
+- Si una corrutina de `asyncio.gather` lanza, **las otras siguen corriendo**: nadie las cancela, solo dejan de esperarse.
+- `gather` **no retorna** esa excepción: la **propaga**. El `await` explota igual que un `raise`, así que `results = await asyncio.gather(...)` nunca llega a asignar `results`. Devolver un valor y lanzar son cosas distintas.
+- Con `return_exceptions=True` el `await` ya no explota: la lista llega **completa y en el orden en que se pasaron** las corrutinas, y en la posición de la que falló está el **objeto excepción**, como un elemento más.
+- Por eso el patrón de S9: hay que clasificar con `isinstance`, porque una misma posición de esa lista puede traer un resultado bueno o una excepción.
+
+**Error del día:** dijo "se retorna la excepción" donde es "se propaga". **Qué hay en la posición de la fallida** ("la excepción") salió tras pregunta directa, no espontáneo → intervalo **+7**, no +21. La puerta para +21 sigue siendo la pregunta gather-vs-pool con sus dos mitades sin empujón; hoy no se hizo.
 
 ## Relacionados
 - [[Modelado y validación con Pydantic]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).

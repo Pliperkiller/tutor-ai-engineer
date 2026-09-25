@@ -4,6 +4,7 @@ aliases: ["f1.git-flujo"]
 fase: 1
 tipo: codigo
 estado: dominado
+repaso_proximo: 2026-10-01
 nivel: sin_evaluar
 tags: [fase/1, estado/dominado]
 ---
@@ -147,6 +148,27 @@ git push                                   # el PR se actualiza y vuelve a ser f
   dos conflictos resueltos (S4, S5). **Regla: antes de reclamar, releer material/.**
 - Mensajes de commit con prefijo `Carlos C :` (git ya registra el autor) y
   títulos de PR que dicen "merge..." en vez de describir el cambio.
+
+## Repaso S34 (2026-09-24) — con reserva: cómo se CIERRA un conflicto resuelto con rebase
+
+Pregunta: GitHub reporta conflictos en tu PR; resuélvelo en local.
+
+**Lo que dio de memoria y está bien:** `git switch <mi-rama>` → `git pull --rebase origin main` → `git status` para ver qué archivos están en conflicto → editar los marcadores → `git add <archivos>`. Describió los marcadores correctamente:
+
+```
+<<<<<<< HEAD
+mis cambios
+=======
+los cambios de remoto
+>>>>>>> origin/main
+```
+
+**Lo que falló — el cierre, que es distinto en rebase que en merge:**
+
+- Un rebase coge tus commits, que **ya existen**, y los vuelve a aplicar uno por uno encima del `main` nuevo. El conflicto lo deja en pausa a mitad de esa reaplicación. Por eso **no** va `git commit -m "..."`: el commit ya existe, y lo que espera git es `git rebase --continue` para reanudar lo que dejó a medias.
+- Al reaplicarlos, los commits **cambian de hash**. Tu rama ya estaba pusheada al PR, así que un `git push` pelado es rechazado: para git, la rama remota tiene commits que la tuya no. Va `git push --force-with-lease`, que reescribe la rama remota **solo si nadie la tocó desde tu último fetch** — a diferencia de `--force`, que pisa lo que haya y puede borrar el trabajo de otro.
+
+**Resultado:** cerró con el flujo de un merge (`git commit` + `git push`). Dio las dos respuestas correctas tras **pista 2** (se le señaló que un rebase reaplica commits existentes y que los hashes cambian). Sigue `dominado`, pero intervalo **+7** en vez de +21. A vigilar: distingue merge de rebase en la teoría, pero mezcla el cierre de uno con el del otro.
 
 ## Relacionados
 - [[Python profesional]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).

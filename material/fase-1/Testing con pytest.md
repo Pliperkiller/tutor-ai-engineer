@@ -4,7 +4,7 @@ aliases: ["f1.testing-pytest"]
 fase: 1
 tipo: codigo
 estado: aprendido
-repaso_proximo: 2026-09-24
+repaso_proximo: 2026-10-01
 nivel: sin_evaluar
 tags: [fase/1, estado/aprendido]
 ---
@@ -476,6 +476,31 @@ Trampa: test **verde** con `client.get("/api/models/999")` sobre una API cuya ru
 - Arreglo: assert sobre el `detail` exacto (`"Model not found"`), que **solo** produce la guarda — el router dice `"Not Found"`. Con ese assert, la URL mala pone el test en rojo y obliga a corregirla también.
 
 Séptima aparición de la familia "tests que pasan por la razón equivocada" — y la primera que desarmo en frío sobre código ajeno. Es el mismo bug que cacé en mi suite en la S19. Intervalo +7; para +21, detectar la trampa sin que me den el marco de los dos 404.
+
+## Repaso S34 (2026-09-24) — el cabo de S12 cerrado: asserts dentro de `pytest.raises`
+
+Pregunta: qué le pasa a este bloque y dónde debería ir el assert.
+
+```python
+with pytest.raises(ValueError) as exc:
+    result = parse("abc")
+    assert "negative" in str(result)
+```
+
+- Todo lo que va **después** de la línea que lanza es código muerto: el salto ocurre en `parse("abc")`. Ese `assert` **nunca se ejecuta**, y el test pasa en verde sin haber verificado nada. `result` tampoco llega a existir: la asignación es lo último que haría esa línea.
+- La forma correcta: nombrar el informe con `as` y hacer el assert **fuera** del bloque, donde el flujo sí pasa.
+
+```python
+with pytest.raises(ValueError) as exc:
+    parse("abc")
+
+assert "not a number:" in str(exc.value)
+```
+
+- `exc` es un `ExceptionInfo` — el **informe** de pytest, no la excepción. `exc.value` es la `ValueError` real, y `str()` sobre ella da su mensaje.
+- Nit: dentro del `with` no se asigna nada; se escribe solo la llamada.
+
+**Resultado:** la primera mitad (el assert nunca se ejecuta) y la ubicación (fuera del `with`) salieron de memoria y sin pista. La mecánica del `as` necesitó un empujón → intervalo **+7**. Siguen abiertos los nits de S12 en `01-registro-modelos`: falta el comentario que justifica `os.environ` encima de los imports del conftest, y ruff nunca se corrió ahí.
 
 ## Relacionados
 - [[APIs REST con FastAPI]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).
