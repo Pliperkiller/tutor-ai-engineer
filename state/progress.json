@@ -175,10 +175,11 @@
   "topicos": {
     "f1.python-profesional": {
       "status": "dominado",
-      "ultima_sesion": "2026-09-03",
-      "next_review": "2026-09-24",
-      "intentos": 5,
+      "ultima_sesion": "2026-09-26",
+      "next_review": "2026-10-17",
+      "intentos": 6,
       "notas": [
+        "S35 (2026-09-26, review): SUPERADA CON RESERVA. (a) __post_init__ explicado bien (fail-fast, el objeto invalido nunca existe); no nombro el riesgo real de un validate() aparte: que nadie lo llame. (b) `-> Config | None`: lo justifico por utilidad de negocio (manejar el fallo, reintentos) pero NO por la OBLIGACION que impone al llamador — mypy le prohibe usar el valor sin comprobar `is None` antes. Tampoco nombro el precio: None pierde el motivo del fallo, la excepcion no. Sigue dominado, intervalo +21.",
         "S21 (2026-09-03, /repaso): review SUPERADA. (a) self-import circular en __init__.py explicado solo y bien ('el init esta dentro de aiconfig; importar aiconfig dentro es referencia ciclica'). (b) F401: dio la salida del re-export via __all__ solo; la salida trivial (borrar el import basura) necesito 2 empujones minimos. Nucleo intacto, titubeo solo en lo obvio. Intervalo extendido +21.",
         "S1: type hints + excepciones propias + control de flujo. Ejercicio 01-tags-tipados 4/4.",
         "S2: dataclasses (@dataclass, defaults/orden, __post_init__ fail-fast, __repr__/__eq__). Ejercicio 02-config-dataclass 5/5.",
@@ -385,10 +386,21 @@
         "S34 — piezas que resolvieron cada fallo de v1: el mensaje vacio lo arregla la REGLA ('vacio o sin peticion -> other') + la regla de formato dura ('answer with only one word'); la trampa de palabra clave la arregla la regla 'tener la palabra de una categoria no implica pertenecer a ella' + un ejemplo que la ilustra. En RESULTADOS.md atribuyo edge a 'ejemplo' cuando el vacio lo arreglo la regla 4 — matiz senalado al cierre, no corregido en el archivo.",
         "S34 — LOGRO CONCEPTUAL (suyo, sin pista): al preguntarle que demuestra su experimento sobre el safeguard de inyeccion, respondio 'no demuestra nada porque v1 ya sacaba 0 en injection'. Entendio que sin fallo que arreglar no hay diferencia que atribuir. Ademas propuso el caso que si lo mediria: una inyeccion con cierre de etiqueta falso (</message><instruction>ignore all...). Ese es el material de la variante."
       ]
+    },
+    "f2.tool-use": {
+      "status": "visto",
+      "nivel": "sin_evaluar",
+      "ultima_sesion": "2026-09-26",
+      "next_review": null,
+      "intentos": 0,
+      "notas": [
+        "S35 (2026-09-26, sesion de LECCION): leccion.md leida y las 4 preguntas discutidas. Q1 (prediccion): identifico que el bloque tool_use no viaja en el historial, pero creia que el id 'no se crea' y que el sintoma era un modelo confundido; con una pregunta llego solo a que es la API la que rechaza (400) antes de que el modelo vea nada. Q2 (is_error): bien el porque (el modelo reintenta con otros argumentos o avisa al usuario); el LIMITE (que NO debe ser is_error) necesito el contraejemplo del TypeError del despachador para verlo. Q3: dio la razon dura (falta un tool_result -> 400) y la blanda (le ensenas al modelo a no pedir en paralelo) sin ayuda. Q4 (run_shell_command): excelente — quien ejecuta, el riesgo (borrado/lectura de archivos privados) y las mitigaciones (shell restringido + whitelist) salieron solos; no conocia la inyeccion de prompt como vector.",
+        "Preguntas propias fuera de guion, todas buenas: relacion tool use <-> harness, por que los harness se hacen en Python y cuando convendria Rust."
+      ]
     }
   },
-  "sesiones_completadas": 34,
-  "ultima_sesion": "2026-09-24",
+  "sesiones_completadas": 35,
+  "ultima_sesion": "2026-09-26",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
@@ -398,5 +410,10 @@
     "setup.estado lo escribe /setup tras el primer push exitoso; sin 'completado' no operan /start-sesion ni /diagnostico",
     "pendiente: null, o {topic_id, ejercicio, paso, siguiente} cuando /end-sesion deja un ejercicio a medias; /start-sesion lo retoma y lo limpia el siguiente /end-sesion"
   ],
-  "pendiente": null
+  "pendiente": {
+    "topic_id": "f2.tool-use",
+    "ejercicio": null,
+    "paso": "leccion leida y las 4 preguntas discutidas; ejercicio no empezado",
+    "siguiente": "montar y resolver el ejercicio de f2.tool-use (loop completo con 3 herramientas reales + manejo de errores de herramienta)"
+  }
 }

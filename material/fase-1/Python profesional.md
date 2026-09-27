@@ -4,6 +4,7 @@ aliases: ["f1.python-profesional"]
 fase: 1
 tipo: codigo
 estado: dominado
+repaso_proximo: 2026-10-17
 nivel: sin_evaluar
 tags: [fase/1, estado/dominado]
 ---
@@ -135,6 +136,12 @@ aiconfig/
 ### Ejercicio
 - `03-paquete-config/`: refactor a paquete `aiconfig` → `ruff check` limpio +
   pytest 4/4. Resuelto por su cuenta (pistas 1-2). **Tópico → `aprendido`.**
+
+## Repaso S35 (2026-09-26) — SUPERADO CON RESERVA
+
+- **`__post_init__`**: explicado bien — corre automáticamente al final del `__init__`, así que un objeto inválido nunca llega a existir (fail-fast). **Lo que faltó:** el riesgo real de un `validate()` aparte no es el orden, es que **nadie lo llame nunca** y el objeto inválido circule por todo el programa.
+- **`-> Config | None`**: lo justificó por utilidad (manejar el fallo, reintentos). **Lo que faltó:** el `| None` es una *obligación* — mypy le prohíbe al llamador usar el valor sin comprobar `is None` antes; el tipo fuerza el chequeo. Y su precio: `None` no dice **por qué** falló, una excepción sí.
+- Intervalo extendido: `next_review` = 2026-10-17. Sigue `dominado`.
 
 ## Relacionados
 - Sin prerequisitos: es el primer tópico del roadmap.
