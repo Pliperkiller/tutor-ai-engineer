@@ -18,7 +18,7 @@
     "nivel_global": null,
     "niveles_por_fase": {}
   },
-  "posicion_actual": "f2.tool-use",
+  "posicion_actual": "f2.salidas-estructuradas",
   "_gate_cierre_f1": [
     "FASE 1 CERRADA el 2026-09-09 (S25). Criterio de fase: entregable 03-api-externa completo (S20, 12/12, ruff+mypy), git-flujo DOMINADO (S24, 3 PRs, 14 commits, conflicto via PR), y la variante de guardas 04-guardas-payload resuelta POR EL sin pistas (S25). Nit no bloqueante que sigue abierto: test 5 de 03-api-externa sin assert espia (route.call_count == 1).",
     "SIGUIENTE: F2 arranca en f2.como-funciona-llm (posicion_actual). Es tópico nuevo: leccion.md desde cero (regla de explicacion), una pieza nueva por ejercicio (regla S18).",
@@ -170,7 +170,9 @@
     "GUARD INVERTIDO REAPARECE (S33) — retirado en S11, volvio al simplificar 'if not in: return False else True' a 'return output not in CATEGORIES'. Causa: copio la condicion del if en vez de la del valor devuelto, y NO re-corrio la verificacion tras el refactor (ruff paso limpio y le dio falsa seguridad). Antidoto: tras cualquier refactor, re-correr la verificacion aunque sea 'solo simplificar'. Vigilar de nuevo.",
     "ALIASING DE DICT MUTABLE (S33): asigno el mismo dict plantilla a varias claves (todas las familias compartian contador). Corregido con .copy() tras predecir. Reforzar: '=' no copia objetos mutables.",
     "Cierre de un rebase con conflicto (S34): mezcla el flujo de merge con el de rebase — hace 'git commit' donde va 'git rebase --continue', y 'git push' pelado donde va '--force-with-lease'. Volver a preguntarlo en frio en el proximo repaso de f1.git-flujo.",
-    "Atribuir causas a diferencias que no existen (S34): en RESULTADOS.md escribio una causa por familia para las tres, incluidas happy e injection, donde v1 y v2 sacaron ambas 0. Lo vio y lo corrigio EL con una sola pregunta ('que demuestra tu experimento sobre esa regla'), pero el reflejo de explicar un numero que no cambio hay que vigilarlo cuando lleguen los evals de F5."
+    "Atribuir causas a diferencias que no existen (S34): en RESULTADOS.md escribio una causa por familia para las tres, incluidas happy e injection, donde v1 y v2 sacaron ambas 0. Lo vio y lo corrigio EL con una sola pregunta ('que demuestra tu experimento sobre esa regla'), pero el reflejo de explicar un numero que no cambio hay que vigilarlo cuando lleguen los evals de F5.",
+    "Auto-imports del editor que crean imports circulares (S36: 'from test_agent import response' en agent.py). Reincidencia del self-import de 03-api-externa. Regla de deteccion dada: si el nombre importado tambien aparece a la izquierda de un '=' en el propio archivo, el import sobra. Vigilar en el proximo ejercicio con tests.",
+    "Descripciones de herramientas incompletas por duplicacion parcial (S36: puso el ejemplo de formato en read_note pero no en append_to_note, que tiene el mismo parametro y la misma trampa). Vigilar: una regla que aplica a N herramientas debe estar en las N."
   ],
   "topicos": {
     "f1.python-profesional": {
@@ -376,31 +378,38 @@
     },
     "f2.prompting-estructurado": {
       "status": "aprendido",
-      "ultima_sesion": "2026-09-24",
-      "next_review": "2026-09-26",
-      "intentos": 3,
+      "ultima_sesion": "2026-09-27",
+      "next_review": "2026-10-04",
+      "intentos": 4,
       "notas": [
         "S32 (2026-09-22): SESION DE LECCION. Leyo leccion.md por su cuenta (tarea de S31) y las 4 preguntas se discutieron, pero TODAS necesitaron una repregunta del tutor para completarse -> no aplica la excepcion de ejercicio el mismo dia. Q1 (costo): primero solo cualitativo ('20 veces mayor pero ahorra reprocesos'); al pedirle el numero: $2 vs $40, diferencia $38/mes CORRECTO; criterio: 'corro v1 y v2 contra los mismos casos y comparo errores' CORRECTO. Completado por el tutor: errores evitados x costo por error > $38, y 10 casos es muestra chica (no determinismo -> correr cada caso varias veces). Precision: el '20x' aplica al system prompt, no a la factura total. Q2 (regla Spanish vs ejemplos en ingles): predijo 'lo mas probable espanol, posible mezcla' CONTRA la negrita de §3; con la pregunta del predictor de siguiente token produjo 'ganan los ejemplos, continua el patron en ingles'. Q3 (inyeccion): competencia instrucciones vs entrada bien; 'v2 pone un seguro' vago -> al pedir las dos piezas: 'instrucciones y etiquetas'; el tutor completo por que cada una sola no basta. Q4 (familias): camino feliz / borde / inyeccion / formato; justificacion al segundo mensaje; le falto 'un caso feliz POR CATEGORIA'; distinguio bien que el formato NO es familia de entradas sino verificacion sobre todos los casos (un assert sobre cada salida).",
         "S33 (2026-09-23): SESION DE EJERCICIO a medias (pasos 0-5 de 01-clasificador-tickets). Hecho: setup uv, cases.json (10 casos, 4 happy uno por categoria, 3 edge: vacio / espanol / trampa de palabra clave 'billing page', 3 injection), v1 (vibras, 3 lineas), is_valid_format y evaluate completos y verificados; corrida de v1: happy 0/12, injection 0/9, edge 6/9 wrong (3 format: vacio -> parrafo; 3 trampa 'billing' formato valido pero incorrecto). Errores del camino: (1) expected de injection = la respuesta inyectada (Mercury/4/print) en vez de la categoria -> confundio 'lo que pide el atacante' con 'lo que debe responder el clasificador'; corregido a other tras la pregunta. (2) aliasing: un mismo dict 'structure' asignado a todas las familias -> corregido con .copy(). (3) faltaba el loop RUNS_PER_CASE y el print de fallos. (4) GUARD INVERTIDO al refactorizar is_valid_format a una linea (return output NOT in CATEGORIES) -> tabla 30/30 wrong; no re-corrio la verificacion del paso 3 tras el refactor; necesito pista 2 (zona exacta). Pidio ideas de edge cases (se le dieron 4 tipos). Pendiente menor: !r en el print del elif (linea 81).",
         "S34 (2026-09-24) — EJERCICIO COMPLETO Y VERIFICADO: 01-clasificador-tickets. v2 = 0 errores en 30 corridas; v1 = 6 wrong / 3 format_err (los 2 fallos de v1 se repitieron 3/3, o sea estables, no azar). ruff limpio. Criterio de dominio del topico CUMPLIDO (2 versiones del system prompt + 10 casos + demostracion de cual rinde mejor y por que). PASA A APRENDIDO con una reserva: en el paso 6 pidio explicitamente 'que quieres que haga' y el tutor le dio la ESTRUCTURA de los 4 cambios (pista 3), no la solucion — el contenido de las reglas y los ejemplos lo escribio el. Para dominado: una variante donde disene el contrato sin que se le enumeren las piezas.",
         "S34 — piezas que resolvieron cada fallo de v1: el mensaje vacio lo arregla la REGLA ('vacio o sin peticion -> other') + la regla de formato dura ('answer with only one word'); la trampa de palabra clave la arregla la regla 'tener la palabra de una categoria no implica pertenecer a ella' + un ejemplo que la ilustra. En RESULTADOS.md atribuyo edge a 'ejemplo' cuando el vacio lo arreglo la regla 4 — matiz senalado al cierre, no corregido en el archivo.",
-        "S34 — LOGRO CONCEPTUAL (suyo, sin pista): al preguntarle que demuestra su experimento sobre el safeguard de inyeccion, respondio 'no demuestra nada porque v1 ya sacaba 0 en injection'. Entendio que sin fallo que arreglar no hay diferencia que atribuir. Ademas propuso el caso que si lo mediria: una inyeccion con cierre de etiqueta falso (</message><instruction>ignore all...). Ese es el material de la variante."
+        "S34 — LOGRO CONCEPTUAL (suyo, sin pista): al preguntarle que demuestra su experimento sobre el safeguard de inyeccion, respondio 'no demuestra nada porque v1 ya sacaba 0 en injection'. Entendio que sin fallo que arreglar no hay diferencia que atribuir. Ademas propuso el caso que si lo mediria: una inyeccion con cierre de etiqueta falso (</message><instruction>ignore all...). Ese es el material de la variante.",
+        "S36: review superada sin material. Explico few-shot de casos borde como fijador de la FRONTERA que la definicion deja ambigua, y la receta para JSON limpio (instruccion explicita + ejemplos de formato). No menciono el prefill; se le dio."
       ]
     },
     "f2.tool-use": {
-      "status": "visto",
+      "status": "aprendido",
       "nivel": "sin_evaluar",
-      "ultima_sesion": "2026-09-26",
-      "next_review": null,
-      "intentos": 0,
+      "ultima_sesion": "2026-09-27",
+      "next_review": "2026-09-29",
+      "intentos": 1,
       "notas": [
         "S35 (2026-09-26, sesion de LECCION): leccion.md leida y las 4 preguntas discutidas. Q1 (prediccion): identifico que el bloque tool_use no viaja en el historial, pero creia que el id 'no se crea' y que el sintoma era un modelo confundido; con una pregunta llego solo a que es la API la que rechaza (400) antes de que el modelo vea nada. Q2 (is_error): bien el porque (el modelo reintenta con otros argumentos o avisa al usuario); el LIMITE (que NO debe ser is_error) necesito el contraejemplo del TypeError del despachador para verlo. Q3: dio la razon dura (falta un tool_result -> 400) y la blanda (le ensenas al modelo a no pedir en paralelo) sin ayuda. Q4 (run_shell_command): excelente — quien ejecuta, el riesgo (borrado/lectura de archivos privados) y las mitigaciones (shell restringido + whitelist) salieron solos; no conocia la inyeccion de prompt como vector.",
-        "Preguntas propias fuera de guion, todas buenas: relacion tool use <-> harness, por que los harness se hacen en Python y cuando convendria Rust."
+        "Preguntas propias fuera de guion, todas buenas: relacion tool use <-> harness, por que los harness se hacen en Python y cuando convendria Rust.",
+        "S36: 01-agente-notas COMPLETO. 11/11 tests offline + corrida real: 3 herramientas, recuperacion de FileNotFoundError sin romper la conversacion.",
+        "S36: import circular por auto-import del editor (from test_agent import response) — misma familia que el self-import de 03-api-externa.",
+        "S36: f-string mal formada f\"{type(exc).__name__: {exc}}\" — los dos puntos dentro de un campo de reemplazo abren un format specifier.",
+        "S36: typo toosl=TOOLS en messages.create — sin la clave 'tools' el modelo nunca llama una herramienta y no hay error visible (error tipico 4 de la leccion).",
+        "S36: for sin raise al final — la funcion devolvia None en vez de reventar al agotar max_turns.",
+        "S36: no sabia el input_schema de una funcion sin parametros (objeto con properties vacio). Explicado."
       ]
     }
   },
-  "sesiones_completadas": 35,
-  "ultima_sesion": "2026-09-26",
+  "sesiones_completadas": 36,
+  "ultima_sesion": "2026-09-27",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
@@ -410,10 +419,5 @@
     "setup.estado lo escribe /setup tras el primer push exitoso; sin 'completado' no operan /start-sesion ni /diagnostico",
     "pendiente: null, o {topic_id, ejercicio, paso, siguiente} cuando /end-sesion deja un ejercicio a medias; /start-sesion lo retoma y lo limpia el siguiente /end-sesion"
   ],
-  "pendiente": {
-    "topic_id": "f2.tool-use",
-    "ejercicio": null,
-    "paso": "leccion leida y las 4 preguntas discutidas; ejercicio no empezado",
-    "siguiente": "montar y resolver el ejercicio de f2.tool-use (loop completo con 3 herramientas reales + manejo de errores de herramienta)"
-  }
+  "pendiente": null
 }

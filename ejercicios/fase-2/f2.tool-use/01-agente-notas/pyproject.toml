@@ -1,0 +1,8 @@
+[project]
+name = "01-agente-notas"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=1.8.0",
+    "pytest>=8.0.0",
+]

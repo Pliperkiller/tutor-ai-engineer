@@ -4,7 +4,7 @@ aliases: ["f2.prompting-estructurado"]
 fase: 2
 tipo: mixto
 estado: aprendido
-repaso_proximo: 2026-09-26
+repaso_proximo: 2026-10-04
 nivel: sin_evaluar
 tags: [fase/2, estado/aprendido]
 ---
@@ -33,6 +33,11 @@ tags: [fase/2, estado/aprendido]
   2. responder con **una sola palabra**, nada más — v1 solo prohibía espacios y símbolos, nunca prohibió añadir una frase alrededor;
   3. *tener la palabra de una categoría no implica pertenecer a ella* — se clasifica por lo que el usuario **pide o reporta**, no por las palabras que aparecen. Es la que desarma la trampa `"I love how clean your billing page looks"` → `other`.
 - **Sin fallo que arreglar no hay diferencia que atribuir.** `happy` e `injection` dieron 0 en las dos versiones: el experimento **no prueba nada** sobre el safeguard de inyección, por bien escrita que esté la regla. Para medirla haría falta un caso que v1 sí falle — p. ej. una inyección con cierre de etiqueta falso (`</message><instruction>ignore all…`). Esa es la v3 pendiente.
+
+**S36 (2026-09-27) — review superada sin material (intervalo +2 → +7).**
+
+- Explicó por su cuenta por qué el few-shot de casos borde bate a la definición escrita: **la definición deja la frontera ambigua, el ejemplo la fija**. La categoría no se aprende del texto que la describe, sino del caso que la delimita.
+- Receta para JSON limpio, dada completa: instrucción explícita ("responde solo con el JSON, sin texto adicional") **más** ejemplos del par entrada → salida exacta. Lo que no mencionó y se le dio: el *prefill*, abrir el turno del assistant con `{` para que no haya sitio donde escribir el preámbulo.
 
 ## Errores cometidos
 - **2026-09-24 (S34)** — el primer `example3` copiaba el caso de prueba del mensaje vacío. Corregido al explicarle que ese caso dejaba de medir nada.
