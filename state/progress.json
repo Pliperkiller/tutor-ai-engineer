@@ -408,8 +408,8 @@
       ]
     }
   },
-  "sesiones_completadas": 36,
-  "ultima_sesion": "2026-09-27",
+  "sesiones_completadas": 37,
+  "ultima_sesion": "2026-09-28",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
@@ -419,5 +419,10 @@
     "setup.estado lo escribe /setup tras el primer push exitoso; sin 'completado' no operan /start-sesion ni /diagnostico",
     "pendiente: null, o {topic_id, ejercicio, paso, siguiente} cuando /end-sesion deja un ejercicio a medias; /start-sesion lo retoma y lo limpia el siguiente /end-sesion"
   ],
-  "pendiente": null
+  "pendiente": {
+    "topic_id": "f2.salidas-estructuradas",
+    "ejercicio": null,
+    "paso": "S37: leccion.md escrita y entregada (ejercicios/fase-2/f2.salidas-estructuradas/: leccion.md + intake.py + demo_parse_failures.py + demo_structured_parse.py + demo_manual_retry.py). El estudiante cerro la sesion sin leerla: las 4 preguntas NO se han discutido. Demos 1 y 3 (offline) verificadas por el tutor ejecutandolas; demo 2 (API real) solo verificada contra respuesta simulada porque la key del .env de la PC Windows da 401 — correrla en el Mac con su key.",
+    "siguiente": "abrir discutiendo las 4 preguntas de leccion.md (Q1 es prediccion: debe escribirla ANTES de correr demo_parse_failures.py); si las trae bien respondidas en los primeros minutos, montar el ejercicio (20 intakes sinteticos, tasa de parseo 100% con reintento) ese mismo dia (excepcion del protocolo de dos sesiones). Antes: repasos vencidos de f2.llamadas-api y f2.tool-use (2026-09-29)."
+  }
 }
