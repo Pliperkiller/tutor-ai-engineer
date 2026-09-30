@@ -3,10 +3,10 @@ topic_id: f2.llamadas-api
 aliases: ["f2.llamadas-api"]
 fase: 2
 tipo: codigo
-estado: aprendido
+estado: visto
 nivel: sin_evaluar
-repaso_proximo: 2026-09-29
-tags: [fase/2, estado/aprendido]
+repaso_proximo: 2026-10-01
+tags: [fase/2, estado/visto]
 ---
 
 # Llamadas a APIs de LLM
@@ -68,6 +68,11 @@ tags: [fase/2, estado/aprendido]
 - **`raise` a secas vs `raise exc`:** `raise` a secas **re-lanza la excepción activa**, el mismo objeto con su traceback intacto (no "genera" un error nuevo); `raise exc` además añade al traceback la línea del propio `raise exc`.
 - **Qué le pasa a `exc` al terminar el `except`:** Python hace un **`del exc` implícito** (la documentación: *"cleared at the end of the except clause"*). Motivo: la excepción guarda su traceback → los frames → las variables locales, entre ellas `exc` → ciclo de referencias. Se borra el **nombre**, no el objeto: si otro nombre lo apunta (`saved = exc`), sigue vivo.
 - **No es scope:** en Python solo crean scope las funciones, las clases y el módulo; `for`/`if`/`try`/`except` no (una variable asignada dentro de un `for` existe después). La prueba: `saved` y `exc` tienen el mismo scope y solo `exc` desaparece. El término técnico es *unbinding* (desvincular el nombre de su objeto).
+
+**S38 (2026-09-29) — REPASO FALLADO. aprendido → visto, `next_review` = 2026-10-01.**
+- Pregunta: `stop_reason == "max_tokens"`, ¿reintentas con backoff exponencial? Respondió **sí** ("tal vez el modelo se idee una respuesta más corta"). Es el error: esa llamada volvió **200 OK**, no hay nada transitorio que esperar, y la request **idéntica** produce la misma truncación.
+- El backoff existe para lo que **se despeja solo con tiempo** (servidor saturado, 429). Una truncación no se despeja: se arregla **cambiando algo** — subir `max_tokens`, o pedir salida más corta. Llegó ahí con dos pistas ("¿qué status devolvió esa llamada?" y "¿qué hace que el modelo escriba más corto si repites lo mismo?").
+- En el mismo repaso tuvo que pedir el recordatorio de qué es el backoff. El intervalo vuelve a +2.
 
 ## Errores cometidos
 

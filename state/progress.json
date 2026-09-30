@@ -172,7 +172,10 @@
     "Cierre de un rebase con conflicto (S34): mezcla el flujo de merge con el de rebase — hace 'git commit' donde va 'git rebase --continue', y 'git push' pelado donde va '--force-with-lease'. Volver a preguntarlo en frio en el proximo repaso de f1.git-flujo.",
     "Atribuir causas a diferencias que no existen (S34): en RESULTADOS.md escribio una causa por familia para las tres, incluidas happy e injection, donde v1 y v2 sacaron ambas 0. Lo vio y lo corrigio EL con una sola pregunta ('que demuestra tu experimento sobre esa regla'), pero el reflejo de explicar un numero que no cambio hay que vigilarlo cuando lleguen los evals de F5.",
     "Auto-imports del editor que crean imports circulares (S36: 'from test_agent import response' en agent.py). Reincidencia del self-import de 03-api-externa. Regla de deteccion dada: si el nombre importado tambien aparece a la izquierda de un '=' en el propio archivo, el import sobra. Vigilar en el proximo ejercicio con tests.",
-    "Descripciones de herramientas incompletas por duplicacion parcial (S36: puso el ejemplo de formato en read_note pero no en append_to_note, que tiene el mismo parametro y la misma trampa). Vigilar: una regla que aplica a N herramientas debe estar en las N."
+    "Descripciones de herramientas incompletas por duplicacion parcial (S36: puso el ejemplo de formato en read_note pero no en append_to_note, que tiene el mismo parametro y la misma trampa). Vigilar: una regla que aplica a N herramientas debe estar en las N.",
+    "Validar vs constrained decoding (S38): trataba structured outputs como 'me llega y lanzo excepcion' en vez de 'nunca se genera'. Corregido, pero volver a probarlo: lo que las rieles del schema NO garantizan es (a) que la generacion termine (max_tokens) y (b) ninguna regla de negocio (fecha futura, coherencia summary<->case_type).",
+    "REINCIDENCIA (S35 y S38): ante un tool_use huerfano en el historial cree que el sintoma es un modelo confundido. Es la API con un 400, antes de que el modelo vea nada. Preguntarlo otra vez en frio el 2026-10-01.",
+    "Capa de transporte vs capa de contenido (S38): necesito definicion y ejemplo aislado para clasificar. Regla que se le dio: 'tienes en la mano un texto generado por el modelo?' No -> transporte. Si y esta mal -> contenido. Verificar que la retiene."
   ],
   "topicos": {
     "f1.python-profesional": {
@@ -348,9 +351,9 @@
       ]
     },
     "f2.llamadas-api": {
-      "status": "aprendido",
-      "ultima_sesion": "2026-09-22",
-      "next_review": "2026-09-29",
+      "status": "visto",
+      "ultima_sesion": "2026-09-29",
+      "next_review": "2026-10-01",
       "intentos": 4,
       "notas": [
         "S32 (2026-09-22) REVIEW SUPERADA CON RESERVA, intervalo +7 -> 2026-09-29. (1) 'con max_retries=3 cuantas esperas' -> '2, el ultimo retry no duerme sino que lanza' EN FRIO Y SIN ANDAMIAJE (en S30 costo pista 3): la espera pertenece al hueco entre intentos. (2) PARCIAL: que pasa con exc al terminar el except -> primero 'queda fuera del scope', luego 'es como un context manager' (MISMA confusion corregida en S30). Distingue bien raise a secas vs raise exc (observo solo que raise exc agrega una linea al traceback; se le preciso que raise a secas RE-LANZA la excepcion activa, no 'genera' una). El mecanismo (del exc implicito por el ciclo excepcion->traceback->frame->locales) lo dio el tutor; su experimento con 'saved = exc' lo predijo bien (saved vive, exc NameError). Discutio con criterio 'como me vas a decir que no es scope' -> se le mostro que scope es estatico (funcion/clase/modulo) y que saved, con el MISMO scope, sobrevivio. Tambien objeto con razon que no conocia el termino 'unbinding' -> concedido: no se evalua vocabulario no ensenado. REPREGUNTAR EN LA PROXIMA REVIEW: el del exc implicito, sin ejemplo.",
@@ -373,7 +376,8 @@
         "TRANSFERENCIA ESPONTANEA (lo mejor de la sesion): antes de leer la leccion pregunto si ESTA conversacion del tutor funciona igual ('recibes tooodo el chat cada vez?') y respondio bien la pregunta de control (sin progress.json y sin chat, el tutor solo sabria lo que hay en archivos). Aplico stateless a su propia realidad sin que se le pidiera.",
         "LOGISTICA RESUELTA EN SESION: gestion de la API key (env var por maquina en ~/.zshrc / perfil de PowerShell, NUNCA en el repo; export suelto vs perfil del shell explicado), que es I/O (definido reanclando a su medicion de S8: gather ahorra porque las esperas son I/O).",
         "ACORDADO CON EL ESTUDIANTE: ejercicio EXTRA del topico, despues del principal — mini-SDK con httpx a pelo contra Ollama en su PC remoto (RTX 5080, accesible por IP): armar el POST, parsear SSE a mano, backoff propio. Regla 'una pieza nueva por ejercicio': va como ejercicio aparte, no colado en el principal.",
-        "PARA LA SESION DE EJERCICIO (S28): (1) el estudiante crea la API key ANTES (console.anthropic.com, ~$5 de credito; instrucciones al final de leccion.md) — verificarla al abrir; (2) correr las dos demos; (3) ejercicio principal con SDK Anthropic (llamada basica + streaming + backoff a mano + registro de costo); (4) incluye verificar las 3 predicciones de la parte C de 01-predecir-tokens contra la API real (deuda de S26)."
+        "PARA LA SESION DE EJERCICIO (S28): (1) el estudiante crea la API key ANTES (console.anthropic.com, ~$5 de credito; instrucciones al final de leccion.md) — verificarla al abrir; (2) correr las dos demos; (3) ejercicio principal con SDK Anthropic (llamada basica + streaming + backoff a mano + registro de costo); (4) incluye verificar las 3 predicciones de la parte C de 01-predecir-tokens contra la API real (deuda de S26).",
+        "S38 (2026-09-29) — REPASO FALLADO (aprendido -> visto). Pregunta: stop_reason == 'max_tokens', reintentas con backoff? Respondio SI ('tal vez el modelo se idee una respuesta mas corta'). Confunde las dos capas: max_tokens llega 200 OK, no hay nada transitorio que esperar y la request identica produce la misma truncacion. Con dos pistas (que status devolvio? que cambia si repites identico?) llego a que hay que CAMBIAR algo: subir max_tokens o pedir salida mas corta. Ademas, en el mismo repaso tuvo que recordar que es el backoff."
       ]
     },
     "f2.prompting-estructurado": {
@@ -391,10 +395,10 @@
       ]
     },
     "f2.tool-use": {
-      "status": "aprendido",
+      "status": "visto",
       "nivel": "sin_evaluar",
-      "ultima_sesion": "2026-09-27",
-      "next_review": "2026-09-29",
+      "ultima_sesion": "2026-09-29",
+      "next_review": "2026-10-01",
       "intentos": 1,
       "notas": [
         "S35 (2026-09-26, sesion de LECCION): leccion.md leida y las 4 preguntas discutidas. Q1 (prediccion): identifico que el bloque tool_use no viaja en el historial, pero creia que el id 'no se crea' y que el sintoma era un modelo confundido; con una pregunta llego solo a que es la API la que rechaza (400) antes de que el modelo vea nada. Q2 (is_error): bien el porque (el modelo reintenta con otros argumentos o avisa al usuario); el LIMITE (que NO debe ser is_error) necesito el contraejemplo del TypeError del despachador para verlo. Q3: dio la razon dura (falta un tool_result -> 400) y la blanda (le ensenas al modelo a no pedir en paralelo) sin ayuda. Q4 (run_shell_command): excelente — quien ejecuta, el riesgo (borrado/lectura de archivos privados) y las mitigaciones (shell restringido + whitelist) salieron solos; no conocia la inyeccion de prompt como vector.",
@@ -404,12 +408,28 @@
         "S36: f-string mal formada f\"{type(exc).__name__: {exc}}\" — los dos puntos dentro de un campo de reemplazo abren un format specifier.",
         "S36: typo toosl=TOOLS en messages.create — sin la clave 'tools' el modelo nunca llama una herramienta y no hay error visible (error tipico 4 de la leccion).",
         "S36: for sin raise al final — la funcion devolvia None en vez de reventar al agotar max_turns.",
-        "S36: no sabia el input_schema de una funcion sin parametros (objeto con properties vacio). Explicado."
+        "S36: no sabia el input_schema de una funcion sin parametros (objeto con properties vacio). Explicado.",
+        "S38 (2026-09-29) — REPASO FALLADO POR REINCIDENCIA (aprendido -> visto). Pregunta: dos bloques tool_use en una vuelta, cuantos mensajes al historial y que pasa si mandas solo un tool_result. La primera mitad salio perfecta (un solo mensaje user con los dos tool_result). La segunda mitad repitio EXACTAMENTE el error registrado en S35: dijo que 'el modelo va a seguir preguntando por el tool faltante'. Quien rechaza es la API con un 400, antes de que el modelo vea nada. Corregido con una pista ('quien lo ve primero, el modelo o la API?'). Es la segunda vez que cae en lo mismo."
+      ]
+    },
+    "f2.salidas-estructuradas": {
+      "status": "visto",
+      "nivel": "sin_evaluar",
+      "ultima_sesion": "2026-09-29",
+      "next_review": null,
+      "intentos": 1,
+      "notas": [
+        "S37 (2026-09-28): leccion.md escrita y entregada como tarea. El estudiante cerro sin leerla.",
+        "S38 (2026-09-29) — sesion de LECCION. Leyo la leccion sobre la marcha y pidio trabajar las preguntas UNA A UNA en el chat en vez de traerlas resueltas. Q1, Q2 y Q3 discutidas; Q4 NO. Ejercicio no montado.",
+        "Q1 (prediccion de las 7 variantes): 6/7 a la primera. Fallo 'future date' (predijo OK/OK). Antes de predecir necesito que se le aclarara que las dos capas son chequeos de SU codigo, no de la API — creia que 'capa 1' era algo que hacia el servidor. Segunda mitad de Q1 (que desaparece con structured outputs): acerto 'future date' sigue (regla de negocio no expresable en JSON Schema) pero dijo que 'truncated' desaparece. Raiz: no distinguia validar (el texto malo llega y lo rechazas) de constrained decoding (el texto malo no se genera). Con el ejemplo de max_tokens=20 vio que las rieles garantizan prefijo valido, no que la generacion TERMINE.",
+        "Q2 (date sin | None con structured outputs): el mecanismo lo saco con una pista ('el modelo nunca se queda callado, siempre elige un token permitido') — el modelo INVENTA una fecha y te llega un Intake valido sin excepcion. La parte (b) la respondio solo y bien: falso positivo silencioso en el expediente, plazos legales calculados sobre una fecha ficticia. En (c) propuso date | None + descripcion 'null si no hay fecha', pero no vio que 'last month' es fecha IMPRECISA, no ausencia: con null solo, se pierde la senal y null significa dos cosas distintas.",
+        "Q3 (clasificar 5 fallos): despues de pedir la definicion de capa de transporte con ejemplo aislado, a/b/c/d salieron bien. En (b) hizo SOLO la distincion fina que yo iba a empujar (si el JSON minimo ya supera el presupuesto no hay retroalimentacion que sirva; si el modelo se extiende, si). En (e) se atasco: propuso usar el field_validator para comprobar case_type sin ver que 'employment' ES un valor permitido — el fallo no es forma invalida sino el valor valido equivocado. Con el boceto de codigo (no hay try, no hay if, la linea siguiente se ejecuta) llego a que hace falta un juez (LLM-as-judge o humano) y que eso se MIDE con evals, no se reintenta.",
+        "Pendiente de la leccion: Q4 (retroalimentacion y memoria; por que el reintento anade la respuesta mala como turno assistant, y el efecto de quitar list() en FakeClient)."
       ]
     }
   },
-  "sesiones_completadas": 37,
-  "ultima_sesion": "2026-09-28",
+  "sesiones_completadas": 38,
+  "ultima_sesion": "2026-09-29",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
     "Estados validos: visto, aprendido, dominado",
@@ -422,7 +442,7 @@
   "pendiente": {
     "topic_id": "f2.salidas-estructuradas",
     "ejercicio": null,
-    "paso": "S37: leccion.md escrita y entregada (ejercicios/fase-2/f2.salidas-estructuradas/: leccion.md + intake.py + demo_parse_failures.py + demo_structured_parse.py + demo_manual_retry.py). El estudiante cerro la sesion sin leerla: las 4 preguntas NO se han discutido. Demos 1 y 3 (offline) verificadas por el tutor ejecutandolas; demo 2 (API real) solo verificada contra respuesta simulada porque la key del .env de la PC Windows da 401 — correrla en el Mac con su key.",
-    "siguiente": "abrir discutiendo las 4 preguntas de leccion.md (Q1 es prediccion: debe escribirla ANTES de correr demo_parse_failures.py); si las trae bien respondidas en los primeros minutos, montar el ejercicio (20 intakes sinteticos, tasa de parseo 100% con reintento) ese mismo dia (excepcion del protocolo de dos sesiones). Antes: repasos vencidos de f2.llamadas-api y f2.tool-use (2026-09-29)."
+    "paso": "S38: leccion leida y Q1, Q2 y Q3 discutidas a fondo en el chat. Falta Q4 (retroalimentacion y memoria). El ejercicio NO se ha montado. Las demos 1 y 3 son offline y ya corrieron; la demo 2 (API real) sigue sin correrse con su key del Mac.",
+    "siguiente": "discutir Q4 y montar el ejercicio (20 intakes sinteticos, tasa de parseo 100% con reintento). Antes: repasos vencidos de f2.llamadas-api y f2.tool-use (2026-10-01), ambos bajados a visto hoy."
   }
 }

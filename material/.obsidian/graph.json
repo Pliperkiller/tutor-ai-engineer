@@ -1,7 +1,7 @@
 {
   "collapse-filter": false,
   "search": "-path:_plantilla -file:README",
-  "showTags": true,
+  "showTags": false,
   "showAttachments": true,
   "hideUnresolved": true,
   "showOrphans": true,
@@ -46,6 +46,6 @@
   "repelStrength": 10,
   "linkStrength": 1,
   "linkDistance": 250,
-  "scale": 2.026246493011354,
+  "scale": 1.3508309953409061,
   "close": false
 }

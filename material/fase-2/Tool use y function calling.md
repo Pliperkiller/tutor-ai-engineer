@@ -3,10 +3,10 @@ topic_id: f2.tool-use
 aliases: ["f2.tool-use"]
 fase: 2
 tipo: codigo
-estado: aprendido
+estado: visto
 nivel: sin_evaluar
-repaso_proximo: 2026-09-29
-tags: [fase/2, estado/aprendido]
+repaso_proximo: 2026-10-01
+tags: [fase/2, estado/visto]
 ---
 
 # Tool use / function calling
@@ -41,6 +41,12 @@ tags: [fase/2, estado/aprendido]
 - **Observación propia (la mejor del día):** tras el fallo de `shopping`, el modelo se ofreció a *crear* la nota — algo que ninguna herramienta declarada sabe hacer. El modelo propone capacidades que no tiene: limitarlo es trabajo del system prompt y de las descripciones, no algo que el protocolo garantice.
 - **Flag de depuración**: `verbose=True` por defecto no es un flag, es un `print`; y un booleano posicional (`run_tool(name, inp, True)`) es ilegible en el punto de llamada — keyword-only.
 
+**S38 (2026-09-29) — REPASO FALLADO POR REINCIDENCIA. aprendido → visto, `next_review` = 2026-10-01.**
+- Pregunta: dos bloques `tool_use` en una vuelta, ¿cuántos mensajes al historial y qué pasa si mandas solo un `tool_result`?
+- **Primera mitad perfecta:** un solo mensaje `user` con los dos `tool_result` dentro.
+- **Segunda mitad, mismo error que en S35:** dijo que "el modelo va a seguir preguntando por el tool faltante". No llega a haber modelo confundido — quien rechaza es **la API, con un 400**, antes de que el modelo vea nada. Corregido con una pista ("¿quién lo ve primero, el modelo o la API?"), pero es la segunda vez que cae en lo mismo.
+- Que el `tool_use_id` huérfano lo rechace la **API** y no el modelo es lo que hace que el síntoma sea inmediato y ruidoso en vez de sutil. Volver a preguntarlo en frío el 2026-10-01.
+
 ## Errores cometidos
 - **2026-09-26 (S35)** — en la predicción creyó que el `id` del `tool_use` "no se crea" al hardcodear el turno del asistente, y que el síntoma sería un modelo confundido. El `id` sí existe (lo devolvió el modelo); lo que se pierde es que viaje en el historial, y quien rechaza es la API con un 400. Llegó solo con una pregunta.
 - **2026-09-26 (S35)** — no vio por su cuenta el límite de `is_error`: necesitó el contraejemplo del `TypeError` del despachador para distinguir fallo del entorno de bug propio. Conecta con la debilidad de S9 (dejar caer errores en silencio).
@@ -50,8 +56,11 @@ tags: [fase/2, estado/aprendido]
 - **2026-09-27 (S36)** — `toosl=TOOLS` en `messages.create`. Detectado por el test (`KeyError: 'tools'`), no a ojo. Peligroso porque en la API real el síntoma es silencioso: sin `tools` el modelo no llama nada y se inventa la respuesta (error típico 4 de la lección).
 - **2026-09-27 (S36)** — el `for` del loop terminaba sin `raise`: al agotar `max_turns` la función devolvía `None` en silencio. Misma familia que la debilidad de S9 (`else -> raise`).
 
+- **2026-09-29 (S38)** — reincidencia del error del 2026-09-26: `tool_use` huérfano en el historial → creyó que el síntoma es un modelo confundido; es un 400 de la API.
+
 ## Relacionados
 - [[Prompt engineering estructurado]] — prerequisito según el roadmap; además, la `description` de una herramienta es un contrato explícito y falla por las mismas razones que un system prompt vago.
 - [[Llamadas a APIs de LLM]] — prerequisito de hecho: el loop reusa los bloques de `response.content` filtrados por `type`, el historial stateless y el criterio de escribir el mecanismo a mano antes de usar el ayudante del SDK.
 - [[Modelado y validación con Pydantic]] — `input_schema` es JSON Schema, la misma idea de declarar la forma de los datos; un `enum` en el schema es un `Literal[...]` de Pydantic.
 - [[Testing con pytest]] — usados juntos en la sesión del 2026-09-27: el ejercicio se verificó con 11 tests offline y un `FakeClient` inyectado, y ahí apareció que `NotImplementedError` es subclase de `RuntimeError` (un test que pasa por la razón equivocada, su debilidad de S7).
+- [[Salidas estructuradas]] — el `input_schema` de una herramienta y el JSON Schema de un modelo Pydantic son el mismo objeto con el mismo papel; ambos tópicos se repasaron/trabajaron juntos el 2026-09-29 ([[2026-09-29]]).
