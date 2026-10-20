@@ -3,10 +3,10 @@ topic_id: f1.async-basico
 aliases: ["f1.async-basico"]
 fase: 1
 tipo: codigo
-estado: aprendido
-repaso_proximo: 2026-10-01
+estado: dominado
+repaso_proximo: 2026-12-18
 nivel: sin_evaluar
-tags: [fase/1, estado/aprendido]
+tags: [fase/1, estado/dominado]
 ---
 # f1.async-basico — Async y concurrencia básica
 
@@ -141,6 +141,14 @@ No se preguntó el gather-vs-pool de siempre, sino qué pasa cuando una de las c
 - Por eso el patrón de S9: hay que clasificar con `isinstance`, porque una misma posición de esa lista puede traer un resultado bueno o una excepción.
 
 **Error del día:** dijo "se retorna la excepción" donde es "se propaga". **Qué hay en la posición de la fallida** ("la excepción") salió tras pregunta directa, no espontáneo → intervalo **+7**, no +21. La puerta para +21 sigue siendo la pregunta gather-vs-pool con sus dos mitades sin empujón; hoy no se hizo.
+
+## Repaso S39 (2026-10-19) — gather/pool limpio en frío: PASA A DOMINADO
+
+Review **superada limpia, 3/3**. Sexta aparición del intercambio `gather`/pool (S15, S16, S21, S22, S31) y **la primera que sale bien a la primera**: en S31 hacía falta una pregunta para autocorregirse.
+
+- **10 requests de 0.8 s con `gather` sobre un `AsyncClient` compartido → ~0.8 s**, y la pieza que lo explica es el `gather` sobre el event loop. El total es el **máximo**, no la suma. El pool de conexiones del cliente solo ahorra el handshake TLS; no es lo que solapa las esperas. Esta vez no se lo atribuyó al cliente.
+- **Sin `gather`, un `for` con `await` dentro → 8 s.** Las dos mitades de la regla, dadas de memoria.
+- **`gather(..., return_exceptions=False)` y una de las 10 lanza `TimeoutError`:** las otras 9 **no se cancelan**, siguen corriendo (sus resultados se descartan). Y del lado del test: la excepción sale del `await gather(...)` y **aborta el test ahí mismo** — si debajo había 3 asserts, los 3 nunca se ejecutan. Esta segunda mitad salió con una repregunta de precisión sobre una respuesta ya correcta.
 
 ## Relacionados
 - [[Modelado y validación con Pydantic]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).

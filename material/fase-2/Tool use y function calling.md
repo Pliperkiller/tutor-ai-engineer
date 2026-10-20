@@ -3,10 +3,10 @@ topic_id: f2.tool-use
 aliases: ["f2.tool-use"]
 fase: 2
 tipo: codigo
-estado: visto
+estado: aprendido
 nivel: sin_evaluar
-repaso_proximo: 2026-10-01
-tags: [fase/2, estado/visto]
+repaso_proximo: 2026-10-26
+tags: [fase/2, estado/aprendido]
 ---
 
 # Tool use / function calling
@@ -57,6 +57,14 @@ tags: [fase/2, estado/visto]
 - **2026-09-27 (S36)** — el `for` del loop terminaba sin `raise`: al agotar `max_turns` la función devolvía `None` en silencio. Misma familia que la debilidad de S9 (`else -> raise`).
 
 - **2026-09-29 (S38)** — reincidencia del error del 2026-09-26: `tool_use` huérfano en el historial → creyó que el síntoma es un modelo confundido; es un 400 de la API.
+
+## Repaso S39 (2026-10-19) — el `tool_use` huérfano, cerrado: vuelve a APRENDIDO
+
+Review **superada limpia, 3/3** (había bajado a `visto` al fallar la review de S38). Tercera vez que se pregunta el punto del `tool_use` huérfano y la primera correcta en frío.
+
+- **Un bloque `tool_use` sin su `tool_result` en el historial** → la **API** rechaza la petición con un **400 de validación**, *antes* de que el modelo vea nada. No es un modelo confundido: es la capa de transporte. En S35 y S38 lo leía como síntoma del modelo; hoy salió de memoria y a la primera.
+- **`stop_reason` en el turno que pide herramienta:** `tool_use`.
+- **Herramienta que revienta** (la nota no existe): la excepción se captura **en tu código** y lo que viaja es un `tool_result` normal **marcado como error** — `is_error: true` con su `tool_use_id`. Así el modelo lee el fallo como dato y puede reintentar con otros argumentos o avisar al usuario; una excepción de Python propagada mata el loop. El nombre del campo lo completó el tutor.
 
 ## Relacionados
 - [[Prompt engineering estructurado]] — prerequisito según el roadmap; además, la `description` de una herramienta es un contrato explícito y falla por las mismas razones que un system prompt vago.

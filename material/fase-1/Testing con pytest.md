@@ -4,7 +4,7 @@ aliases: ["f1.testing-pytest"]
 fase: 1
 tipo: codigo
 estado: aprendido
-repaso_proximo: 2026-10-01
+repaso_proximo: 2026-11-09
 nivel: sin_evaluar
 tags: [fase/1, estado/aprendido]
 ---
@@ -501,6 +501,14 @@ assert "not a number:" in str(exc.value)
 - Nit: dentro del `with` no se asigna nada; se escribe solo la llamada.
 
 **Resultado:** la primera mitad (el assert nunca se ejecuta) y la ubicación (fuera del `with`) salieron de memoria y sin pista. La mecánica del `as` necesitó un empujón → intervalo **+7**. Siguen abiertos los nits de S12 en `01-registro-modelos`: falta el comentario que justifica `os.environ` encima de los imports del conftest, y ruff nunca se corrió ahí.
+
+## Repaso S39 (2026-10-19) — superado con reserva: las tres a medias al primer tiro
+
+Review **superada con reserva**: las tres preguntas acabaron correctas, pero **ninguna salió completa de primeras** — las tres necesitaron una repregunta para la segunda mitad. Mantiene el intervalo de 21 días (regla nueva de "con reserva").
+
+- **`respx.route(...)` registrado pero sin el decorador `@respx.mock`** (el fallo de S20): "la request fue al servidor real", al instante. El *valor* del test costó dos repreguntas: primero una frase genérica ("no detecta el bug para el que lo escribiste") y, con "¿de qué depende que siga verde mañana?", lo concreto: **del wifi y de que el servicio externo responda igual**. Es un test *flaky* — rojo mañana por razones que no son tuyas, y verde hoy sin haber ejercitado el camino que creías estar probando.
+- **Por qué `os.environ[...]` va encima de `from main import app`:** "porque el import ejecuta el código de nivel de módulo de `main.py` en ese instante, y en `main` se lee esa key". El gap de S12–S17 (`from X import Y` ejecuta X **entero**) está asentado.
+- **Un test sin un solo `assert`:** verde, porque pytest solo marca rojo si se lanza una excepción. Con repregunta, la implicación: ese test afirma únicamente "el código no explotó", y la suite cuenta ese verde como si hubiera verificado algo. Séptima aparición de la familia de los falsos verdes — ya la reconoce, pero la consecuencia sobre la suite aún no sale al primer tiro.
 
 ## Relacionados
 - [[APIs REST con FastAPI]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).

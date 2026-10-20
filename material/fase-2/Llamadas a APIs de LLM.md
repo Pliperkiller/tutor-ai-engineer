@@ -3,10 +3,10 @@ topic_id: f2.llamadas-api
 aliases: ["f2.llamadas-api"]
 fase: 2
 tipo: codigo
-estado: visto
+estado: aprendido
 nivel: sin_evaluar
-repaso_proximo: 2026-10-01
-tags: [fase/2, estado/visto]
+repaso_proximo: 2026-10-26
+tags: [fase/2, estado/aprendido]
 ---
 
 # Llamadas a APIs de LLM
@@ -90,6 +90,16 @@ tags: [fase/2, estado/visto]
 - **2026-09-16 (S30) — dijo "listos" sin correr la verificación.** El archivo ni importaba (`NameError` garantizado en la primera llamada) y el comando de verificación se le había dado literal en la misma instrucción. Regla acordada: "listo" significa *"lo corrí y vi la salida esperada"*; si no se corrió, se dice "lo escribí, no lo he corrido".
 
 - **2026-09-22 (S32)** — el `del exc` implícito no salió en frío: primero "queda fuera del scope", luego "es como un context manager" (**segunda aparición**: ya se corrigió en la S30). Predijo bien el experimento `saved = exc` una vez planteado. Repreguntar sin ejemplo en la review del 2026-09-29.
+
+## Repaso S39 (2026-10-19) — superado con reserva: vuelve a APRENDIDO
+
+Review **superada con reserva** (había bajado a `visto` en S38). Reentra en la escalera en +7.
+
+- **El `raise` tras agotar los reintentos** — la cláusula que en S29 se señaló y no se aplicó: "hace `raise` del último error; si no, devuelve `None` silenciosamente". Dada de memoria **con su consecuencia**. Cerrada.
+- **Qué se reintenta y qué no:** 429 `rate_limit` y 529 `overloaded` sí; 400 `invalid_request` y 401 `authentication` no. El principio salió con una repregunta: los primeros son **transitorios**, los otros no se arreglan reintentando — reintentarlos solo gasta tiempo y dinero.
+- **LA RESERVA — qué le pasa a `exc` al salir del `except`.** El *qué* ya lo tiene en frío ("se desvincula el nombre; Python ejecuta un `del exc` implícito, usarlo después da `NameError`"), y eso es progreso real sobre S32, donde dio dos modelos erróneos ("queda fuera del scope", "es como un context manager"). El *por qué* no lo tenía: repitió el mecanismo dos veces y lo explicó el tutor —
+
+  `exc.__traceback__` apunta al **frame** de la función (con todas sus variables locales). Si `exc` sobreviviera al `except`, habría un ciclo *frame → exc → traceback → frame* y el frame entero quedaría vivo. El `del exc` implícito corta el ciclo. Si lo necesitas después del bloque, lo copias: `last_error = exc`.
 
 ## Relacionados
 

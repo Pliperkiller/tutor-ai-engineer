@@ -4,7 +4,7 @@ aliases: ["f1.git-flujo"]
 fase: 1
 tipo: codigo
 estado: dominado
-repaso_proximo: 2026-10-01
+repaso_proximo: 2026-12-18
 nivel: sin_evaluar
 tags: [fase/1, estado/dominado]
 ---
@@ -169,6 +169,14 @@ los cambios de remoto
 - Al reaplicarlos, los commits **cambian de hash**. Tu rama ya estaba pusheada al PR, así que un `git push` pelado es rechazado: para git, la rama remota tiene commits que la tuya no. Va `git push --force-with-lease`, que reescribe la rama remota **solo si nadie la tocó desde tu último fetch** — a diferencia de `--force`, que pisa lo que haya y puede borrar el trabajo de otro.
 
 **Resultado:** cerró con el flujo de un merge (`git commit` + `git push`). Dio las dos respuestas correctas tras **pista 2** (se le señaló que un rebase reaplica commits existentes y que los hashes cambian). Sigue `dominado`, pero intervalo **+7** en vez de +21. A vigilar: distingue merge de rebase en la teoría, pero mezcla el cierre de uno con el del otro.
+
+## Repaso S39 (2026-10-19) — el rebase con conflicto, cerrado en frío
+
+Review **superada limpia, 3/3**, sin repreguntas y sin material a la vista. Cae la deuda que S34 dejó abierta.
+
+- **Cerrar un rebase con conflicto.** Ya resolviste los marcadores: `git add <archivo>` y luego `git rebase --continue`. El orden no es decorativo — `--continue` lee el **índice**, así que sin el `add` git cree que no resolviste nada y se queda plantado. En S34 ponía `git commit` aquí, que es el flujo del *merge*, no el del rebase.
+- **Por qué git rechaza el `push` después.** El rebase produce commits **nuevos** (otros SHAs), así que la rama local ya no es descendiente de la remota y el push deja de ser fast-forward. Va `--force-with-lease`, que sobrescribe **solo si** nadie más empujó mientras tanto; `--force` a secas se lleva por delante el trabajo ajeno. En S34 ponía `git push` pelado.
+- **El prefijo `Carlos C :` en los mensajes de commit** (nit de S24): "nada, git ya guarda el autor". Correcto, y además ensucia el `--oneline`.
 
 ## Relacionados
 - [[Python profesional]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).
