@@ -181,7 +181,8 @@
     "RETIRADAS (S39): (a) cierre de un rebase con conflicto — 'add' + 'rebase --continue' y '--force-with-lease', la deuda que S34 dejo abierta, en frio y sin pista; (b) el nit del prefijo 'Carlos C :' en los mensajes de commit (S24): respondio 'nada, git ya guarda el autor'; (c) re-raise del ultimo error tras agotar los reintentos — la clausula que en S29 se le senalo explicitamente y no aplico, hoy dada de memoria con su consecuencia (None silencioso).",
     "SEGUNDA MITAD SOLO CON REPREGUNTA — PATRON CONFIRMADO Y AHORA MEDIDO (S25, S26, S32, S39). En S39, 4 de los 5 topicos repasados necesitaron una repregunta para completar una respuesta que ya era correcta: la conclusion sale, el numero / el mecanismo / la causa / la consecuencia concreta no. Casos de hoy: el por que del 'del exc' (llamadas-api, hubo que explicarlo), 'de que depende que el test siga verde manana' (testing, dos repreguntas), 'cuantos asserts se ejecutan' (async-basico) y 'que tienen en comun 429 y 529' (llamadas-api). Es la razon de que 2 de los 5 quedaran 'con reserva' en vez de limpias. Antidoto que funciona: la repregunta cerrada y concreta, no 'ampliame eso'. No es un hueco de concepto: es que entrega la conclusion y se guarda la justificacion.",
     "RECLAMO FUNDADO DEL ESTUDIANTE Y BUG DEL MOTOR — ARREGLADO EN S39: 'estamos teniendo demasiados repasos, muchos de ellos de cosas que ya me has preguntado'. Verificado con la aritmetica del repo antes de conceder (regla de S15/S24): la escalera de CLAUDE.md topaba en +21 dias sin paso siguiente ni salida de la rotacion, asi que todo topico aprendido volvia cada 21 dias para siempre, 'dominado' incluido — 11 topicos / 21 d = un repaso cada 1.9 dias; con los 44 del roadmap, 2.1 repasos/dia. Arreglado via /config (commit 9cfe356): escalera 2/7/21/60/150, retiro de la rotacion con next_review=null al superar la de 150 (reentrada en +7 si un error posterior lo toca), tercer outcome 'superada con reserva' que mantiene el intervalo, y tope de 3 repasos por sesion tambien en /repaso (que pedia 'TODOS los vencidos' y contradecia el 'hasta 3' de CLAUDE.md). Lo que el reclamo NO acertaba, dicho en sesion: los items repetidos hoy (tool-use 3a vez, gather/pool 6a) eran items FALLADOS, y hoy salieron limpios — esa repeticion era el mecanismo funcionando.",
-    "DURACION (S39): sesion de repaso que corrio 5 items donde el protocolo decia 'hasta 3' — el command /repaso pedia TODOS los vencidos y el tutor lo siguio. Es la causa raiz del reclamo del estudiante y ya esta arreglada en el motor (tope de 3, tambien en /repaso). El estudiante corto por su cuenta antes del 6o; el tutor si propuso el cierre en cuanto el bloque quedo verificable. Quedan 5 vencidos sin atender: se toman de 3 en 3 y NO se degradan por estar vencidos."
+    "DURACION (S39): sesion de repaso que corrio 5 items donde el protocolo decia 'hasta 3' — el command /repaso pedia TODOS los vencidos y el tutor lo siguio. Es la causa raiz del reclamo del estudiante y ya esta arreglada en el motor (tope de 3, tambien en /repaso). El estudiante corto por su cuenta antes del 6o; el tutor si propuso el cierre en cuanto el bloque quedo verificable. Quedan 5 vencidos sin atender: se toman de 3 en 3 y NO se degradan por estar vencidos.",
+    "Fallo intermitente de un prompt: lo atribuye entero a ambiguedad del prompt y no contempla el muestreo del modelo (temperature>0). Por eso existen las 3 corridas: separar senal de ruido. Repreguntar cuando llegue evals (F5)."
   ],
   "topicos": {
     "f1.python-profesional": {
@@ -248,9 +249,9 @@
     },
     "f1.pydantic-validacion": {
       "status": "dominado",
-      "ultima_sesion": "2026-09-17",
-      "next_review": "2026-10-08",
-      "intentos": 5,
+      "ultima_sesion": "2026-10-19",
+      "next_review": "2026-12-18",
+      "intentos": 6,
       "notas": [
         "S31 (2026-09-17): review SUPERADA LIMPIA, 3/3 en frio y sin ayuda → PASA A DOMINADO (segunda review limpia consecutiva: S16 y S31, ambas sin pistas, ≥2 dias tras ensenarse). (a) la validacion corre al parsear el body, ANTES del endpoint — 'justo antes de llegar al endpoint', su codigo no se ejecuta; (b) 422 y lo decide FastAPI — nombro RequestValidationError el solo, sin que se le preguntara; (c) ValidationError a secas cuando no hay FastAPI. Precision dada por el tutor (menor, de nombre): dijo 'el model validator' para referirse a la validacion de Pydantic; @model_validator es un decorador concreto. next_review 2026-10-08 como mantenimiento.",
         "S16 (2026-08-25): review SUPERADA limpia — cerro el gap de S13. Ante max_tokens: int = Field(gt=0) con body {'max_tokens': '64000'}: dijo que PASA, que Pydantic coacciona el tipo durante json->modelo, y que los constraints de Field se aplican DESPUES de la conversion. El orden (coacciona primero, valida despues) lo nombro el solo. Precisiones dadas: la coaccion no es universal ('64000.5' y 'abc' dan 422 porque perderian informacion) y existe ConfigDict(strict=True) donde '64000' falla. Intervalo extendido a +21.",
@@ -262,14 +263,15 @@
         "Recuperacion activa S7 superada: explico atrapar-y-acumular por campo (pregunta abierta de S6) tras correccion de su hipotesis 'holdear la excepcion'.",
         "PASA A APRENDIDO: criterio_dominio del topico cumplido (3+ modelos anidados, validators propios, tests validos+invalidos). Pistas nivel 1-2; el esqueleto de pytest se le dio porque testing aun no es topico visto.",
         "Errores S7 (todos corregidos por el mismo): self.name vs self.nombre; asserts muertos dentro del with pytest.raises (tests verdes mentirosos); test 5 con Forma A no ejercitaba la anidacion. Guard invertido NO reaparecio (3/3 condiciones de rechazo derechas).",
-        "DEUDA para proximo repaso (sin material a la vista): que excepcion lanza self.name cuando el campo es nombre (AttributeError, no ValidationError). Extra: no distinguia aun model_dump() (dict) de model_dump_json() (string) — solo uso la segunda."
+        "DEUDA para proximo repaso (sin material a la vista): que excepcion lanza self.name cuando el campo es nombre (AttributeError, no ValidationError). Extra: no distinguia aun model_dump() (dict) de model_dump_json() (string) — solo uso la segunda.",
+        "S40 review LIMPIA (sobre Q1 y Q2; Q3 quemada por el tutor, no cuenta): sin return en field_validator el campo queda None porque Pydantic guarda el valor de retorno; loc distinto segun quien construye el anidado, y supo que Python evalua los argumentos antes de llamar al padre. Intervalo 21 -> 60."
       ]
     },
     "f1.apis-rest-fastapi": {
-      "status": "aprendido",
-      "ultima_sesion": "2026-09-17",
-      "next_review": "2026-10-08",
-      "intentos": 12,
+      "status": "dominado",
+      "ultima_sesion": "2026-10-19",
+      "next_review": "2026-12-18",
+      "intentos": 13,
       "notas": [
         "S31 (2026-09-17): review SUPERADA LIMPIA — la condicion de S23 ('pedir la cadena SIN plantilla de piezas') se cumplio. Reprodujo de memoria y en orden, una frase por pieza: el cliente nace en el lifespan (se inicializa al arrancar la app y muere al detenerla 'gracias al yield', 'no quedan conexiones http abiertas') → se registra en app.state.http → get_client lo saca → Depends hace la inyeccion → Annotated en la firma. A la pregunta de precision sobre Annotated respondio las DOS cosas: el tipo httpx.AsyncClient y el Depends(get_client). Precisiones del tutor (menores): quien llama a get_client es FastAPI ANTES de entrar al endpoint (el endpoint recibe el cliente ya resuelto); el tipo es para mypy/editor y el Depends es metadata para FastAPI. INTERVALO +21 → next_review 2026-10-08. Para dominado: proxima review limpia sin ninguna precision del tutor.",
         "S25 (2026-09-09, noche, Linux/zsh): VARIANTE 04-guardas-payload COMPLETA Y VERIFICADA por el tutor ejecutando (5/5, ruff limpio, main.py contra Open-Meteo real: 17.9 C). Las DOS guardas las escribio EL, solo, a la primera y sin pistas: orden correcto (arriba del acceso), clave exacta (current_weather / temperature dentro de payload['current_weather']), 'in' sobre dict en ambas. Cierra la deuda de S16. P1 escrita antes del primer pytest ('corre 1, el resto KeyError en extract.py linea 19') y correcta. Unico tropiezo: 'raise UpstreamFormatError' SIN mensaje -> str(exc_info.value) == '' y los tests 2-3 rojos; lo diagnostico con el experimento de atrapar la excepcion e imprimir repr(e) | repr(str(e)) corrido por el, y lo arreglo solo con mensajes que nombran la clave. Pregunta de comprension (test 4, temperature en el nivel equivocado) correcta tras exigir una frase con forma: 'la guarda 2 pregunta sobre payload[\"current_weather\"], que vale {windspeed: 12.6}; el 99.9 esta en otro nivel'. Status se mantiene en aprendido (no era review programada); next_review sigue 2026-09-16 — en esa review pedir la cadena DI SIN lista de piezas; si sale, +21.",
@@ -300,7 +302,8 @@
         "P2 de S11 (reciclaje de ids): predicha correctamente — gap de S10 cerrado.",
         "Incidente didactico S11: la demo del concepto se perdio (texto de chat previo a tool calls no visible para el estudiante; 2da vez). Regla nueva permanente: demos SIEMPRE como archivo (demo_api_key.py funciono bien). Ademas: entorno Windows/PowerShell detectado — enunciados con comandos en ambas variantes (curl.exe, $env:).",
         "Pregunta candidata para review 2026-08-08: por que auto_error=False en vez de True (quien decide el error y que status) y por que compare_digest en secretos.",
-        "S18: fixture del lifespan y demo de respx DADAS por el tutor (andamiaje, no evaluadas). Tests 2-5 siguen pendientes. Sin cambio de estado."
+        "S18: fixture del lifespan y demo de respx DADAS por el tutor (andamiaje, no evaluadas). Tests 2-5 siguen pendientes. Sin cambio de estado.",
+        "S40 review LIMPIA sin ninguna precision del tutor -> DOMINADO (condicion puesta en S31). Traduccion de fallos del upstream (500 mentiroso, 504 vs 502) y las tres cosas de -> CostOut, de memoria. Intervalo 21 -> 60."
       ]
     },
     "f1.testing-pytest": {
@@ -392,16 +395,17 @@
     },
     "f2.prompting-estructurado": {
       "status": "aprendido",
-      "ultima_sesion": "2026-09-27",
-      "next_review": "2026-10-04",
-      "intentos": 4,
+      "ultima_sesion": "2026-10-19",
+      "next_review": "2026-10-26",
+      "intentos": 5,
       "notas": [
         "S32 (2026-09-22): SESION DE LECCION. Leyo leccion.md por su cuenta (tarea de S31) y las 4 preguntas se discutieron, pero TODAS necesitaron una repregunta del tutor para completarse -> no aplica la excepcion de ejercicio el mismo dia. Q1 (costo): primero solo cualitativo ('20 veces mayor pero ahorra reprocesos'); al pedirle el numero: $2 vs $40, diferencia $38/mes CORRECTO; criterio: 'corro v1 y v2 contra los mismos casos y comparo errores' CORRECTO. Completado por el tutor: errores evitados x costo por error > $38, y 10 casos es muestra chica (no determinismo -> correr cada caso varias veces). Precision: el '20x' aplica al system prompt, no a la factura total. Q2 (regla Spanish vs ejemplos en ingles): predijo 'lo mas probable espanol, posible mezcla' CONTRA la negrita de §3; con la pregunta del predictor de siguiente token produjo 'ganan los ejemplos, continua el patron en ingles'. Q3 (inyeccion): competencia instrucciones vs entrada bien; 'v2 pone un seguro' vago -> al pedir las dos piezas: 'instrucciones y etiquetas'; el tutor completo por que cada una sola no basta. Q4 (familias): camino feliz / borde / inyeccion / formato; justificacion al segundo mensaje; le falto 'un caso feliz POR CATEGORIA'; distinguio bien que el formato NO es familia de entradas sino verificacion sobre todos los casos (un assert sobre cada salida).",
         "S33 (2026-09-23): SESION DE EJERCICIO a medias (pasos 0-5 de 01-clasificador-tickets). Hecho: setup uv, cases.json (10 casos, 4 happy uno por categoria, 3 edge: vacio / espanol / trampa de palabra clave 'billing page', 3 injection), v1 (vibras, 3 lineas), is_valid_format y evaluate completos y verificados; corrida de v1: happy 0/12, injection 0/9, edge 6/9 wrong (3 format: vacio -> parrafo; 3 trampa 'billing' formato valido pero incorrecto). Errores del camino: (1) expected de injection = la respuesta inyectada (Mercury/4/print) en vez de la categoria -> confundio 'lo que pide el atacante' con 'lo que debe responder el clasificador'; corregido a other tras la pregunta. (2) aliasing: un mismo dict 'structure' asignado a todas las familias -> corregido con .copy(). (3) faltaba el loop RUNS_PER_CASE y el print de fallos. (4) GUARD INVERTIDO al refactorizar is_valid_format a una linea (return output NOT in CATEGORIES) -> tabla 30/30 wrong; no re-corrio la verificacion del paso 3 tras el refactor; necesito pista 2 (zona exacta). Pidio ideas de edge cases (se le dieron 4 tipos). Pendiente menor: !r en el print del elif (linea 81).",
         "S34 (2026-09-24) — EJERCICIO COMPLETO Y VERIFICADO: 01-clasificador-tickets. v2 = 0 errores en 30 corridas; v1 = 6 wrong / 3 format_err (los 2 fallos de v1 se repitieron 3/3, o sea estables, no azar). ruff limpio. Criterio de dominio del topico CUMPLIDO (2 versiones del system prompt + 10 casos + demostracion de cual rinde mejor y por que). PASA A APRENDIDO con una reserva: en el paso 6 pidio explicitamente 'que quieres que haga' y el tutor le dio la ESTRUCTURA de los 4 cambios (pista 3), no la solucion — el contenido de las reglas y los ejemplos lo escribio el. Para dominado: una variante donde disene el contrato sin que se le enumeren las piezas.",
         "S34 — piezas que resolvieron cada fallo de v1: el mensaje vacio lo arregla la REGLA ('vacio o sin peticion -> other') + la regla de formato dura ('answer with only one word'); la trampa de palabra clave la arregla la regla 'tener la palabra de una categoria no implica pertenecer a ella' + un ejemplo que la ilustra. En RESULTADOS.md atribuyo edge a 'ejemplo' cuando el vacio lo arreglo la regla 4 — matiz senalado al cierre, no corregido en el archivo.",
         "S34 — LOGRO CONCEPTUAL (suyo, sin pista): al preguntarle que demuestra su experimento sobre el safeguard de inyeccion, respondio 'no demuestra nada porque v1 ya sacaba 0 en injection'. Entendio que sin fallo que arreglar no hay diferencia que atribuir. Ademas propuso el caso que si lo mediria: una inyeccion con cierre de etiqueta falso (</message><instruction>ignore all...). Ese es el material de la variante.",
-        "S36: review superada sin material. Explico few-shot de casos borde como fijador de la FRONTERA que la definicion deja ambigua, y la receta para JSON limpio (instruccion explicita + ejemplos de formato). No menciono el prefill; se le dio."
+        "S36: review superada sin material. Explico few-shot de casos borde como fijador de la FRONTERA que la definicion deja ambigua, y la receta para JSON limpio (instruccion explicita + ejemplos de formato). No menciono el prefill; se le dio.",
+        "S40 review CON RESERVA: atribuyo todo fallo intermitente a ambiguedad del prompt; falto la otra fuente, el muestreo del modelo (temperature>0 da salidas distintas sin defecto en el prompt). Q2 (caso que no discrimina) y Q3 (regla vs ejemplo) limpias. Intervalo se mantiene en 7."
       ]
     },
     "f2.tool-use": {
@@ -439,7 +443,7 @@
       ]
     }
   },
-  "sesiones_completadas": 39,
+  "sesiones_completadas": 40,
   "ultima_sesion": "2026-10-19",
   "_reglas": [
     "Todo topico ausente de 'topicos' esta en status no_visto",
@@ -453,7 +457,7 @@
   "pendiente": {
     "topic_id": "f2.salidas-estructuradas",
     "ejercicio": null,
-    "paso": "Leccion leida y Q1-Q3 discutidas a fondo (S38). Falta Q4 (retroalimentacion y memoria). El ejercicio NO se ha montado. La demo 2 (API real) sigue sin correrse con su key del Mac; las demos 1 y 3 son offline y ya corrieron.",
-    "siguiente": "Discutir Q4 y montar el ejercicio de f2.salidas-estructuradas (20 intakes sinteticos, tasa de parseo 100% con reintento). Los repasos vencidos del bloque antiguo quedaron saldados en S39; los 5 que quedan van de 3 en 3."
+    "paso": "Leccion leida y Q1-Q3 discutidas a fondo (S38). Falta Q4 (retroalimentacion y memoria). El ejercicio NO se ha montado. La demo 2 (API real) sigue sin correrse con su key del Mac.",
+    "siguiente": "Discutir Q4 y montar el ejercicio de f2.salidas-estructuradas (20 intakes sinteticos, tasa de parseo 100% con reintento). Quedan 2 repasos vencidos: f2.como-funciona-llm y f1.python-profesional."
   }
 }

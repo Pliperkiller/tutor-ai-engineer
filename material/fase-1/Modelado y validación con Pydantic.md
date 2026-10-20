@@ -4,7 +4,7 @@ aliases: ["f1.pydantic-validacion"]
 fase: 1
 tipo: codigo
 estado: dominado
-repaso_proximo: 2026-10-08
+repaso_proximo: 2026-12-18
 nivel: sin_evaluar
 tags: [fase/1, estado/dominado]
 ---
@@ -144,6 +144,17 @@ En frío y sin material, ante `POST /models` con `{"name": 123, "price": "gratis
 Precisión de nombre (del tutor): dije "el model validator" refiriéndome a la validación de tipos que Pydantic hace siempre; `@model_validator` es un decorador concreto que el modelo puede ni tener.
 
 Segunda review limpia consecutiva (S16, S31) → **dominado**. Próximo contacto de mantenimiento: 2026-10-08.
+
+
+## Repaso S40 (2026-10-19) — superado limpio (mantiene DOMINADO, intervalo +21 → +60)
+
+En frío y sin material:
+
+1. **`field_validator` sin `return`**: el campo queda `None`, y con el mecanismo — Pydantic guarda **el valor de retorno de la función**, y una función sin `return` devuelve `None`. No es una regla aparte de Pydantic.
+2. **`loc` según quién construye el anidado**: con `ModelConfig(...)` el error nace en el modelo hijo, antes de que el padre exista, así que `loc = ('temperatura',)`; con el dict crudo valida el padre, que sí conoce la ruta, y sale `('modelo', 'temperatura')`. Añadió "antes de que exista `AsistenteConfig`" por su cuenta; la pieza de Python que lo explica (los argumentos se evalúan **antes** de la llamada) se nombró al confirmar.
+3. **Errores en lote**: no se evaluó. Un mensaje ajeno apareció en el hilo respondiendo esta pregunta y el tutor lo contestó como si fuera del estudiante, quemándola. El estudiante lo detectó ("no he respondido la pregunta 3"). Se descartó: no cuenta ni a favor ni en contra, y la review se cerró con las dos primeras.
+
+Nota de proceso: verificar de quién es un mensaje antes de darle feedback. El estudiante perdió una pregunta por esto.
 
 ## Relacionados
 - [[Git y flujo de trabajo]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).

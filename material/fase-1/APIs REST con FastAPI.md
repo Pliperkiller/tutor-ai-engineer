@@ -3,10 +3,10 @@ topic_id: f1.apis-rest-fastapi
 aliases: ["f1.apis-rest-fastapi"]
 fase: 1
 tipo: codigo
-estado: aprendido
-repaso_proximo: 2026-10-08
+estado: dominado
+repaso_proximo: 2026-12-18
 nivel: sin_evaluar
-tags: [fase/1, estado/aprendido]
+tags: [fase/1, estado/dominado]
 ---
 # FastAPI — parte 1: primera API real (S10, 2026-08-05)
 
@@ -616,6 +616,17 @@ La condición que quedó puesta en la S23 (pedir la cadena SIN lista de piezas) 
 Precisiones del tutor (menores): quien llama a `get_client` es FastAPI, **antes** de entrar al endpoint — el endpoint recibe el cliente ya resuelto, no lo pide él; y del par de `Annotated`, el tipo es para mypy/editor y el `Depends` es metadata para FastAPI.
 
 Intervalo +21 → 2026-10-08. Para dominado: una review limpia sin ninguna precisión del tutor.
+
+
+## Repaso S40 (2026-10-19) — limpio y sin precisiones → DOMINADO (intervalo +21 → +60)
+
+Se cumplió la condición puesta en la S31 (*"para dominado: una review limpia sin ninguna precisión del tutor"*). Tres respuestas completas de memoria, ninguna corrección:
+
+1. **Dejar escapar la excepción de httpx** → el cliente ve un **500**: "mi servidor tiene un bug", cuando el que falló fue el upstream. Añadió la consecuencia que lo vuelve grave: el cliente **no puede distinguir** tu error del ajeno.
+2. **Los dos códigos propios**: **504** cuando el upstream no respondió a tiempo (`httpx.TimeoutException`) y **502** cuando sí respondió pero mal — un 5xx, una respuesta inválida o un fallo de conexión. El eje de la distinción, dicho por él: *respondió o no respondió*.
+3. **`-> CostOut`**: valida la salida (lo deforme falla en tu servidor, no le llega basura al cliente), **filtra** a los campos declarados (no se escapan datos internos) y publica el esquema de respuesta en OpenAPI / `/docs`. Serializando a mano se pierden las tres.
+
+Tercer contacto limpio consecutivo del tópico (S23, S31, S40), y el primero sin ninguna repregunta. La cadena DI no se preguntó hoy a propósito: ya salió limpia dos veces (S23, S31) y repetirla no medía nada nuevo.
 
 ## Relacionados
 - [[Async y concurrencia básica]] — prerequisito según el roadmap (tópico anterior en el orden de la Fase 1).

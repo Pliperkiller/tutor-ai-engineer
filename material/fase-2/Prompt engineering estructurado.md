@@ -4,7 +4,7 @@ aliases: ["f2.prompting-estructurado"]
 fase: 2
 tipo: mixto
 estado: aprendido
-repaso_proximo: 2026-10-04
+repaso_proximo: 2026-10-26
 nivel: sin_evaluar
 tags: [fase/2, estado/aprendido]
 ---
@@ -44,6 +44,18 @@ tags: [fase/2, estado/aprendido]
 - **2026-09-24 (S34)** — puso "qué hacer con el mensaje vacío" como *ejemplo* en vez de como *regla*. Corregido con las reglas 4 y 5.
 - **2026-09-24 (S34)** — en `RESULTADOS.md` escribió una causa por familia para las tres, incluidas `happy` e `injection`, donde v1 y v2 sacaron ambas 0. Lo vio y lo corrigió **él** con una sola pregunta ("¿qué demuestra tu experimento sobre esa regla?").
 - **2026-09-24 (S34)** — atribuyó el arreglo del caso vacío al *ejemplo*; lo arregló la *regla 4*. Señalado al cierre, no corregido en el archivo.
+
+
+## Repaso S40 (2026-10-19) — superado CON RESERVA (intervalo se mantiene en +7)
+
+En frío, sobre el banco de pruebas de `01-clasificador-tickets`:
+
+- **`RUNS_PER_CASE = 3`**: un fallo 3 de 3 es un defecto concreto del prompt, localizable y arreglable. Añadió por su cuenta el porqué de producción de un fallo intermitente: "fallará de vez en cuando sin avisar", que es peor que uno constante.
+- **Lo que faltó (y hubo que darle)**: atribuyó TODO fallo intermitente a ambigüedad del prompt. La otra fuente es el **muestreo del modelo** — con `temperature > 0` el mismo prompt da salidas distintas sin que el prompt tenga defecto alguno. Esa es justamente la razón de ser de las 3 corridas: separar señal de ruido, no solo medir dos veces.
+- **`happy` e `injection` en 0 para v1 y v2**: el experimento no demuestra nada sobre la regla anti-inyección, y lo nombró con el término exacto — el caso **no discrimina** entre versiones. Para medir la regla haría falta un caso que v1 sí falle.
+- **Regla vs ejemplo para el mensaje vacío**: la regla. "Un caso límite tan definido no se muestra, se declara: un ejemplo obliga al modelo a adivinar la regla detrás". Los ejemplos quedan para estilo o formato difícil de describir.
+
+Reserva anotada: el hueco del muestreo es la mitad de la respuesta que no salió sola. Por eso el intervalo no avanza a 21.
 
 ## Relacionados
 - [[Testing con pytest]] — usados juntos en la sesión [[2026-09-24]]: la tabla de v1 vs v2 es el mismo hábito que un test que falla primero, y el ejemplo few-shot copiado del caso de prueba es la versión "prompt" del test que pasa por la razón equivocada.
